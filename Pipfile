@@ -1,0 +1,22 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+borgini = {editable = true, path = "."}
+bump2version = "==1.0.1"
+freezegun = "==1.1.0"
+ipython = "==7.19.0"
+prompt-toolkit = "==3.0.13"
+pyaud = "==1.2.1"
+pytest = "==6.2.1"
+restview = "==2.9.2"
+twine = "==3.3.0"
+
+[packages]
+borgbackup = "==1.1.15"
+pygments = "==2.6.1"
+
+[requiresduplicate-code]
+python_version = "3.8"

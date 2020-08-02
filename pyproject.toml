@@ -1,0 +1,26 @@
+[tool.black]
+line-length = 79
+exclude = '''
+/(
+  | \.git
+  | \.mypy_cache
+  | _build
+  | build
+  | dist
+)/
+'''
+
+[tool.coverage.run]
+omit = ["whitelist.py", "borgini/__main__.py"]
+
+[tool.pytest.ini_options]
+addopts = [
+    "--profile",
+    "--durations=5",
+     "-vv",
+     "--color=yes",
+     "--cov-report",
+     "term-missing"
+]
+norecursedirs = ["docs", "*.egg-info", ".git", ".mypy_cache", ".idea", "prof"]
+filterwarnings = "ignore::DeprecationWarning"
