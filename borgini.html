@@ -1,0 +1,228 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>borgini &#8212; borgini 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/graphite.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="README" href="readme.html" />
+    <link rel="prev" title="PyAud Docs" href="index.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="readme.html" title="README"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="PyAud Docs"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">borgini 1.0.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">borgini</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-borgini">
+<span id="borgini"></span><h1>borgini<a class="headerlink" href="#module-borgini" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>borgini<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>A wrapper to quickly get you started backing up with borg</p>
+<p>An easy to use ini style and profile based format</p>
+<p>See README for examples or run <code class="docutils literal notranslate"><span class="pre">borgini</span> <span class="pre">--help</span></code> for usage</p>
+<dl class="py class">
+<dt id="borgini.Data">
+<em class="property">class </em><code class="sig-prename descclassname">borgini.</code><code class="sig-name descname">Data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">appdir</span></em>, <em class="sig-param"><span class="n">profile</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/borgini/src.html#Data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#borgini.Data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Resolve the directory the configurations belong to. Get the list
+of files to include and exclude. Allow the files to contain comments
+and avoid parsing them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>profile</strong> – The profile that <code class="docutils literal notranslate"><span class="pre">borgini</span></code> is being run under.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="borgini.Data.get_exclude">
+<code class="sig-name descname">get_exclude</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/borgini/src.html#Data.get_exclude"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#borgini.Data.get_exclude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the values obtained from the <code class="docutils literal notranslate"><span class="pre">exclude</span></code> file</p>
+<p>Unlike the <code class="docutils literal notranslate"><span class="pre">include</span></code> file this doesn’t necessarily need to
+be populated</p>
+<p>Every item will automatically be prefixed with <code class="docutils literal notranslate"><span class="pre">--exclude</span></code>
+for the <code class="docutils literal notranslate"><span class="pre">borgbackup</span></code> commandline</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A lit of paths to exclude - this will override items
+in <code class="docutils literal notranslate"><span class="pre">include</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="borgini.Data.get_include">
+<code class="sig-name descname">get_include</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/borgini/src.html#Data.get_include"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#borgini.Data.get_include" title="Permalink to this definition">¶</a></dt>
+<dd><p>The tuple of directories and files to include from the
+<code class="docutils literal notranslate"><span class="pre">include</span></code> file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Tuple of paths to include in backups for that profile</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="borgini.Data.get_path">
+<code class="sig-name descname">get_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">key</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/borgini/src.html#Data.get_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#borgini.Data.get_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the path of the file by calling it’s key</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>key</strong> – Name of the basename file</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The file’s absolute path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="borgini.Data.initialize_data_files">
+<code class="sig-name descname">initialize_data_files</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pathlists</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/borgini/src.html#Data.initialize_data_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#borgini.Data.initialize_data_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>If the <code class="docutils literal notranslate"><span class="pre">include</span></code> or <code class="docutils literal notranslate"><span class="pre">exclude</span></code> files do not exist
+write the starter templates to file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pathlists</strong> – Tuple containing two tuples of lines to
+write to file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="borgini.Data.make_appdir">
+<code class="sig-name descname">make_appdir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/borgini/src.html#Data.make_appdir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#borgini.Data.make_appdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the configuration directory for all the user’s
+settings.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="borgini.PygmentPrint">
+<em class="property">class </em><code class="sig-prename descclassname">borgini.</code><code class="sig-name descname">PygmentPrint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">styles</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/borgini/src.html#PygmentPrint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#borgini.PygmentPrint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Instantiate with the path leading to the config file for syntax
+styles. Class will read the file and maintain it’s config throughout
+the process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>styles</strong> – The path to the <code class="docutils literal notranslate"><span class="pre">styles</span></code> config file.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="borgini.PygmentPrint.print">
+<code class="sig-name descname">print</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">string</span></em>, <em class="sig-param"><span class="n">ini</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/borgini/src.html#PygmentPrint.print"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#borgini.PygmentPrint.print" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print with <code class="docutils literal notranslate"><span class="pre">pygments</span></code>. Read the string entered in method
+Configure syntax highlighting for either shell or ini files and
+processes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>string</strong> – What is to be printed.</p></li>
+<li><p><strong>ini</strong> – <code class="docutils literal notranslate"><span class="pre">True</span></code> for printing ini files, <code class="docutils literal notranslate"><span class="pre">False</span></code> for
+shell.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="borgini.PygmentPrint.read_styles">
+<code class="sig-name descname">read_styles</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/borgini/src.html#PygmentPrint.read_styles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#borgini.PygmentPrint.read_styles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the <code class="docutils literal notranslate"><span class="pre">styles</span></code> file into the buffer. Parse the
+configuration that is uncommented and ignore the rest.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="borgini.main">
+<code class="sig-prename descclassname">borgini.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/borgini.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#borgini.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Module entry point called by <code class="docutils literal notranslate"><span class="pre">__main__</span></code>.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">borgini</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">borgini</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">README</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="readme.html" title="README"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="PyAud Docs"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">borgini 1.0.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">borgini</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Stephen Whitlock.
+    </div>
+  </body>
+</html>

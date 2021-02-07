@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>README &#8212; borgini 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/graphite.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="borgini" href="borgini.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="borgini.html" title="borgini"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">borgini 1.0.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">README</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="readme">
+<h1>README<a class="headerlink" href="#readme" title="Permalink to this headline">¶</a></h1>
+<a class="reference external image-reference" href="https://github.com/jshwi/borgini/workflows/build/badge.svg"><img alt="build" src="https://github.com/jshwi/borgini/workflows/build/badge.svg" /></a>
+<a class="reference external image-reference" href="https://www.python.org/downloads/release/python-380"><img alt="python3.8" src="https://img.shields.io/badge/python-3.8-blue.svg" /></a>
+<a class="reference external image-reference" href="https://img.shields.io/pypi/v/borgini"><img alt="pypi" src="https://img.shields.io/pypi/v/borgini" /></a>
+<a class="reference external image-reference" href="https://codecov.io/gh/jshwi/borgini"><img alt="codecov.io" src="https://codecov.io/gh/jshwi/borgini/branch/master/graph/badge.svg" /></a>
+<a class="reference external image-reference" href="https://borgini.readthedocs.io/en/latest/?badge=latest"><img alt="readthedocs.org" src="https://readthedocs.org/projects/borgini/badge/?version=latest" /></a>
+<a class="reference external image-reference" href="https://lbesson.mit-license.org/"><img alt="mit" src="https://img.shields.io/badge/License-MIT-blue.svg" /></a>
+<a class="reference external image-reference" href="https://github.com/psf/black"><img alt="black" src="https://img.shields.io/badge/code%20style-black-000000.svg" /></a>
+<p>A wrapper to quickly get you started backing up with borg</p>
+<p>An easy to use ini style and profile based format</p>
+<p>Requires:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Python 3 &gt;= 3.5.0, plus development headers</p></li>
+<li><p>OpenSSL &gt;= 1.0.0, plus development headers</p></li>
+<li><p>libacl (which depends on libattr), both plus development headers</p></li>
+<li><p>liblz4 &gt;= 1.7.0 (r129)</p></li>
+<li><p>libzstd &gt;= 1.3.0</p></li>
+<li><p>libb2</p></li>
+</ul>
+<p>For information on how to install these dependencies for Borg:
+<a class="reference external" href="https://borgbackup.readthedocs.io/en/stable/installation.html">https://borgbackup.readthedocs.io/en/stable/installation.html</a></p>
+</div></blockquote>
+<p>Initialize the config</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> borgini
+<span class="go">First run detected for profile: default</span>
+<span class="go">Make all necessary changes to config before running this again</span>
+<span class="go">You can do this by running the command:</span>
+
+<span class="go">. borgini EDITOR --config --select default</span>
+
+<span class="go">Default settings have been written to the ``include`` and ``exclude`` lists</span>
+<span class="go">These can be edited by running:</span>
+
+<span class="go">. borgini EDITOR --include --select default</span>
+<span class="go">. borgini EDITOR --exclude --select default</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>the <code class="docutils literal notranslate"><span class="pre">--select</span></code> optional argument does not need to be passed if using the default profile</p>
+</div>
+<p>Edit the config</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> borgini vim --config
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The selected editor is up to the user</p>
+<p>The following would also work (provided they are installed)</p>
+</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> borgini code --config
+<span class="gp">$</span> borgini gedit --config
+<span class="gp">$</span> borgini notepad --config
+</pre></div>
+</div>
+<p>Ensure to make necessary changes to the <code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code> section</p>
+<p>And ensure to configure the <code class="docutils literal notranslate"><span class="pre">SSH</span></code> section if an ssh repo is configured</p>
+<p>The remaining configurations will suite most people</p>
+<p>If you use the <code class="docutils literal notranslate"><span class="pre">BORG_PASSPHRASE</span></code> environment variable edit the <code class="docutils literal notranslate"><span class="pre">ENVIRONMENT</span></code>
+section to point to the keyfile</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>the file should contain one line and a password stored with safe read-write and ownership permissions</p>
+</div>
+<p>Edit the include and exclude files</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> borgini vim --include  <span class="c1"># add a list of paths to back up</span>
+<span class="gp">$</span> borgini vim --exclude  <span class="c1"># add a list of paths to exclude</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The exclude list can contain subdirectories and files listed within the include list</p>
+<p>This will override their inclusion</p>
+</div>
+<p>To switch between profiles add <code class="docutils literal notranslate"><span class="pre">--select</span> <span class="pre">PROFILE</span></code></p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> borgini vim --config  <span class="c1"># edit default config</span>
+<span class="gp">$</span> borgini vim --config --select profile2  <span class="c1"># edit profile2&#39;s config</span>
+<span class="gp">$</span> borgini vim --include --select profile2  <span class="c1"># edit profile2&#39;s include file</span>
+<span class="gp">$</span> borgini vim --exclude --select profile2  <span class="c1"># edit profile2&#39;s exclude file</span>
+<span class="gp">$</span> borgini --select profile2  <span class="c1"># run profile2&#39;s backup</span>
+</pre></div>
+</div>
+<p>Add the following for nightly backups at 12:00 to your crontab</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> <span class="m">0</span> <span class="m">0</span> * * * /usr/local/bin/borgini
+<span class="gp">$</span> <span class="m">0</span> <span class="m">0</span> * * * /usr/local/bin/borgini -s profile2  <span class="c1"># easy for multiple repos</span>
+</pre></div>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="borgini.html">borgini</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">README</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="borgini.html" title="borgini"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">borgini 1.0.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">README</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Stephen Whitlock.
+    </div>
+  </body>
+</html>

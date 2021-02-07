@@ -1,0 +1,343 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>borgini.src &#8212; borgini 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/graphite.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">borgini 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../borgini.html" accesskey="U">borgini</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">borgini.src</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for borgini.src</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">borgini.src</span>
+<span class="sd">===========</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pathlib</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+
+<span class="kn">from</span> <span class="nn">pygments</span> <span class="kn">import</span> <span class="n">highlight</span>
+<span class="kn">from</span> <span class="nn">pygments.formatters.terminal256</span> <span class="kn">import</span> <span class="n">Terminal256Formatter</span>
+<span class="kn">from</span> <span class="nn">pygments.lexers.configs</span> <span class="kn">import</span> <span class="n">IniLexer</span>
+<span class="kn">from</span> <span class="nn">pygments.lexers.shell</span> <span class="kn">import</span> <span class="n">BashLexer</span>
+
+<span class="n">HOME</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">())</span>
+
+
+<span class="k">class</span> <span class="nc">BorgBackup</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;``Borgbackup`` wrapper class,</span>
+
+<span class="sd">    :param repopath:    Path to the backup repository - local dir if</span>
+<span class="sd">                        ``ssh`` set to ``False``, remote server and repo</span>
+<span class="sd">                        dir if ``ssh`` set to ``True``.</span>
+<span class="sd">    :param pygments:    Instantiated ``src.print.PygmentPrint`` class</span>
+<span class="sd">                        configured with user&#39;s style option.</span>
+<span class="sd">    :param dry:         if ``--dry`` is passed through the commandline</span>
+<span class="sd">                        then display the commandline arguments that</span>
+<span class="sd">                        would be passed to ``borgbackup`` without</span>
+<span class="sd">                        actually running the it.</span>
+<span class="sd">    :param args:        Arguments parsed from the ``config.ini`` file</span>
+<span class="sd">                        with ``configparser.ConfigParser``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">repopath</span><span class="p">,</span> <span class="n">pygments</span><span class="p">,</span> <span class="n">dry</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">repo</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">repopath</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pygments</span> <span class="o">=</span> <span class="n">pygments</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bin</span> <span class="o">=</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s2">&quot;borg&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dry</span> <span class="o">=</span> <span class="n">dry</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bin</span> <span class="k">else</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">archive</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">repo</span><span class="si">}</span><span class="s2">::</span><span class="si">{</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_separate_keep</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+        <span class="n">keep</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;--keep-&quot;</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">args</span><span class="p">),</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">keep</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_run_borg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="n">borgargs</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">bin</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">borgargs</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_dry_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="n">borgargs</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">args</span><span class="p">])</span>
+        <span class="n">borg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bin</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bin</span> <span class="k">else</span> <span class="s2">&quot;borg&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pygments</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">borg</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">borgargs</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ini</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">borg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Run ``borgbackup`` ``create`` to create a backup or ``prune``</span>
+<span class="sd">        to prune an old backup according to the ``--keep-*`` settings.</span>
+<span class="sd">        If ``--dry`` has been passed through the commandline only</span>
+<span class="sd">        display the command that would occur - this won&#39;t run a backup</span>
+<span class="sd">        or prune.</span>
+
+<span class="sd">        :param args:    Arguments for the borg command to receive,</span>
+<span class="sd">                        parsed from the ``config.ini``, the ``include``</span>
+<span class="sd">                        and the ``exclude`` files</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dry</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dry_mode</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_run_borg</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">exclude</span><span class="p">,</span> <span class="n">include</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Run the ``borg create`` command. Includes several</span>
+<span class="sd">        miscellaneous boolean arguments and key-values parsed from the</span>
+<span class="sd">        ``config.ini`` file. Includes the ``exclude`` arguments</span>
+<span class="sd">        formatted as ``[--exclude ARG, ...]``. Includes the ``include``</span>
+<span class="sd">        arguments formatted as ``[ARG, ...]``.</span>
+
+<span class="sd">        :param args:    Flags that effect compression, whether stats are</span>
+<span class="sd">                        shown, the command is verbose etc...</span>
+<span class="sd">        :param exclude: Directories or files to exclude parsed from the</span>
+<span class="sd">                        exclude list.</span>
+<span class="sd">        :param include: Directories or files to include parsed from the</span>
+<span class="sd">                        include list - files and dirs will be overridden</span>
+<span class="sd">                        by exclude.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">borg</span><span class="p">(</span><span class="s2">&quot;create&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">*</span><span class="n">exclude</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">archive</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">include</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">prune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Run the ``borg prune`` command Includes several miscellaneous</span>
+<span class="sd">        boolean arguments that can be further explored by running</span>
+<span class="sd">        ``borgini --config``.</span>
+
+<span class="sd">        :param args:    Flags that effect compression, whether stats are</span>
+<span class="sd">                        shown, the command is verbose etc...</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">pruneargs</span><span class="p">,</span> <span class="n">keep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_separate_keep</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">borg</span><span class="p">(</span><span class="s2">&quot;prune&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">pruneargs</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">repo</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">keep</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Data"><a class="viewcode-back" href="../../borgini.html#borgini.Data">[docs]</a><span class="k">class</span> <span class="nc">Data</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Resolve the directory the configurations belong to. Get the list</span>
+<span class="sd">    of files to include and exclude. Allow the files to contain comments</span>
+<span class="sd">    and avoid parsing them.</span>
+
+<span class="sd">    :param profile: The profile that ``borgini`` is being run under.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">appdir</span><span class="p">,</span> <span class="n">profile</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">appdir</span><span class="p">,</span> <span class="n">profile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_file_obj</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_get_file_obj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">paths</span> <span class="o">=</span> <span class="s2">&quot;config.ini&quot;</span><span class="p">,</span> <span class="s2">&quot;include&quot;</span><span class="p">,</span> <span class="s2">&quot;exclude&quot;</span><span class="p">,</span> <span class="s2">&quot;styles&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dirname</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">}</span>
+
+<div class="viewcode-block" id="Data.make_appdir"><a class="viewcode-back" href="../../borgini.html#borgini.Data.make_appdir">[docs]</a>    <span class="k">def</span> <span class="nf">make_appdir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create the configuration directory for all the user&#39;s</span>
+<span class="sd">        settings.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dirname</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dirname</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="n">arg</span><span class="p">]</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Data.initialize_data_files"><a class="viewcode-back" href="../../borgini.html#borgini.Data.initialize_data_files">[docs]</a>    <span class="k">def</span> <span class="nf">initialize_data_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathlists</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;If the ``include`` or ``exclude`` files do not exist</span>
+<span class="sd">        write the starter templates to file.</span>
+
+<span class="sd">        :param pathlists:   Tuple containing two tuples of lines to</span>
+<span class="sd">                            write to file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">count</span><span class="p">,</span> <span class="n">datafile</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_paths</span><span class="p">(</span><span class="s2">&quot;include&quot;</span><span class="p">,</span> <span class="s2">&quot;exclude&quot;</span><span class="p">,</span> <span class="s2">&quot;styles&quot;</span><span class="p">)</span>
+        <span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">datafile</span><span class="p">):</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">datafile</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">pathlists</span><span class="p">[</span><span class="n">count</span><span class="p">]:</span>
+                        <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_read_datafile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">readfile</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">readfile</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_parse_datafile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_datafile</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="c1"># remove string starting at the hash symbol if inline</span>
+        <span class="c1"># comment or remove entire line if the first index is the</span>
+        <span class="c1"># hash symbol</span>
+        <span class="k">return</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">f</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="si">}</span><span class="s2">&#39;&quot;</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span> <span class="k">if</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;#&quot;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="Data.get_path"><a class="viewcode-back" href="../../borgini.html#borgini.Data.get_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the path of the file by calling it&#39;s key</span>
+
+<span class="sd">        :param key: Name of the basename file</span>
+<span class="sd">        :return:    The file&#39;s absolute path</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="n">key</span><span class="p">]</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="n">pathlist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="n">pathlist</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parse_datafile</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">pathlist</span>
+
+    <span class="k">def</span> <span class="nf">_format_include</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_files</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+
+<div class="viewcode-block" id="Data.get_include"><a class="viewcode-back" href="../../borgini.html#borgini.Data.get_include">[docs]</a>    <span class="k">def</span> <span class="nf">get_include</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The tuple of directories and files to include from the</span>
+<span class="sd">        ``include`` file</span>
+
+<span class="sd">        :return: Tuple of paths to include in backups for that profile</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">include_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;include&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format_include</span><span class="p">(</span><span class="n">include_path</span><span class="p">)</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_format_exclude</span><span class="p">(</span><span class="n">pathlist</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;--exclude </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">pathlist</span><span class="p">])</span>
+
+<div class="viewcode-block" id="Data.get_exclude"><a class="viewcode-back" href="../../borgini.html#borgini.Data.get_exclude">[docs]</a>    <span class="k">def</span> <span class="nf">get_exclude</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the values obtained from the ``exclude`` file</span>
+
+<span class="sd">        Unlike the ``include`` file this doesn&#39;t necessarily need to</span>
+<span class="sd">        be populated</span>
+
+<span class="sd">        Every item will automatically be prefixed with ``--exclude``</span>
+<span class="sd">        for the ``borgbackup`` commandline</span>
+
+<span class="sd">        :return:    A lit of paths to exclude - this will override items</span>
+<span class="sd">                    in ``include``</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">exclude_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;exclude&quot;</span><span class="p">)</span>
+        <span class="n">exclude_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_files</span><span class="p">(</span><span class="n">exclude_path</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format_exclude</span><span class="p">(</span><span class="n">exclude_list</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="PygmentPrint"><a class="viewcode-back" href="../../borgini.html#borgini.PygmentPrint">[docs]</a><span class="k">class</span> <span class="nc">PygmentPrint</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Instantiate with the path leading to the config file for syntax</span>
+<span class="sd">    styles. Class will read the file and maintain it&#39;s config throughout</span>
+<span class="sd">    the process.</span>
+
+<span class="sd">    :param styles: The path to the ``styles`` config file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">styles</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">styles</span> <span class="o">=</span> <span class="n">styles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_styles</span><span class="p">()</span>
+
+<div class="viewcode-block" id="PygmentPrint.read_styles"><a class="viewcode-back" href="../../borgini.html#borgini.PygmentPrint.read_styles">[docs]</a>    <span class="k">def</span> <span class="nf">read_styles</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Read the ``styles`` file into the buffer. Parse the</span>
+<span class="sd">        configuration that is uncommented and ignore the rest.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">styles</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">contents</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">contents</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">content</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;#&quot;</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">content</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+            <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+        <span class="k">return</span> <span class="s2">&quot;default&quot;</span></div>
+
+<div class="viewcode-block" id="PygmentPrint.print"><a class="viewcode-back" href="../../borgini.html#borgini.PygmentPrint.print">[docs]</a>    <span class="k">def</span> <span class="nf">print</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">ini</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Print with ``pygments``. Read the string entered in method</span>
+<span class="sd">        Configure syntax highlighting for either shell or ini files and</span>
+<span class="sd">        processes.</span>
+
+<span class="sd">        :param string:  What is to be printed.</span>
+<span class="sd">        :param ini:     ``True`` for printing ini files, ``False`` for</span>
+<span class="sd">                        shell.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">string</span><span class="p">:</span>
+            <span class="n">lexer</span> <span class="o">=</span> <span class="n">IniLexer</span> <span class="k">if</span> <span class="n">ini</span> <span class="k">else</span> <span class="n">BashLexer</span>
+            <span class="n">string</span> <span class="o">=</span> <span class="n">highlight</span><span class="p">(</span>
+                <span class="n">string</span><span class="p">,</span> <span class="n">lexer</span><span class="p">(),</span> <span class="n">Terminal256Formatter</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">style</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">string</span><span class="p">)</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../index.html">Table of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../borgini.html">borgini</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">README</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">borgini 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../borgini.html" >borgini</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">borgini.src</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Stephen Whitlock.
+    </div>
+  </body>
+</html>

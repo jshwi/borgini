@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>borgini &#8212; borgini 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/graphite.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">borgini 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">borgini</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for borgini</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">borgini</span>
+<span class="sd">=======</span>
+
+<span class="sd">A wrapper to quickly get you started backing up with borg</span>
+
+<span class="sd">An easy to use ini style and profile based format</span>
+
+<span class="sd">See README for examples or run ``borgini --help`` for usage</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">.src</span> <span class="kn">import</span> <span class="n">HOME</span><span class="p">,</span> <span class="n">BorgBackup</span><span class="p">,</span> <span class="n">Data</span><span class="p">,</span> <span class="n">PygmentPrint</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">funcs</span><span class="p">,</span> <span class="n">parser</span>
+
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;1.0.0&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">Parser</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">RawParser</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Inherit ``RawParser`` which inherits ``argparse.ArgumentParser``.</span>
+<span class="sd">    Catch any incompatible arguments. Instantiate and access the</span>
+<span class="sd">    ``Namespace`` object from this class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">editor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">editor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">editor_opts</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">arg_groups</span><span class="p">[</span><span class="s2">&quot;EDITOR&quot;</span><span class="p">]</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_message</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_exit_error</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_check_editor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># exit the process if the editor argument has been incorrectly</span>
+        <span class="c1"># supplied</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">editor</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">getcolor</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;EDITOR must be installed: `</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">editor</span><span class="si">}</span><span class="s2">&#39; cannot be found&quot;</span><span class="p">,</span>
+                <span class="n">code</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">editor_opts</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">getcolor</span><span class="p">(</span>
+                <span class="s2">&quot;EDITOR must be followed by a file to edit&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="mi">1</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_get_message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">editor</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_editor</span><span class="p">()</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_exit_error</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_help</span><span class="p">()</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../borgini.html#borgini.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Module entry point called by ``__main__``.&quot;&quot;&quot;</span>
+    <span class="n">_parser</span> <span class="o">=</span> <span class="n">Parser</span><span class="p">()</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">_parser</span><span class="o">.</span><span class="n">args</span>
+    <span class="n">profile</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">select</span>
+    <span class="n">dry</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">dry</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">Data</span><span class="p">(</span><span class="n">funcs</span><span class="o">.</span><span class="n">CONFIGDIR</span><span class="p">,</span> <span class="n">profile</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">make_appdir</span><span class="p">()</span>
+    <span class="n">funcs</span><span class="o">.</span><span class="n">initialize_datafiles</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">pygments</span> <span class="o">=</span> <span class="n">PygmentPrint</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s2">&quot;styles&quot;</span><span class="p">])</span>
+    <span class="n">catch</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">Catch</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+    <span class="n">_configpath</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;config.ini&quot;</span><span class="p">)</span>
+    <span class="n">_config</span> <span class="o">=</span> <span class="n">funcs</span><span class="o">.</span><span class="n">initialize_config</span><span class="p">(</span><span class="n">_configpath</span><span class="p">,</span> <span class="n">catch</span><span class="p">)</span>
+    <span class="n">funcs</span><span class="o">.</span><span class="n">remove_profile</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">remove</span><span class="p">)</span>
+    <span class="n">funcs</span><span class="o">.</span><span class="n">list_profiles</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">list</span><span class="p">,</span> <span class="n">pygments</span><span class="p">)</span>
+    <span class="n">funcs</span><span class="o">.</span><span class="n">edit_file</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">editor</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">files</span><span class="p">,</span> <span class="n">pygments</span><span class="p">,</span> <span class="n">dry</span><span class="p">)</span>
+    <span class="n">funcs</span><span class="o">.</span><span class="n">set_passphrase</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">get_key</span><span class="p">(</span><span class="s2">&quot;ENVIRONMENT&quot;</span><span class="p">,</span> <span class="s2">&quot;keyfile&quot;</span><span class="p">),</span> <span class="n">catch</span><span class="p">)</span>
+    <span class="n">catch</span><span class="o">.</span><span class="n">check_repopath_config</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">get_key</span><span class="p">(</span><span class="s2">&quot;DEFAULT&quot;</span><span class="p">,</span> <span class="s2">&quot;repopath&quot;</span><span class="p">))</span>
+    <span class="n">fullpath</span> <span class="o">=</span> <span class="n">funcs</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span>
+        <span class="o">*</span><span class="n">_config</span><span class="o">.</span><span class="n">get_keytuple</span><span class="p">(</span>
+            <span class="n">SSH</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;remoteuser&quot;</span><span class="p">,</span> <span class="s2">&quot;remotehost&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">),</span>
+            <span class="n">DEFAULT</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;repopath&quot;</span><span class="p">,</span> <span class="s2">&quot;ssh&quot;</span><span class="p">),</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">borg</span> <span class="o">=</span> <span class="n">BorgBackup</span><span class="p">(</span>
+        <span class="n">fullpath</span><span class="p">,</span>
+        <span class="n">pygments</span><span class="p">,</span>
+        <span class="n">dry</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">_config</span><span class="o">.</span><span class="n">get_keytuple</span><span class="p">(</span><span class="n">DEFAULT</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;reponame&quot;</span><span class="p">,</span> <span class="s2">&quot;timestamp&quot;</span><span class="p">)),</span>
+    <span class="p">)</span>
+    <span class="n">backup</span> <span class="o">=</span> <span class="n">_config</span><span class="o">.</span><span class="n">return_all</span><span class="p">(</span><span class="s2">&quot;BACKUP&quot;</span><span class="p">)</span>
+    <span class="n">include</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get_include</span><span class="p">()</span>
+    <span class="n">exclude</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get_exclude</span><span class="p">()</span>
+    <span class="n">borg</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">backup</span><span class="p">,</span> <span class="n">exclude</span><span class="p">,</span> <span class="n">include</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">_config</span><span class="o">.</span><span class="n">get_key</span><span class="p">(</span><span class="s2">&quot;DEFAULT&quot;</span><span class="p">,</span> <span class="s2">&quot;prune&quot;</span><span class="p">):</span>
+        <span class="n">pruneargs</span> <span class="o">=</span> <span class="n">_config</span><span class="o">.</span><span class="n">return_all</span><span class="p">(</span><span class="s2">&quot;PRUNE&quot;</span><span class="p">)</span>
+        <span class="n">borg</span><span class="o">.</span><span class="n">prune</span><span class="p">(</span><span class="n">pruneargs</span><span class="p">)</span></div>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;HOME&quot;</span><span class="p">,</span> <span class="s2">&quot;PygmentPrint&quot;</span><span class="p">,</span> <span class="s2">&quot;Data&quot;</span><span class="p">,</span> <span class="s2">&quot;funcs&quot;</span><span class="p">,</span> <span class="s2">&quot;main&quot;</span><span class="p">]</span>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../borgini.html">borgini</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">README</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">borgini 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">borgini</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Stephen Whitlock.
+    </div>
+  </body>
+</html>
