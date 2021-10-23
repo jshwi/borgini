@@ -15,7 +15,7 @@ restview = "==2.9.2"
 twine = "==3.3.0"
 
 [packages]
-borgbackup = "==1.1.15"
+borgbackup = "==1.1.17"
 pygments = "==2.6.1"
 
 [requiresduplicate-code]
