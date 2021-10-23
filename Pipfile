@@ -12,7 +12,7 @@ prompt-toolkit = "==3.0.13"
 pyaud = "==3.2.7"
 pytest = "==6.2.1"
 restview = "==2.9.2"
-twine = "==3.3.0"
+twine = "==3.4.2"
 
 [packages]
 borgbackup = "==1.1.15"
