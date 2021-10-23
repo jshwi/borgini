@@ -14,7 +14,7 @@ BORG = shutil.which("borg") if shutil.which("borg") else "borg"
 
 
 class NoColorCapsys:
-    """Capsys but with a regex to remove ANSI escape codes
+    """Capsys but with a regex to remove ANSI escape codes.
 
     Class is preferable for this as we can instantiate the instance
     as a fixture that also contains the same attributes as capsys
@@ -32,7 +32,7 @@ class NoColorCapsys:
     @staticmethod
     def regex(out):
         """Replace ANSI color codes with empty strings i.e. remove all
-        escape codes
+        escape codes.
 
         Prefer to test colored output this way as colored strings can
         be tricky and the effort in testing their validity really isn't
@@ -47,7 +47,7 @@ class NoColorCapsys:
 
     def readouterr(self):
         """Call as capsys ``readouterr`` but regex the strings for
-        escape codes at the same time
+        escape codes at the same time.
 
         :return:    A tuple (just like the capsys) containing stdout in
                     the first index and stderr in the second
@@ -57,21 +57,18 @@ class NoColorCapsys:
 
     def stdout(self):
         """Call this to return the stdout without referencing the tuple
-        indices
-        """
+        indices."""
         return self.readouterr()[0]
 
     def stderr(self):
         """Call this to return the stderr without referencing the tuple
-        indices
-        """
+        indices."""
         return self.readouterr()[1]
 
 
 class BorgCommands:
     """Read the kwargs supplied into a mock of the command output
-    executed after parsing the config information
-    """
+    executed after parsing the config information."""
 
     def __init__(self, **kwargs):
         self.datetime = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
@@ -86,7 +83,7 @@ class BorgCommands:
     def get_sections(**kwargs):
         """Get all sections that belong to the
         ``configparser.ConfigParser`` object once the config file is
-        parsed
+        parsed.
 
         Allow for empty dictionary values as default values are in place
         for all output if a keyword arg is not supplied
@@ -167,8 +164,7 @@ class BorgCommands:
 
     def commands(self):
         """Return a string that should match up with the output from the
-        tests provided the tests are passing
-        """
+        tests provided the tests are passing."""
         reponame = self.default.get("reponame", HOST)
         fullpath = self._get_fullpath(reponame)
         backup_path = self._backup_path(fullpath, reponame)

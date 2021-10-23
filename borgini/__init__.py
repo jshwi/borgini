@@ -18,6 +18,7 @@ __version__ = "1.0.0"
 
 class Parser(parser.RawParser):
     """Inherit ``RawParser`` which inherits ``argparse.ArgumentParser``.
+
     Catch any incompatible arguments. Instantiate and access the
     ``Namespace`` object from this class.
     """
@@ -26,7 +27,7 @@ class Parser(parser.RawParser):
         super().__init__()
         self.editor = self.args.editor
         self.editor_opts = any(
-            [v for k, v in self.arg_groups["EDITOR"].__dict__.items()]
+            v for k, v in self.arg_groups["EDITOR"].__dict__.items()
         )
         self.message = self._get_message()
         self._exit_error()

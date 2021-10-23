@@ -14,7 +14,7 @@ import shutil
 import subprocess
 import sys
 
-from . import HOME, config, Data
+from . import HOME, Data, config
 
 
 def get_configdir():
@@ -67,7 +67,7 @@ def normalize_ntpath(path):
         p[:-1] if re.match("^[a-zA-Z]:", p) else p
         for p in [p.lower() for p in path.split("\\")]
     )
-    return normalized if path[0] == "/" else "/" + normalized
+    return normalized if path[0] == "/" else f"/{normalized}"
 
 
 def edit_files(edit, file, pygments, dry):
@@ -97,7 +97,7 @@ def read_file(filepath, pygments):
                         configured with user's style option.
     """
     ini = os.path.basename(filepath) == "config.ini"
-    with open(filepath) as file:
+    with open(filepath, encoding="utf-8") as file:
         lines = file.read()
 
     pygments.print(lines, ini=ini)
@@ -160,7 +160,7 @@ def set_passphrase(keyfile, catch):
     """
     if keyfile:
         if os.path.isfile(keyfile):
-            with open(keyfile) as file:
+            with open(keyfile, encoding="utf-8") as file:
                 passphrase = file.read().strip()
 
             os.environ["BORG_PASSPHRASE"] = passphrase
@@ -169,8 +169,8 @@ def set_passphrase(keyfile, catch):
 
 
 def initialize_config(configpath, catch):
-    """If a ``config.ini`` file does not exist create the file
-    and write the default values.
+    """If a ``config.ini`` file does not exist create the file and write
+    the default values.
 
     Otherwise, read ``config.ini`` for it's values.
     """

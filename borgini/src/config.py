@@ -63,20 +63,19 @@ class RawConfig:
 
     def write_values(self):
         """Write values in the ``configparser.ConfigParser`` object to
-        the ``config.ini`` file.
-        """
-        with open(self.configpath, "w") as configfile:
+        the ``config.ini`` file."""
+        with open(self.configpath, "w", encoding="utf-8") as configfile:
             self.parser.write(configfile)
 
     def write_new_config(self):
         """Load the default values into the
-        ``configparser.ConfigParser`` object and Write them to file
-        """
+        ``configparser.ConfigParser`` object and Write them to file."""
         self._load_default_values()
         self.write_values()
 
     def read(self):
         """Read the ``config.ini`` file and avoid non-critical errors.
+
         Once the ``config.ini`` is read and loaded into the buffer write
         it back to the file as this class will filter out non-parsable
         configurations back to their default. If there is a key in the
@@ -191,9 +190,9 @@ class Config(Proxy):
     def get_key(self, section, key):
         """Get a key from the dictionary object in ``self``. If the
         value is not found such as the ``BORG_PASSPHRASE`` environment
-        variable (as the string value ``"None"`` would have been
-        omitted by ``src.config.Proxy``) return ``None`` in its place
-        to avoid an expected error and carry on omitting the key.
+        variable (as the string value ``"None"`` would have been omitted
+        by ``src.config.Proxy``) return ``None`` in its place to avoid
+        an expected error and carry on omitting the key.
 
         :param section: The primary key and the section from
                         ``configparser.ConfigParser``.
@@ -207,13 +206,16 @@ class Config(Proxy):
             return None
 
     def get_keytuple(self, **kwargs):
-        """Return multiple values at once from ``self.dict[section]``
-        as a tuple that can be unpacked by the keys passed to the
-        method.
+        """Return multiple values at once from ``self.dict[section]`` as
+        a tuple that can be unpacked by the keys passed to the method.
 
         :return: A tuple of multiple any one or more values.
         """
-        return tuple([self.get_key(s, k) for s in kwargs for k in kwargs[s]])
+        return tuple(
+            self.get_key(s, k)
+            for s in kwargs  # pylint: disable=consider-using-dict-items
+            for k in kwargs[s]
+        )
 
     @staticmethod
     def _get_flags(obj):
@@ -225,7 +227,8 @@ class Config(Proxy):
 
     def return_all(self, section):
         """Get all args belonging to a section. The (kw)args that are
-        boolean flags only need to exist, as their existence in the
+        boolean flags only need to exist, as their existence in the.
+
         script is the switch - so these are not returned as kwargs but
         rather args. Treat values that aren't boolean differently as the
         key and the value need to be included.

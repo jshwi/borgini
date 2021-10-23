@@ -16,13 +16,14 @@ import freezegun
 import pytest
 
 import borgini
+
 from . import BorgCommands, expected
 
 
 @pytest.mark.usefixtures("tmpconfigdir")
 def test_initialize_files(initialize_files, initialize_files_expected):
     """Test that ``config.ini``, ``include``, ``exclude`` and ``styles``
-    are all initialized and that the correct message is displayed
+    are all initialized and that the correct message is displayed.
 
     :param initialize_files:            Initialize all the configuration
                                         files in a temporary directory
@@ -35,9 +36,9 @@ def test_initialize_files(initialize_files, initialize_files_expected):
 
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
 def test_empty_repo_setting(main, nocolorcapsys):
-    """Test that the correct stderr is displayed when the
-    ``config.ini`` file has not been configured to contain a path
-    to the backup repository. Assert non-zero exit-code.
+    """Test that the correct stderr is displayed when the ``config.ini``
+    file has not been configured to contain a path to the backup
+    repository. Assert non-zero exit-code.
 
     :param main:            Fixture for mocking ``borgini.main``.
     :param nocolorcapsys:   Capture stderr and strip it of any ANSI
@@ -54,7 +55,7 @@ def test_empty_repo_setting(main, nocolorcapsys):
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
 def test_borg_commands(main, update_config, nocolorcapsys, tmpconfigdir):
     """Test that values written to the config file yield the correct
-    result when running borgbackup commands
+    result when running borgbackup commands.
 
     :param main:            Fixture for mocking ``borgini.main``.
     :param update_config:   Update the test config with parameters.
@@ -83,7 +84,7 @@ def test_borg_commands(main, update_config, nocolorcapsys, tmpconfigdir):
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
 def test_show_config(main, nocolorcapsys):
     """Test the correct stdout is displayed when running the
-    ``--config`` flag without an editor to show the config
+    ``--config`` flag without an editor to show the config.
 
     :param main:            Fixture for mocking ``borgini.main``.
     :param nocolorcapsys:   Capture stdout and strip it of any ANSI
@@ -98,7 +99,7 @@ def test_show_config(main, nocolorcapsys):
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
 def test_show_include(main, nocolorcapsys):
     """Test the correct stdout is displayed when running the
-    ``--include`` flag without an editor to show the include file
+    ``--include`` flag without an editor to show the include file.
 
     :param main:            Fixture for mocking ``borgini.main``.
     :param nocolorcapsys:   Capture stdout and strip it of any ANSI
@@ -113,7 +114,7 @@ def test_show_include(main, nocolorcapsys):
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
 def test_show_exclude(main, nocolorcapsys):
     """Test the correct stdout is displayed when running the
-    ``--exclude`` flag without an editor to show the exclude file
+    ``--exclude`` flag without an editor to show the exclude file.
 
     :param main:            Fixture for mocking ``borgini.main``.
     :param nocolorcapsys:   Capture stdout and strip it of any ANSI
@@ -129,9 +130,8 @@ def test_show_exclude(main, nocolorcapsys):
 def test_invalid_keyfile(  # pylint: disable=too-many-arguments
     main, invalid_keyfile, update_config, nocolorcapsys, tmpconfigdir
 ):
-    """Test the correct warning message is displayed when the
-    process is attempting to go on without a correct value value for
-    a keyfile
+    """Test the correct warning message is displayed when the process is
+    attempting to go on without a correct value value for a keyfile.
 
     :param main:            Fixture for mocking ``borgini.main``.
     :param update_config:   Update the test config with parameters.
@@ -183,8 +183,8 @@ def test_invalid_path_arg(main, nocolorcapsys):
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
 def test_edit_invalid_path_arg(main, nocolorcapsys):
     """Test that the usage information is displayed when a file that
-    does not exist is entered and not the following when running
-    with an the editor positional argument:
+    does not exist is entered and not the following when running with an
+    the editor positional argument:
 
     - ``config``
     - ``include``
@@ -206,8 +206,8 @@ def test_edit_invalid_path_arg(main, nocolorcapsys):
 def test_edit_path_arg(
     mock_which, main, edit_path_arg, nocolorcapsys, tmpconfigdir
 ):
-    """Test the correct command is passed when attempting to edit
-    a file with the editor positional argument
+    """Test the correct command is passed when attempting to edit a file
+    with the editor positional argument.
 
     Run in dry mode for dumb terminal
 
@@ -235,8 +235,8 @@ def test_edit_path_arg(
 def test_read_keyfile(  # pylint: disable=too-many-arguments
     main, update_config, tmpdir, capsys, tmpconfigdir, keygen
 ):
-    """Test that the correct password is retrieved from a keyfile
-    when the keyfile path is supplied in the config file
+    """Test that the correct password is retrieved from a keyfile when
+    the keyfile path is supplied in the config file.
 
     :param main:            Fixture for mocking ``borgini.main``.
     :param update_config:   Update the test config with parameters.
@@ -251,7 +251,7 @@ def test_read_keyfile(  # pylint: disable=too-many-arguments
     """
     configpath = os.path.join(tmpconfigdir, "default", "config.ini")
     keyfile = os.path.join(tmpdir, "borgsecret")
-    with open(keyfile, "w") as file:
+    with open(keyfile, "w", encoding="utf-8") as file:
         file.write(keygen)
     update_config(
         configpath,
@@ -266,8 +266,8 @@ def test_read_keyfile(  # pylint: disable=too-many-arguments
 @freezegun.freeze_time("2021-02-07T16:12:58")
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
 def test_no_ssh(main, update_config, nocolorcapsys, tmpconfigdir):
-    """Test the path is properly adjusted to not include the full
-    ssh path when ``ssh`` is False
+    """Test the path is properly adjusted to not include the full ssh
+    path when ``ssh`` is False.
 
     :param main:            Fixture for mocking ``borgini.main``.
     :param update_config:   Update the test config with parameters.
@@ -324,7 +324,7 @@ def test_select_profile(
 def test_list_arg(
     main, list_arg, initialize_profile, nocolorcapsys, tmpconfigdir
 ):
-    """Test for the correct output when the ``--list`` flag is used
+    """Test for the correct output when the ``--list`` flag is used.
 
     :param main:                Fixture for mocking ``borgini.main``.
     :param list_arg:            Expected arg.
@@ -345,9 +345,8 @@ def test_list_arg(
 
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
 def test_remove_no_exist(main, remove, nocolorcapsys):
-    """Test that the correct warning is displayed when the
-    ``--remove`` option is passed with a profile name and that name
-    does not exist
+    """Test that the correct warning is displayed when the ``--remove``
+    option is passed with a profile name and that name does not exist.
 
     :param main:            Fixture for mocking ``borgini.main``.
     :param remove:          Run commandline arguments to remove a
@@ -364,9 +363,9 @@ def test_remove_no_exist(main, remove, nocolorcapsys):
 def test_remove_arg(
     main, remove, initialize_profile, nocolorcapsys, tmpconfigdir
 ):
-    """First create a profile and test the remote function with it
-    so that we can test that the ``--remove`` flag properly removes
-    profiles
+    """First create a profile and test the remote function with it so
+    that we can test that the ``--remove`` flag properly removes
+    profiles.
 
     :param main:                Fixture for mocking ``borgini.main``.
     :param initialize_profile:  Create a test profile.
@@ -404,7 +403,7 @@ def test_file_exists_error(
     borgini.Data(tmpconfigdir, "profile1").make_appdir()
     initialize_profile(main, tmpconfigdir, nocolorcapsys, "profile2")
     borgini.Data(tmpconfigdir, "profile2").make_appdir()
-    with open(os.path.join(tmpconfigdir, "profile3"), "w"):
+    with open(os.path.join(tmpconfigdir, "profile3"), "w", encoding="utf-8"):
         # touch file
         pass
     with pytest.raises(FileExistsError):
@@ -417,7 +416,7 @@ def test_file_exists_error(
 def test_random_opts(  # pylint: disable=too-many-arguments
     main, randopts, update_config, nocolorcapsys, tmpconfigdir, _
 ):
-    """Run this test function 10 times
+    """Run this test function 10 times.
 
     Random values will be generated and written to the config file
 
@@ -448,7 +447,7 @@ def test_random_opts(  # pylint: disable=too-many-arguments
 @mock.patch("shutil.which")
 def test_run_editor_without_arg(mock_which, main, nocolorcapsys):
     """Test for the correct error message is displayed when an editor is
-    called without a file to edit
+    called without a file to edit.
 
     :param main:            Fixture for mocking ``borgini.main``.
     :param mock_which:      ``shutil.which`` mock object
@@ -466,7 +465,7 @@ def test_run_editor_without_arg(mock_which, main, nocolorcapsys):
 @mock.patch("shutil.which")
 def test_run_uninstalled_editor(mock_which, main, nocolorcapsys):
     """Test for the correct error message is displayed when the entered
-    "editor" does not exist
+    "editor" does not exist.
 
     :param main:            Fixture for mocking ``borgini.main``.
     :param mock_which:      ``shutil.which`` mock object
@@ -483,9 +482,8 @@ def test_run_uninstalled_editor(mock_which, main, nocolorcapsys):
 
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
 def test_repair_config_key_err(main, update_config, tmpconfigdir, capsys):
-    """Test that a out of place section does not halt the process and
-    is subsequently corrected by the ``configparser.ConfigParser``
-    object
+    """Test that a out of place section does not halt the process and is
+    subsequently corrected by the ``configparser.ConfigParser`` object.
 
     Useful if there are any section updates in the code
 
@@ -519,7 +517,7 @@ def test_pass_on_not_a_directory_err(main, tmpconfigdir, capsys):
     directories without the exception to just ignore a file that doesn't
     need to be there (all items should be dirs in the `CONFIGDIR')
     `-l/--list' will try to make a path out of the file and raise a
-    NotADirectoryError
+    NotADirectoryError.
 
     Test that this process can continue will an out of place file
 
@@ -530,7 +528,7 @@ def test_pass_on_not_a_directory_err(main, tmpconfigdir, capsys):
     :param capsys:          Silence unnecessary stdout
     """
     out_of_place_file = os.path.join(tmpconfigdir, "out_of_place_file.txt")
-    with open(out_of_place_file, "w"):
+    with open(out_of_place_file, "w", encoding="utf-8"):
         # create an empty file
         pass
     with pytest.raises(SystemExit):
@@ -541,6 +539,7 @@ def test_pass_on_not_a_directory_err(main, tmpconfigdir, capsys):
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
 def test_chosen_style(tmpconfigdir):
     """Test that the first option written to the ``styles`` file -
+
     ``monokai`` - is collected
 
     :param tmpconfigdir:    Absolute path to directory containing
@@ -555,16 +554,16 @@ def test_chosen_style(tmpconfigdir):
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
 def test_default_style(tmpconfigdir):
     """Test that the ``default`` option written to the ``styles`` file -
-    is collected if all options are commented out
+    is collected if all options are commented out.
 
     :param tmpconfigdir:    Absolute path to directory containing
                             ``config.ini``, ``include``, ``exclude`` and
                             ``styles``files
     """
     styles = os.path.join(tmpconfigdir, "default", "styles")
-    with open(styles) as file:
+    with open(styles, encoding="utf-8") as file:
         content = [r for r in file.readlines() if "monokai" not in r]
-    with open(styles, "w") as file:
+    with open(styles, "w", encoding="utf-8") as file:
         for line in content:
             file.write(f"{line}\n")
     pygments = borgini.PygmentPrint(styles)
@@ -577,7 +576,7 @@ def test_run_call_main_process(
     mock_subproc_call, main, update_config, tmpconfigdir
 ):
     """Test that no errors occur when the main process is run with a
-    configured repo path
+    configured repo path.
 
     :param mock_subproc_call:   Mock ``subprocess.call`` object
     :param main:                Fixture for mocking ``borgini.main``.
@@ -599,7 +598,7 @@ def test_run_call_main_process(
 @mock.patch("subprocess.call")
 def test_run_call_editor(mock_which, mock_subproc_call, main):
     """Test that no errors occur when the user opts to configure a file
-    with their favourite editor
+    with their favourite editor.
 
     Mock ``vim`` for systems where ``vim`` isn't installed
 
