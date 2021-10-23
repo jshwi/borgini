@@ -15,7 +15,6 @@ omit = ["whitelist.py", "borgini/__main__.py"]
 
 [tool.pytest.ini_options]
 addopts = [
-    "--profile",
     "--durations=5",
      "-vv",
      "--color=yes",
