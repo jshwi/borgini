@@ -10,7 +10,7 @@ freezegun = "==1.1.0"
 ipython = "==7.19.0"
 prompt-toolkit = "==3.0.13"
 pyaud = "==3.2.7"
-pytest = "==6.2.1"
+pytest = "==6.2.5"
 restview = "==2.9.2"
 twine = "==3.4.2"
 
