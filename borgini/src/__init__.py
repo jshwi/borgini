@@ -62,7 +62,8 @@ class BorgBackup:
     def borg(self, *args):
         """Run ``borgbackup`` ``create`` to create a backup or ``prune``
         to prune an old backup according to the ``--keep-*`` settings.
-        If ``--dry`` has been passed through the commandline only
+        If ``--dry`` has been passed through the commandline only.
+
         display the command that would occur - this won't run a backup
         or prune.
 
@@ -123,8 +124,7 @@ class Data:
 
     def make_appdir(self):
         """Create the configuration directory for all the user's
-        settings.
-        """
+        settings."""
         if not os.path.isdir(self.dirname):
             os.makedirs(self.dirname)
 
@@ -132,8 +132,8 @@ class Data:
         return tuple(self.files[arg] for arg in args)
 
     def initialize_data_files(self, pathlists):
-        """If the ``include`` or ``exclude`` files do not exist
-        write the starter templates to file.
+        """If the ``include`` or ``exclude`` files do not exist write
+        the starter templates to file.
 
         :param pathlists:   Tuple containing two tuples of lines to
                             write to file.
@@ -142,13 +142,13 @@ class Data:
             self._get_paths("include", "exclude", "styles")
         ):
             if not os.path.isfile(datafile):
-                with open(datafile, "w") as file:
+                with open(datafile, "w", encoding="utf-8") as file:
                     for path in pathlists[count]:
                         file.write(f"{path}\n")
 
     @staticmethod
     def _read_datafile(path):
-        with open(path) as file:
+        with open(path, encoding="utf-8") as file:
             readfile = file.read().strip()
 
         return readfile.splitlines()
@@ -162,7 +162,7 @@ class Data:
         return [f"'{f.split('#')[0].strip()}'" for f in files if f[0] != "#"]
 
     def get_path(self, key):
-        """Get the path of the file by calling it's key
+        """Get the path of the file by calling it's key.
 
         :param key: Name of the basename file
         :return:    The file's absolute path
@@ -181,7 +181,7 @@ class Data:
 
     def get_include(self):
         """The tuple of directories and files to include from the
-        ``include`` file
+        ``include`` file.
 
         :return: Tuple of paths to include in backups for that profile
         """
@@ -190,10 +190,10 @@ class Data:
 
     @staticmethod
     def _format_exclude(pathlist):
-        return tuple([f"--exclude {e}" for e in pathlist])
+        return tuple(f"--exclude {e}" for e in pathlist)
 
     def get_exclude(self):
-        """Return the values obtained from the ``exclude`` file
+        """Return the values obtained from the ``exclude`` file.
 
         Unlike the ``include`` file this doesn't necessarily need to
         be populated
@@ -203,7 +203,6 @@ class Data:
 
         :return:    A lit of paths to exclude - this will override items
                     in ``include``
-
         """
         exclude_path = self.get_path("exclude")
         exclude_list = self._get_files(exclude_path)
@@ -223,10 +222,11 @@ class PygmentPrint:
         self.style = self.read_styles()
 
     def read_styles(self):
-        """Read the ``styles`` file into the buffer. Parse the
-        configuration that is uncommented and ignore the rest.
+        """Read the ``styles`` file into the buffer.
+
+        Parse the configuration that is uncommented and ignore the rest.
         """
-        with open(self.styles) as file:
+        with open(self.styles, encoding="utf-8") as file:
             contents = file.readlines()
 
         for content in contents:

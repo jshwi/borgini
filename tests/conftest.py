@@ -14,7 +14,8 @@ import sys
 import pytest
 
 import borgini
-from . import BorgCommands, NoColorCapsys, HOST
+
+from . import HOST, BorgCommands, NoColorCapsys
 
 
 @pytest.fixture(name="homedir", autouse=True)
@@ -46,7 +47,7 @@ def fixture_main(monkeypatch):
 
 @pytest.fixture(name="initialize_files")
 def fixture_initialize_files(main, tmpconfigdir, nocolorcapsys):
-    """Initialize the config files and return the stdout for testing
+    """Initialize the config files and return the stdout for testing.
 
     :param main:            Fixture for mocking ``borgini.main``.
     :param nocolorcapsys:   Capture stdout
@@ -63,7 +64,7 @@ def fixture_initialize_files(main, tmpconfigdir, nocolorcapsys):
 
 @pytest.fixture(name="keygen")
 def fixture_keygen():
-    """Generate a random password
+    """Generate a random password.
 
     :return: Random password with a length of 16 characters
     """
@@ -74,7 +75,7 @@ def fixture_keygen():
 @pytest.fixture(name="tmpconfigdir")
 def fixture_tmpconfigdir(tmpdir):
     """Make a config directory and return the value of that temporary
-    directory
+    directory.
 
     :param tmpdir:  The ``tmpdir`` fixture with ``pytest``
     :return:        Path to the random directory
@@ -87,19 +88,19 @@ def fixture_tmpconfigdir(tmpdir):
 
 @pytest.fixture(name="nocolorcapsys")
 def fixture_nocolorcapsys(capsys):
-    """Instantiate capsys with the regex method"""
+    """Instantiate capsys with the regex method."""
     return NoColorCapsys(capsys)
 
 
 @pytest.fixture(name="update_config")
 def fixture_update_config():
-    """Update the config file with kwargs"""
+    """Update the config file with kwargs."""
 
     def _update_config(path, **kwargs):
         config = configparser.ConfigParser()
         config.read(path)
         config.read_dict(kwargs)
-        with open(path, "w") as file:
+        with open(path, "w", encoding="utf-8") as file:
             config.write(file)
 
     return _update_config
@@ -108,7 +109,7 @@ def fixture_update_config():
 @pytest.fixture(name="initialize_profile")
 def fixture_initialize_profile():
     """Initialize a new profile with a variable name passed to the
-    function
+    function.
 
     Once the profile is created return the captured stdout in the case
     it needs to be used a by a test
@@ -126,9 +127,8 @@ def fixture_initialize_profile():
 
 @pytest.fixture(name="remove")
 def fixture_remove():
-    """Test the correct profile is removed when the ``--remove``
-    option is passed.
-    """
+    """Test the correct profile is removed when the ``--remove`` option
+    is passed."""
 
     def _remove(main, nocolorcapsys):
         with pytest.raises(SystemExit):
@@ -142,8 +142,7 @@ def fixture_remove():
 @pytest.fixture(name="randopts")
 def fixture_randopts():
     """Generate an assortment of random options within the allowed
-    values for the borgbackup arguments
-    """
+    values for the borgbackup arguments."""
 
     def _randopts():
         filterkwargs = [
@@ -215,8 +214,7 @@ def fixture_randopts():
 @pytest.fixture(name="invalid_keyfile")
 def fixture_invalid_keyfile():
     """Output that should match up with the actual stdout when a keyfile
-    argument does not lead to an existing file
-    """
+    argument does not lead to an existing file."""
 
     def _invalid_keyfile(**kwargs):
         announce = (
@@ -236,7 +234,7 @@ def fixture_invalid_keyfile():
 
 @pytest.fixture(name="list_arg")
 def fixture_list_arg():
-    """Test for the correct stdout
+    """Test for the correct stdout.
 
     Output in the tests should match what this returns
     """
@@ -258,8 +256,7 @@ def fixture_list_arg():
 @pytest.fixture(name="initialize_files_expected")
 def fixture_initialize_files_expected():
     """Output that should match up with the actual stdout when
-    initializing a new profile
-    """
+    initializing a new profile."""
 
     def _initialize_files_expected(profile):
         return (
@@ -279,9 +276,8 @@ def fixture_initialize_files_expected():
 
 @pytest.fixture(name="edit_path_arg")
 def fixture_edit_path_arg():
-    """Representation of the stdout that should match with the actual stdout
-    when running with an editor to edit a file
-    """
+    """Representation of the stdout that should match with the actual
+    stdout when running with an editor to edit a file."""
 
     def _edit_path_arg(path):
         path = borgini.funcs.normalize_ntpath(path)
