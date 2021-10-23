@@ -48,7 +48,7 @@ pipfile-requirements==0.3.0
 pkginfo==1.7.1
 platformdirs==2.4.0
 pluggy==0.13.1
-prompt-toolkit==3.0.13
+prompt-toolkit==3.0.21
 ptyprocess==0.7.0
 py==1.10.0
 pyaud==3.2.7
