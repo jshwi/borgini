@@ -4,7 +4,7 @@ tests.expected
 
 Expected stdout and stderr for tests
 """
-from . import USER, HOST
+from . import HOST, USER
 
 EMPTY_REPO_SETTING = (
     "Path to repo not configured\n"
