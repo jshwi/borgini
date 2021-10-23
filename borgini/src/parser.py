@@ -21,8 +21,9 @@ def getcolor(string, code):
 
 class RawParser(argparse.ArgumentParser):
     """Inherit ``argparse.ArgumentParser`` as add all args and options
-    to be parsed from the commandline. Format a separate ``Namespace``
-    object to get arguments by group.
+    to be parsed from the commandline.
+
+    Format a separate ``Namespace`` object to get arguments by group.
     """
 
     def __init__(self):
@@ -146,7 +147,9 @@ class Catch:
 
     def announce_first_run(self):
         """Announce that a new default config file has been initialized
-        on a first run. Not an error. Exit with zero exit status.
+        on a first run.
+
+        Not an error. Exit with zero exit status.
         """
         print(
             f"{getcolor('First run detected for profile', 3)}: "
@@ -166,9 +169,10 @@ class Catch:
         """If the keyfile section of the config file has been populated
         but the keyfile cannot be found let the user know as this would
         make it clearer as to why the backup might fail eventually if
-        ``borgbackup`` prompts for a passphrase. If no keyfile is
-        necessary then the field should be ``None`` which this message
-        would also notify the user about.
+        ``borgbackup`` prompts for a passphrase.
+
+        If no keyfile is necessary then the field should be ``None``
+        which this message would also notify the user about.
         """
         print(
             f'{getcolor("BORG_PASSPHRASE keyfile cannot be found", 3)}\n'
