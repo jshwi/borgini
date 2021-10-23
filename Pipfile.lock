@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "f901149863f9f144549f9e6c17dfcd5cd1bf5f0eb68a66b12bdf57c527fb59e6"
+            "sha256": "bdb8f0016b870a2bdbd0bbb6a15033575cc13fe537e0bf27a0ddc5b930accdf4"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -16,10 +16,18 @@
     "default": {
         "borgbackup": {
             "hashes": [
-                "sha256:49cb9eed98b8e32ae3b97beaedf94cdff46f796445043f1923fd0fce7ed3c2bc"
+                "sha256:7ab924fc017b24929bedceba0dcce16d56f9868bf9b5050d2aae2eb080671674"
             ],
             "index": "pypi",
-            "version": "==1.1.15"
+            "version": "==1.1.17"
+        },
+        "packaging": {
+            "hashes": [
+                "sha256:7dc96269f53a4ccec5c0670940a4281106dd0bb343f47b7471f779df49c2fbe7",
+                "sha256:c86254f9220d55e31cc94d69bade760f0847da8000def4dfe1c6b872fd14ff14"
+            ],
+            "markers": "python_version >= '3.6'",
+            "version": "==21.0"
         },
         "pygments": {
             "hashes": [
@@ -28,6 +36,14 @@
             ],
             "index": "pypi",
             "version": "==2.6.1"
+        },
+        "pyparsing": {
+            "hashes": [
+                "sha256:c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1",
+                "sha256:ef9d7589ef3c200abe66653d3f1ab1033c3c419ae9b9bdb1240a85b024efc88b"
+            ],
+            "markers": "python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2, 3.3'",
+            "version": "==2.4.7"
         }
     },
     "develop": {
@@ -93,10 +109,10 @@
         },
         "borgbackup": {
             "hashes": [
-                "sha256:49cb9eed98b8e32ae3b97beaedf94cdff46f796445043f1923fd0fce7ed3c2bc"
+                "sha256:7ab924fc017b24929bedceba0dcce16d56f9868bf9b5050d2aae2eb080671674"
             ],
             "index": "pypi",
-            "version": "==1.1.15"
+            "version": "==1.1.17"
         },
         "borgini": {
             "editable": true,
@@ -815,6 +831,10 @@
                 "sha256:a86d6e1f5b1dc238b218b012df0aa79409667bb209e58da56d0b94704e712a97"
             ],
             "version": "==1.5.0"
+        },
+        "sanitized-package": {
+            "editable": true,
+            "path": "."
         },
         "secretstorage": {
             "hashes": [
