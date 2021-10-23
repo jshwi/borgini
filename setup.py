@@ -33,7 +33,7 @@ setuptools.setup(
     packages=setuptools.find_packages(exclude=["tests"]),
     include_package_data=True,
     zip_safe=False,
-    install_requires=["borgbackup==1.1.15", "pygments==2.6.1"],
+    install_requires=["borgbackup==1.1.15", "pygments>=2.0.0, <=3.0.0"],
     entry_points={"console_scripts": ["borgini=borgini:main"]},
     python_requires=">=3.8",
 )
