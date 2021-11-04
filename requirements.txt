@@ -52,7 +52,7 @@ pluggy==1.0.0
 prompt-toolkit==3.0.21
 ptyprocess==0.7.0
 py==1.10.0
-pyaud==3.2.7
+pyaud==3.2.8
 pycparser==2.20
 pygments==2.10.0
 pylint==2.11.1
