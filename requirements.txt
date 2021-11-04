@@ -27,7 +27,7 @@ idna==3.3
 imagesize==1.2.0
 importlib-metadata==4.8.1
 iniconfig==1.1.1
-ipython==7.28.0
+ipython==7.29.0
 isort==5.10.0
 jedi==0.18.0
 jeepney==0.7.1
