@@ -49,4 +49,4 @@ jobs:
 
       - name: Audit
         run: |
-          poetry run pyaud audit --deploy
+          poetry run pyaud audit --deploy --rcfile .github/pyaud.toml
