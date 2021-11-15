@@ -2,7 +2,7 @@
 alabaster==0.7.12
 appdirs==1.4.4
 astor==0.8.1
-astroid==2.8.4
+astroid==2.8.5
 attrs==21.2.0
 babel==2.9.1
 backcall==0.2.0
@@ -52,7 +52,7 @@ pluggy==1.0.0
 prompt-toolkit==3.0.22
 ptyprocess==0.7.0
 py==1.11.0
-pyaud==3.2.9
+pyaud==3.2.10
 pycparser==2.21
 pygments==2.10.0
 pylint==2.11.1
@@ -60,7 +60,7 @@ pyparsing==2.4.7
 pytest-cov==3.0.0
 pytest==6.2.5
 python-dateutil==2.8.2
-python-dotenv==0.19.1
+python-dotenv==0.19.2
 pytz==2021.3
 readme-renderer==30.0
 readmetester==1.0.1
@@ -86,7 +86,7 @@ tomli==1.2.2
 tqdm==4.62.3
 traitlets==5.1.1
 twine==3.6.0
-typing-extensions==3.10.0.2
+typing-extensions==4.0.0
 untokenize==0.1.1
 urllib3==1.26.7
 vulture==2.3
