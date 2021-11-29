@@ -11,7 +11,7 @@ ipython = "==7.29.0"
 prompt-toolkit = "==3.0.22"
 pyaud = "==3.2.10"
 pytest = "==6.2.5"
-restview = "==2.9.2"
+restview = "==2.9.3"
 twine = "==3.6.0"
 
 [packages]
