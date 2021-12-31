@@ -16,7 +16,7 @@ twine = "==3.7.1"
 
 [packages]
 borgbackup = "==1.1.17"
-pygments = "==2.10.0"
+pygments = "==2.11.1"
 
 [requiresduplicate-code]
 python_version = "3.8"
