@@ -9,7 +9,7 @@ on:
 
 jobs:
   ci:
-    name: ${{ matrix.os }}-python${{ matrix.python-version }}
+    name: ${{ matrix.os }}-python${{ matrix.python-version }}-node@${{ matrix.node-version }}
     runs-on: ${{ matrix.os }}
     env:
       PYAUD_GH_NAME: jshwi
@@ -21,6 +21,7 @@ jobs:
     strategy:
       matrix:
         python-version: [3.8]
+        node-version: [16.x.x]
         os: [ubuntu-latest]
 
     steps:
@@ -43,10 +44,21 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: poetry
 
+      - name: Setup Node
+        id: setup-node
+        uses: actions/setup-node@v3.1.1
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
       - name: Install Python Packages
         id: install-python-packages
         run: poetry install
 
+      - name: Install Node Packages
+        id: install-node-packages
+        run: npm install
+
       - name: Audit
-        run: |
-          poetry run pyaud audit --deploy --rcfile .github/pyaud.toml
+        id: audit
+        run: npm run audit
