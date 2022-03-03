@@ -37,7 +37,7 @@ pyaud = "^3.8.0"
 pytest = "^6.2.5"
 restview = "^3.0.0"
 toml-sort = "^0.19.0"
-freezegun = "^1.1.0"
+freezegun = "^1.2.0"
 
 [tool.poetry.scripts]
 borgini = "borgini:main"
