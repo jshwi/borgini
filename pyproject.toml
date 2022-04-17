@@ -1,9 +1,8 @@
 [build-system]
-requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0"]
 
 [tool.black]
-line-length = 79
 exclude = '''
 /(
   | \.git
@@ -13,31 +12,32 @@ exclude = '''
   | dist
 )/
 '''
+line-length = 79
 
 [tool.coverage.run]
 omit = ["whitelist.py", "borgini/__main__.py"]
 
 [tool.poetry]
-name = "borgini"
-version = "1.0.0"
-description = "ini config for borg backup"
 authors = ["jshwi <stephen@jshwisolutions.com>"]
+description = "ini config for borg backup"
 license = "MIT"
+name = "borgini"
 readme = "README.rst"
+version = "1.0.0"
 
 [tool.poetry.dependencies]
-python = "^3.8"
 Pygments = "^2.8.1"
 borgbackup = "^1.1.17"
+python = "^3.8"
 
 [tool.poetry.dev-dependencies]
 bump2version = "^1.0.1"
+freezegun = "^1.2.1"
 ipython = "^8.2.0"
 pyaud = "^3.10.0"
 pytest = "^7.1.1"
 restview = "^3.0.0"
 toml-sort = "^0.20.0"
-freezegun = "^1.2.1"
 
 [tool.poetry.scripts]
 borgini = "borgini:main"
@@ -50,5 +50,5 @@ addopts = [
      "--cov-report",
      "term-missing"
 ]
-norecursedirs = ["docs", "*.egg-info", ".git", ".mypy_cache", ".idea", "prof"]
 filterwarnings = "ignore::DeprecationWarning"
+norecursedirs = ["docs", "*.egg-info", ".git", ".mypy_cache", ".idea", "prof"]
