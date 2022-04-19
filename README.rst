@@ -3,6 +3,9 @@ Borgini
 .. image:: https://github.com/jshwi/borgini/workflows/build/badge.svg
     :target: https://github.com/jshwi/borgini/workflows/build/badge.svg
     :alt: build
+.. image:: https://readthedocs.org/projects/borgini/badge/?version=latest
+    :target: https://borgini.readthedocs.io/en/latest/?badge=latest
+    :alt: readthedocs.org
 .. image:: https://img.shields.io/badge/python-3.8-blue.svg
     :target: https://www.python.org/downloads/release/python-380
     :alt: python3.8
