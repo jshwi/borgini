@@ -7,6 +7,24 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "apeye"
+version = "1.2.0"
+description = "Handy tools for working with URLs and APIs."
+category = "dev"
+optional = false
+python-versions = ">=3.6.1"
+
+[package.dependencies]
+domdf-python-tools = ">=2.6.0"
+idna = ">=2.5"
+platformdirs = ">=2.3.0"
+requests = ">=2.24.0"
+
+[package.extras]
+all = ["cachecontrol[filecache] (>=0.12.6)", "lockfile (>=0.12.2)"]
+limiter = ["cachecontrol[filecache] (>=0.12.6)", "lockfile (>=0.12.2)"]
+
+[[package]]
 name = "appdirs"
 version = "1.4.4"
 description = "A small Python module for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
@@ -228,6 +246,19 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
+name = "dist-meta"
+version = "0.3.4"
+description = "Parse and create Python distribution metadata."
+category = "dev"
+optional = false
+python-versions = ">=3.6.1"
+
+[package.dependencies]
+domdf-python-tools = ">=3.1.0"
+handy-archives = ">=0.1.0"
+packaging = ">=20.9"
+
+[[package]]
 name = "docformatter"
 version = "1.4"
 description = "Formats docstrings to follow PEP 257."
@@ -245,6 +276,35 @@ description = "Docutils -- Python Documentation Utilities"
 category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+
+[[package]]
+name = "dom-toml"
+version = "0.5.1.post1"
+description = "Dom's tools for Tom's Obvious, Minimal Language."
+category = "dev"
+optional = false
+python-versions = ">=3.6.1"
+
+[package.dependencies]
+domdf-python-tools = ">=2.8.0"
+toml = ">=0.10.2"
+
+[[package]]
+name = "domdf-python-tools"
+version = "3.3.0"
+description = "Helpful functions for Python 🐍 🛠️"
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+importlib-metadata = {version = ">=3.6.0", markers = "python_version < \"3.9\""}
+natsort = ">=7.0.1"
+typing-extensions = ">=3.7.4.1"
+
+[package.extras]
+all = ["pytz (>=2019.1)"]
+dates = ["pytz (>=2019.1)"]
 
 [[package]]
 name = "environs"
@@ -307,6 +367,21 @@ python-versions = ">=3.8,<4.0"
 spall = ">=0.1.0,<0.2.0"
 
 [[package]]
+name = "handy-archives"
+version = "0.1.2"
+description = "Some handy archive helpers for Python."
+category = "dev"
+optional = false
+python-versions = ">=3.6.1"
+
+[package.dependencies]
+domdf-python-tools = ">=3.1.0"
+
+[package.extras]
+all = ["coincidence (>=0.2.0)", "pytest (>=6.0.0)"]
+testing = ["coincidence (>=0.2.0)", "pytest (>=6.0.0)"]
+
+[[package]]
 name = "idna"
 version = "3.3"
 description = "Internationalized Domain Names in Applications (IDNA)"
@@ -321,6 +396,22 @@ description = "Getting image size from png/jpeg/jpeg2000/gif file"
 category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+
+[[package]]
+name = "importlib-metadata"
+version = "4.11.3"
+description = "Read metadata from Python packages"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+zipp = ">=0.5"
+
+[package.extras]
+docs = ["sphinx", "jaraco.packaging (>=9)", "rst.linker (>=1.9)"]
+perf = ["ipython"]
+testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-cov", "pytest-enabler (>=1.0.1)", "packaging", "pyfakefs", "flufl.flake8", "pytest-perf (>=0.9.2)", "pytest-black (>=0.3.7)", "pytest-mypy (>=0.9.1)", "importlib-resources (>=1.3)"]
 
 [[package]]
 name = "iniconfig"
@@ -514,6 +605,18 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "natsort"
+version = "8.1.0"
+description = "Simple yet flexible natural sorting in Python."
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+fast = ["fastnumbers (>=2.0.0)"]
+icu = ["PyICU (>=1.0.0)"]
+
+[[package]]
 name = "object-colors"
 version = "2.0.1"
 description = "Adding colours to Python simplified into a single class"
@@ -703,11 +806,11 @@ vulture = ">=2.3,<3.0"
 
 [[package]]
 name = "pygments"
-version = "2.8.1"
+version = "2.12.0"
 description = "Pygments is a syntax highlighting package written in Python."
 category = "main"
 optional = false
-python-versions = ">=3.5"
+python-versions = ">=3.6"
 
 [[package]]
 name = "pylint"
@@ -736,6 +839,30 @@ python-versions = ">=3.6"
 
 [package.extras]
 diagrams = ["jinja2", "railroad-diagrams"]
+
+[[package]]
+name = "pyproject-parser"
+version = "0.4.3"
+description = "Parser for 'pyproject.toml'"
+category = "dev"
+optional = false
+python-versions = ">=3.6.1"
+
+[package.dependencies]
+apeye = ">=1.0.0"
+attrs = ">=20.3.0"
+dom-toml = ">=0.4.0"
+domdf-python-tools = ">=2.8.0"
+natsort = ">=7.1.1"
+packaging = ">=20.9"
+shippinglabel = ">=1.0.0"
+toml = ">=0.10.2"
+typing-extensions = ">=3.7.4.3"
+
+[package.extras]
+all = ["click (>=7.1.2)", "consolekit (>=1.2.0)", "docutils (==0.16)", "readme-renderer[md] (>=27.0)"]
+cli = ["click (>=7.1.2)", "consolekit (>=1.2.0)"]
+readme = ["docutils (==0.16)", "readme-renderer[md] (>=27.0)"]
 
 [[package]]
 name = "pytest"
@@ -821,15 +948,17 @@ md = ["cmarkgfm (>=0.5.0,<0.7.0)"]
 
 [[package]]
 name = "readmetester"
-version = "1.0.1"
+version = "2.3.0"
 description = "Parse, test, and assert RST code-blocks"
 category = "dev"
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.8,<4.0"
 
 [package.dependencies]
-object-colors = ">=2.0.0"
-pygments = "2.8.1"
+object-colors = ">=2.0.0,<3.0.0"
+Pygments = ">=2.8.1,<3.0.0"
+pyproject-parser = ">=0.4.3,<0.5.0"
+restructuredtext-lint = ">=1.4.0,<2.0.0"
 
 [[package]]
 name = "requests"
@@ -850,6 +979,17 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
 use_chardet_on_py3 = ["chardet (>=3.0.2,<5)"]
 
 [[package]]
+name = "restructuredtext-lint"
+version = "1.4.0"
+description = "reStructuredText linter"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+docutils = ">=0.11,<1.0"
+
+[[package]]
 name = "restview"
 version = "3.0.0"
 description = "ReStructuredText viewer"
@@ -861,6 +1001,23 @@ python-versions = "*"
 docutils = "*"
 pygments = "*"
 readme-renderer = "*"
+
+[[package]]
+name = "shippinglabel"
+version = "1.3.0"
+description = "Utilities for handling packages."
+category = "dev"
+optional = false
+python-versions = ">=3.6.1"
+
+[package.dependencies]
+apeye = ">=1.0.0"
+dist-meta = ">=0.1.2"
+dom-toml = ">=0.2.2"
+domdf-python-tools = ">=3.1.0"
+packaging = ">=20.9"
+platformdirs = ">=2.3.0"
+typing-extensions = ">=3.7.4.3"
 
 [[package]]
 name = "six"
@@ -1133,6 +1290,18 @@ category = "dev"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
 
+[[package]]
+name = "zipp"
+version = "3.8.0"
+description = "Backport of pathlib-compatible object wrapper for zip files"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[package.extras]
+docs = ["sphinx", "jaraco.packaging (>=9)", "rst.linker (>=1.9)"]
+testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-cov", "pytest-enabler (>=1.0.1)", "jaraco.itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy (>=0.9.1)"]
+
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
@@ -1142,6 +1311,10 @@ content-hash = "faaf92fc1da9daf45087e7d78fd92722088630a89e069f3e1e057774b88efb48
 alabaster = [
     {file = "alabaster-0.7.12-py2.py3-none-any.whl", hash = "sha256:446438bdcca0e05bd45ea2de1668c1d9b032e1a9154c2c259092d77031ddd359"},
     {file = "alabaster-0.7.12.tar.gz", hash = "sha256:a661d72d58e6ea8a57f7a86e37d86716863ee5e92788398526d58b26a4e4dc02"},
+]
+apeye = [
+    {file = "apeye-1.2.0-py3-none-any.whl", hash = "sha256:d6b08c96457e4e0457088c247417fc336ebf83ab88645c508562aaeaf3077954"},
+    {file = "apeye-1.2.0.tar.gz", hash = "sha256:0bb0f5b037730f149d3ab3697bc30ccccd60407cf16218d8ffa8f78462239e1e"},
 ]
 appdirs = [
     {file = "appdirs-1.4.4-py2.py3-none-any.whl", hash = "sha256:a841dacd6b99318a741b166adb07e19ee71a274450e68237b4650ca1055ab128"},
@@ -1289,12 +1462,24 @@ decorator = [
     {file = "decorator-5.1.1-py3-none-any.whl", hash = "sha256:b8c3f85900b9dc423225913c5aace94729fe1fa9763b38939a95226f02d37186"},
     {file = "decorator-5.1.1.tar.gz", hash = "sha256:637996211036b6385ef91435e4fae22989472f9d571faba8927ba8253acbc330"},
 ]
+dist-meta = [
+    {file = "dist-meta-0.3.4.tar.gz", hash = "sha256:01806bd9bc189c305e81cd5d039eb543d186163f5d8c87a4890b2aec81b600f4"},
+    {file = "dist_meta-0.3.4-py3-none-any.whl", hash = "sha256:29ec99bd4b4326b226ddd59e0262cb6b4cc2f6f560334bcaf3e4131bb3dc1c3b"},
+]
 docformatter = [
     {file = "docformatter-1.4.tar.gz", hash = "sha256:064e6d81f04ac96bc0d176cbaae953a0332482b22d3ad70d47c8a7f2732eef6f"},
 ]
 docutils = [
     {file = "docutils-0.17.1-py2.py3-none-any.whl", hash = "sha256:cf316c8370a737a022b72b56874f6602acf974a37a9fba42ec2876387549fc61"},
     {file = "docutils-0.17.1.tar.gz", hash = "sha256:686577d2e4c32380bb50cbb22f575ed742d58168cee37e99117a854bcd88f125"},
+]
+dom-toml = [
+    {file = "dom_toml-0.5.1.post1-py3-none-any.whl", hash = "sha256:492293ded75d864365ac15f10d3796c1b3b2e3bb26e949e19f16781089f8a75f"},
+    {file = "dom_toml-0.5.1.post1.tar.gz", hash = "sha256:5fe4c5d8925528d509be41b878aeb8c24f2d3cc2e85c37d3d451542965138f3b"},
+]
+domdf-python-tools = [
+    {file = "domdf_python_tools-3.3.0-py3-none-any.whl", hash = "sha256:692a33cfc4bc4270a30f18b95beb8f65bf56935d122a4bdb0af7f7760452d41c"},
+    {file = "domdf_python_tools-3.3.0.tar.gz", hash = "sha256:7c588cdfa3e8bfd9617efbb4fa42652b7010c0f158c81844c862fbda5d86d9cc"},
 ]
 environs = [
     {file = "environs-9.4.0-py2.py3-none-any.whl", hash = "sha256:b5a197f70c590e8ad2d60d145ea2a2e90d4b1b05cdd04f8e18132d2760123971"},
@@ -1316,6 +1501,10 @@ gitspy = [
     {file = "gitspy-0.1.1-py3-none-any.whl", hash = "sha256:7f506b18667a1655b03978bf354301d918a0d91a6d021e2c0f367b3d31944199"},
     {file = "gitspy-0.1.1.tar.gz", hash = "sha256:b91fdb56ee9e0ca16a0243f38cb99fc40473562680f91e7a2be1aac736f89fae"},
 ]
+handy-archives = [
+    {file = "handy-archives-0.1.2.tar.gz", hash = "sha256:0d49e8c4254a24843a982df1caee6abf7badd90338966ea970990d8d7b9fc627"},
+    {file = "handy_archives-0.1.2-py3-none-any.whl", hash = "sha256:f5ee79152fc24d8b4ed3cbed6b335f190d10f06dcf7c005d8f232959f029d72e"},
+]
 idna = [
     {file = "idna-3.3-py3-none-any.whl", hash = "sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff"},
     {file = "idna-3.3.tar.gz", hash = "sha256:9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d"},
@@ -1323,6 +1512,10 @@ idna = [
 imagesize = [
     {file = "imagesize-1.3.0-py2.py3-none-any.whl", hash = "sha256:1db2f82529e53c3e929e8926a1fa9235aa82d0bd0c580359c67ec31b2fddaa8c"},
     {file = "imagesize-1.3.0.tar.gz", hash = "sha256:cd1750d452385ca327479d45b64d9c7729ecf0b3969a58148298c77092261f9d"},
+]
+importlib-metadata = [
+    {file = "importlib_metadata-4.11.3-py3-none-any.whl", hash = "sha256:1208431ca90a8cca1a6b8af391bb53c1a2db74e5d1cef6ddced95d4b2062edc6"},
+    {file = "importlib_metadata-4.11.3.tar.gz", hash = "sha256:ea4c597ebf37142f827b8f39299579e31685c31d3a438b59f469406afd0f2539"},
 ]
 iniconfig = [
     {file = "iniconfig-1.1.1-py2.py3-none-any.whl", hash = "sha256:011e24c64b7f47f6ebd835bb12a743f2fbe9a26d4cecaa7f53bc4f35ee9da8b3"},
@@ -1503,6 +1696,10 @@ mypy-extensions = [
     {file = "mypy_extensions-0.4.3-py2.py3-none-any.whl", hash = "sha256:090fedd75945a69ae91ce1303b5824f428daf5a028d2f6ab8a299250a846f15d"},
     {file = "mypy_extensions-0.4.3.tar.gz", hash = "sha256:2d82818f5bb3e369420cb3c4060a7970edba416647068eb4c5343488a6c604a8"},
 ]
+natsort = [
+    {file = "natsort-8.1.0-py3-none-any.whl", hash = "sha256:f59988d2f24e77b6b56f8a8f882d5df6b3b637e09e075abc67b486d59fba1a4b"},
+    {file = "natsort-8.1.0.tar.gz", hash = "sha256:c7c1f3f27c375719a4dfcab353909fe39f26c2032a062a8c80cc844eaaca0445"},
+]
 object-colors = [
     {file = "object_colors-2.0.1-py3-none-any.whl", hash = "sha256:dd62c7cecd0360a73286609f12b92e09b557a50ea0bb367c2bc31e25e077feb4"},
     {file = "object_colors-2.0.1.tar.gz", hash = "sha256:5a70dc0927cbbeb45ae9534b6688ad947af6d56636421ff661727e5eef0455f2"},
@@ -1564,8 +1761,8 @@ pyaud-plugins = [
     {file = "pyaud_plugins-0.3.0-py3-none-any.whl", hash = "sha256:634fd461647fc0f7a91b73cc722142c342ae9354000b2e5d9a33a4c60e60cf7a"},
 ]
 pygments = [
-    {file = "Pygments-2.8.1-py3-none-any.whl", hash = "sha256:534ef71d539ae97d4c3a4cf7d6f110f214b0e687e92f9cb9d2a3b0d3101289c8"},
-    {file = "Pygments-2.8.1.tar.gz", hash = "sha256:2656e1a6edcdabf4275f9a3640db59fd5de107d88e8663c5d4e9a0fa62f77f94"},
+    {file = "Pygments-2.12.0-py3-none-any.whl", hash = "sha256:dc9c10fb40944260f6ed4c688ece0cd2048414940f1cea51b8b226318411c519"},
+    {file = "Pygments-2.12.0.tar.gz", hash = "sha256:5eb116118f9612ff1ee89ac96437bb6b49e8f04d8a13b514ba26f620208e26eb"},
 ]
 pylint = [
     {file = "pylint-2.12.2-py3-none-any.whl", hash = "sha256:daabda3f7ed9d1c60f52d563b1b854632fd90035bcf01443e234d3dc794e3b74"},
@@ -1574,6 +1771,10 @@ pylint = [
 pyparsing = [
     {file = "pyparsing-3.0.6-py3-none-any.whl", hash = "sha256:04ff808a5b90911829c55c4e26f75fa5ca8a2f5f36aa3a51f68e27033341d3e4"},
     {file = "pyparsing-3.0.6.tar.gz", hash = "sha256:d9bdec0013ef1eb5a84ab39a3b3868911598afa494f5faa038647101504e2b81"},
+]
+pyproject-parser = [
+    {file = "pyproject-parser-0.4.3.tar.gz", hash = "sha256:63fb38ea8b7b3d7922e69872af9fc11e604bad7bdb4435dc7fc8366fae3ed457"},
+    {file = "pyproject_parser-0.4.3-py3-none-any.whl", hash = "sha256:60d9bb9cf411250a1c071788f90202e6fdb6d02954e30cd8fb854433877e0de0"},
 ]
 pytest = [
     {file = "pytest-7.1.2-py3-none-any.whl", hash = "sha256:13d0e3ccfc2b6e26be000cb6568c832ba67ba32e719443bfe725814d3c42433c"},
@@ -1600,16 +1801,23 @@ readme-renderer = [
     {file = "readme_renderer-32.0.tar.gz", hash = "sha256:b512beafa6798260c7d5af3e1b1f097e58bfcd9a575da7c4ddd5e037490a5b85"},
 ]
 readmetester = [
-    {file = "readmetester-1.0.1-py3-none-any.whl", hash = "sha256:7971628d224bfecb1766e5e20a6f69a8a044ff1b5a3d7f11ee9481904d400296"},
-    {file = "readmetester-1.0.1.tar.gz", hash = "sha256:10a0f043571f0c206ba45836ac3171696620911a1cc5bd2a996d988daad4c0e9"},
+    {file = "readmetester-2.3.0-py3-none-any.whl", hash = "sha256:eea55f19ae4ded34c0250f69eae9f569d284f5cb950922dbf3e0dc25b46ee041"},
+    {file = "readmetester-2.3.0.tar.gz", hash = "sha256:2c310b29f4d099e71fc7b43c1885bfb5ff357941c18d0dcf5832a33924545887"},
 ]
 requests = [
     {file = "requests-2.27.1-py2.py3-none-any.whl", hash = "sha256:f22fa1e554c9ddfd16e6e41ac79759e17be9e492b3587efa038054674760e72d"},
     {file = "requests-2.27.1.tar.gz", hash = "sha256:68d7c56fd5a8999887728ef304a6d12edc7be74f1cfa47714fc8b414525c9a61"},
 ]
+restructuredtext-lint = [
+    {file = "restructuredtext_lint-1.4.0.tar.gz", hash = "sha256:1b235c0c922341ab6c530390892eb9e92f90b9b75046063e047cacfb0f050c45"},
+]
 restview = [
     {file = "restview-3.0.0-py2.py3-none-any.whl", hash = "sha256:9cd358c3ddf7ef82174d90a64e82e8c1b82630269cb750c166ef94bd73cf3162"},
     {file = "restview-3.0.0.tar.gz", hash = "sha256:2b989610aaed2fd42da64f6cdc539cf3ee70ce370bcba872db72421ad515dd1e"},
+]
+shippinglabel = [
+    {file = "shippinglabel-1.3.0-py3-none-any.whl", hash = "sha256:906a5b93f69291cb29d16c57007c672fdeb0dd1cb6a5a1f4d2a85c90d542ee1c"},
+    {file = "shippinglabel-1.3.0.tar.gz", hash = "sha256:259a159d1c2b9e961ab6c0ac28dd57965f83f0063470480434266bc5264cd1d9"},
 ]
 six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
@@ -1757,4 +1965,8 @@ wrapt = [
     {file = "wrapt-1.13.3-cp39-cp39-win32.whl", hash = "sha256:0a017a667d1f7411816e4bf214646d0ad5b1da2c1ea13dec6c162736ff25a374"},
     {file = "wrapt-1.13.3-cp39-cp39-win_amd64.whl", hash = "sha256:81bd7c90d28a4b2e1df135bfbd7c23aee3050078ca6441bead44c42483f9ebfb"},
     {file = "wrapt-1.13.3.tar.gz", hash = "sha256:1fea9cd438686e6682271d36f3481a9f3636195578bab9ca3382e2f5f01fc185"},
+]
+zipp = [
+    {file = "zipp-3.8.0-py3-none-any.whl", hash = "sha256:c4f6e5bbf48e74f7a38e7cc5b0480ff42b0ae5178957d564d18932525d5cf099"},
+    {file = "zipp-3.8.0.tar.gz", hash = "sha256:56bf8aadb83c24db6c4b577e13de374ccfb67da2078beba1d037c17980bf43ad"},
 ]
