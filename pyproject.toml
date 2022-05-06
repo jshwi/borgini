@@ -63,6 +63,7 @@ pyaud = "^3.13.5"
 pytest = "^6.2.1"
 pytest-randomly = "^3.5.0"
 restview = "^2.9.2"
+sphinx-toolbox = "^2.18.1"
 
 [tool.poetry.scripts]
 borgini = "borgini:main"
