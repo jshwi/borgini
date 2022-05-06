@@ -69,7 +69,9 @@ borgini = "borgini:main"
 
 [tool.pyaud.audit]
 modules = [
-    "files",
+    "toc",
+    "whitelist",
+    "sort-pyproject",
     "format",
     "format-docs",
     "format-str",
@@ -77,8 +79,7 @@ modules = [
     "typecheck",
     "unused",
     "lint",
-    "coverage",
-    "readme",
+    "test",
     "docs",
 ]
 
