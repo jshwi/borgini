@@ -15,15 +15,17 @@ from typing import Tuple
 
 
 class RawConfig:
-    """Contains the ``configparser.ConfigParser`` object. Write to and
-    read from the ``config.ini`` file. The boolean values get written to
-    the file as strings, and they get read from the file into the buffer
-    as strings too. Not all values are as they should be when read into
-    Python so this will get subclassed into ``config.Proxy`` first.
+    """Contains the ``configparser.ConfigParser`` object.
 
-    :param configpath:  The path to the config.ini file - this depends
-                        on the profile used and whether this is run as
-                        ``"$USER"`` or as root.
+    Write to and read from the ``config.ini`` file. The boolean values
+    get written to the file as strings, and they get read from the file
+    into the buffer as strings too. Not all values are as they should be
+    when read into Python so this will get subclassed into
+    ``config.Proxy`` first.
+
+    :param configpath: The path to the config.ini file - this depends on
+        the profile used and whether this is run as ``"$USER"`` or as
+        root.
     """
 
     def __init__(self, configpath: str | os.PathLike) -> None:
@@ -67,14 +69,12 @@ class RawConfig:
         )
 
     def write_values(self) -> None:
-        """Write values in the ``configparser.ConfigParser`` object to
-        the ``config.ini`` file."""
+        """Write values from ``ConfigParser`` to the config file."""
         with open(self.configpath, "w", encoding="utf-8") as configfile:
             self.parser.write(configfile)
 
     def write_new_config(self) -> None:
-        """Load the default values into the
-        ``configparser.ConfigParser`` object and Write them to file."""
+        """Load default values into the ``ConfigParser`` and write."""
         self._load_default_values()
         self.write_values()
 
@@ -85,7 +85,7 @@ class RawConfig:
         it back to the file as this class will filter out non-parsable
         configurations back to their default. If there is a key in the
         config.ini file that cannot be parsed skip reading it into
-        buffer as it will be removed once the config is subsequently
+        buffer, as it will be removed once the config is subsequently
         written. Any new keys and configurations that may be added in
         the future will also be safely added to the config.
         """
@@ -107,16 +107,16 @@ class RawConfig:
 
 
 class Proxy:
-    """Subclass ``RawConfig`` to inherit the populated
-    ``configparser.ConfigParser`` object. Translate the string values
-    into boolean and ``NoneType`` values or some of the tests will not
-    work i.e. ``None`` and ``False`` will be ``True`` as the strings
-    ``"None"`` and ``"False"`` Inherit ``RawConfig`` after the
-    ``parser.Catch`` string has identified run-time errors.
+    """Subclass ``RawConfig`` to inherit the ``ConfigParser`` object.
 
-    :param raw_config:  Instantiated ``RawConfig`` object containing the
-                        ``configparser.ConfigParser`` object as
-                        ``parser``.
+    Translate the string values into boolean and ``NoneType`` values or
+    some of the tests will not work i.e. ``None`` and ``False`` will be
+    ``True`` as the strings ``"None"`` and ``"False"`` Inherit
+    ``RawConfig`` after the ``parser.Catch`` string has identified
+    run-time errors.
+
+    :param raw_config: Instantiated ``RawConfig`` object containing the
+        ``configparser.ConfigParser`` object as ``parser``.
     """
 
     def __init__(self, raw_config: RawConfig) -> None:
@@ -124,7 +124,10 @@ class Proxy:
         self.sections = self.section_list()
 
     def section_list(self) -> t.List[str]:
-        """Index the sections of the config.ini file."""
+        """Index the sections of the config.ini file.
+
+        :return: List of config sections.
+        """
         sections = self.parser.sections()
         sections.append("DEFAULT")
         return sections
@@ -166,8 +169,7 @@ class Proxy:
         return {k: v for k, v in raw_dict.items() if v}
 
     def convert_proxy(self) -> t.Dict[str, t.Any]:
-        """Convert the ``configparser.ConfigParser`` object into a
-        python friendly dictionary.
+        """Convert ``ConfigParser`` into python friendly dictionary.
 
         :return: Dictionary object.
         """
@@ -179,10 +181,11 @@ class Proxy:
 
 class Config(Proxy):
     """Final config object suitable for running with python methods.
-    Subclass the ``config.Proxy`` class to inherit the translated config
-    object from ``ConfigParser`` -> ``Dict``.
 
-    :param raw_config:  The ``configparser.ConfigParser`` object.
+    Subclass the ``config.Proxy`` class to inherit the translated
+    config object from ``ConfigParser`` -> ``Dict``.
+
+    :param raw_config: The ``configparser.ConfigParser`` object.
     """
 
     def __init__(self, raw_config: RawConfig) -> None:
@@ -193,16 +196,17 @@ class Config(Proxy):
         return self.dict[section]
 
     def get_key(self, section: str, key: str) -> str | None:
-        """Get a key from the dictionary object in ``self``. If the
-        value is not found such as the ``BORG_PASSPHRASE`` environment
-        variable (as the string value ``"None"`` would have been omitted
-        by ``config.Proxy``) return ``None`` in its place to avoid an
-        expected error and carry on omitting the key.
+        """Get a key from the dictionary object in ``self``.
+
+        If the value is not found such as the ``BORG_PASSPHRASE``
+        environment variable (as the string value ``"None"`` would have
+        been omitted by ``config.Proxy``) return ``None`` in its
+        place to avoid an expected error and carry on omitting the key.
 
         :param section: The primary key and the section from
-                        ``configparser.ConfigParser``.
-        :param key:     The key containing the configured value.
-        :return:        The value of the called key.
+            ``configparser.ConfigParser``.
+        :param key: The key containing the configured value.
+        :return: The value of the called key.
         """
         try:
             return self._get_section(section)[key]
@@ -213,9 +217,12 @@ class Config(Proxy):
     def get_keytuple(
         self, **kwargs: t.Tuple[str, ...]
     ) -> Tuple[str | bool | None, ...]:
-        """Return multiple values at once from ``self.dict[section]`` as
-        a tuple that can be unpacked by the keys passed to the method.
+        """Return multiple values at once from ``self.dict[section]``.
 
+        Return as a tuple that can be unpacked by the keys passed to the
+        method.
+
+        :param kwargs: Sections to get.
         :return: A tuple of multiple any one or more values.
         """
         return tuple(
@@ -233,17 +240,18 @@ class Config(Proxy):
         return [f"--{k} {v}" for k, v in obj.items() if isinstance(v, str)]
 
     def return_all(self, section: str) -> t.Tuple[str, ...]:
-        """Get all args belonging to a section. The (kw)args that are
-        boolean flags only need to exist, as their existence in the.
+        """Get all args belonging to a section.
 
-        script is the switch - so these are not returned as kwargs but
-        rather args. Treat values that aren't boolean differently as the
-        key and the value need to be included.
+        The (kw)args that are boolean flags only need to exist, as their
+        existence in the script is the switch - so these are not
+        returned as kwargs but rather args. Treat values that aren't
+        boolean differently as the key and the value need to be
+        included.
 
         :param section: The section from which the (kw)args should be
-                        retrieved.
-        :return:        A tuple of all switches prefixed with ``"--"``
-                        and all kwargs.
+            retrieved.
+        :return: A tuple of all switches prefixed with ``"--"`` and all
+            kwargs.
         """
         obj = self.dict[section]
         args = self._get_flags(obj)

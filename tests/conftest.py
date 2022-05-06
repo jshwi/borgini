@@ -1,8 +1,6 @@
 """
 tests.conftest
 ==============
-
-Automatically detected by pytest for custom fixtures
 """
 from __future__ import annotations
 
@@ -39,19 +37,17 @@ from . import (
 def fixture_homedir(tmpdir: str | os.PathLike) -> None:
     """Ensure the HOME directory is ``tmpdir``.
 
-    :param tmpdir:  ``pytest`` ``tmpdir`` fixture for creating and
-                    returning a temporary directory.
+    :param tmpdir: Create and return temporary directory.
     """
     borgini.HOME = str(tmpdir)
 
 
 @pytest.fixture(name="main")
 def fixture_main(monkeypatch: pytest.MonkeyPatch) -> MockMainFixture:
-    """Function for passing mock ``borgini.main`` commandline arguments
-    to package's main function.
+    """Pass patched commandline arguments to package's main function.
 
-    :param monkeypatch: ``pytest`` fixture for mocking attributes.
-    :return:            Function for using this fixture.
+    :param monkeypatch: Mock patch environment and attributes.
+    :return: Function for using this fixture.
     """
 
     def _main(*args: str) -> None:
@@ -70,12 +66,12 @@ def fixture_initialize_files(
 ) -> str:
     """Initialize the config files and return the stdout for testing.
 
-    :param main:            Fixture for mocking ``borgini.main``.
-    :param nocolorcapsys:   Capture stdout
-    :param tmpconfigdir:    Absolute path to directory containing
-                            ``config.ini``, ``include`` and
-                            ``exclude`` files
-    :return:                stdout from ``capsys``
+    :param main: Patch package entry point.
+    :param tmpconfigdir:  Absolute path to directory containing
+        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
+    :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
+        codes.
+    :return: Stdout from ``capsys``.
     """
     with pytest.raises(SystemExit):
         main("--dry")
@@ -87,7 +83,7 @@ def fixture_initialize_files(
 def fixture_keygen() -> str:
     """Generate a random password.
 
-    :return: Random password with a length of 16 characters
+    :return: Random password with a length of 16 characters.
     """
     alphabet = string.ascii_letters + string.digits
     return "".join(secrets.choice(alphabet) for _ in range(16))
@@ -95,11 +91,10 @@ def fixture_keygen() -> str:
 
 @pytest.fixture(name="tmpconfigdir")
 def fixture_tmpconfigdir(tmpdir: str | os.PathLike) -> str:
-    """Make a config directory and return the value of that temporary
-    directory.
+    """Make a config directory and return the path.
 
-    :param tmpdir:  The ``tmpdir`` fixture with ``pytest``
-    :return:        Path to the random directory
+    :param tmpdir: Create and return temporary directory.
+    :return: Path to the random directory.
     """
     configdir = os.path.join(tmpdir, "borgini")
     os.makedirs(configdir)
@@ -109,13 +104,20 @@ def fixture_tmpconfigdir(tmpdir: str | os.PathLike) -> str:
 
 @pytest.fixture(name="nocolorcapsys")
 def fixture_nocolorcapsys(capsys: pytest.CaptureFixture) -> NoColorCapsys:
-    """Instantiate capsys with the regex method."""
+    """Instantiate capsys with the regex method.
+
+    :param capsys: Capture sys out.
+    :return: Instantiated ``NoColorCapsys`` object.
+    """
     return NoColorCapsys(capsys)
 
 
 @pytest.fixture(name="update_config")
 def fixture_update_config() -> UpdateConfigFixture:
-    """Update the config file with kwargs."""
+    """Update the config file with kwargs.
+
+    :return: Function for using this fixture.
+    """
 
     def _update_config(path: str | os.PathLike, **kwargs: t.Any) -> None:
         config = configparser.ConfigParser()
@@ -129,11 +131,12 @@ def fixture_update_config() -> UpdateConfigFixture:
 
 @pytest.fixture(name="initialize_profile")
 def fixture_initialize_profile() -> InitializeProfileFixture:
-    """Initialize a new profile with a variable name passed to the
-    function.
+    """Initialize a new profile with variable name passed to the func.
 
     Once the profile is created return the captured stdout in the case
-    it needs to be used a by a test
+    it needs to be used a by a test.
+
+    :return: Function for using this fixture.
     """
 
     def _initialize_profile(
@@ -153,8 +156,10 @@ def fixture_initialize_profile() -> InitializeProfileFixture:
 
 @pytest.fixture(name="remove")
 def fixture_remove() -> RemoveFixture:
-    """Test the correct profile is removed when the ``--remove`` option
-    is passed."""
+    """Test the correct profile is removed when using ``--remove``.
+
+    :return: Function for using this fixture.
+    """
 
     def _remove(main: MockMainFixture, nocolorcapsys: NoColorCapsys) -> str:
         with pytest.raises(SystemExit):
@@ -167,8 +172,10 @@ def fixture_remove() -> RemoveFixture:
 
 @pytest.fixture(name="randopts")
 def fixture_randopts() -> RandOptsFixture:
-    """Generate an assortment of random options within the allowed
-    values for the borgbackup arguments."""
+    """Generate an assortment of random options.
+
+    :return: Function for using this fixture.
+    """
 
     def _randopts() -> RandOpts:
         filterkwargs = [
@@ -239,8 +246,13 @@ def fixture_randopts() -> RandOptsFixture:
 
 @pytest.fixture(name="invalid_keyfile")
 def fixture_invalid_keyfile() -> InvalidKeyfileFixture:
-    """Output that should match up with the actual stdout when a keyfile
-    argument does not lead to an existing file."""
+    """Create an invalid keyfile.
+
+    Output that should match up with the actual stdout when a keyfile
+    argument does not lead to an existing file.
+
+    :return: Function for using this fixture.
+    """
 
     def _invalid_keyfile(**kwargs: t.Any) -> str:
         announce = (
@@ -262,7 +274,9 @@ def fixture_invalid_keyfile() -> InvalidKeyfileFixture:
 def fixture_list_arg() -> ListArgFixture:
     """Test for the correct stdout.
 
-    Output in the tests should match what this returns
+    Output in the tests should match what this returns.
+
+    :return: Function for using this fixture.
     """
 
     def list_arg(*profiles: str) -> str:
@@ -281,8 +295,10 @@ def fixture_list_arg() -> ListArgFixture:
 
 @pytest.fixture(name="initialize_files_expected")
 def fixture_initialize_files_expected() -> InitializeFilesExpectedFixture:
-    """Output that should match up with the actual stdout when
-    initializing a new profile."""
+    """Output that matches with stdout when initializing profile.
+
+    :return: Function for using this fixture.
+    """
 
     def _initialize_files_expected(profile: str) -> str:
         return (
@@ -302,8 +318,13 @@ def fixture_initialize_files_expected() -> InitializeFilesExpectedFixture:
 
 @pytest.fixture(name="edit_path_arg")
 def fixture_edit_path_arg() -> EditPathArgFixture:
-    """Representation of the stdout that should match with the actual
-    stdout when running with an editor to edit a file."""
+    """String to replace actual calling of an editor.
+
+    Representation of the stdout that should match with the actual
+    stdout when running with an editor to edit a file.
+
+    :return: Function for using this fixture.
+    """
 
     def _edit_path_arg(path):
         path = borgini.funcs.normalize_ntpath(path)

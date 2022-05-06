@@ -20,19 +20,18 @@ HOME = str(pathlib.Path.home())
 
 
 class BorgBackup:
-    """``Borgbackup`` wrapper class,
+    """``Borgbackup`` wrapper class.
 
-    :param repopath:    Path to the backup repository - local dir if
-                        ``ssh`` set to ``False``, remote server and repo
-                        dir if ``ssh`` set to ``True``.
-    :param pygments:    Instantiated ``print.PygmentPrint`` class
-                        configured with user's style option.
-    :param dry:         if ``--dry`` is passed through the commandline
-                        then display the commandline arguments that
-                        would be passed to ``borgbackup`` without
-                        actually running the it.
-    :param args:        Arguments parsed from the ``config.ini`` file
-                        with ``configparser.ConfigParser``.
+    :param repopath: Path to the backup repository - local dir if
+        ``ssh`` set to ``False``, remote server and repo dir if ``ssh``
+        set to ``True``.
+    :param pygments: Instantiated ``print.PygmentPrint`` class
+        configured with user's style option.
+    :param dry: if ``--dry`` is passed through the commandline then
+        display the commandline arguments that would be passed to
+        ``borgbackup`` without actually running it.
+    :param args: Arguments parsed from the ``config.ini`` file with
+        ``configparser.ConfigParser``.
     """
 
     def __init__(
@@ -67,16 +66,18 @@ class BorgBackup:
         self.pygments.print(f"\n{borg} {borgargs[1:-1]}", ini=False)
 
     def borg(self, *args: str) -> None:
-        """Run ``borgbackup`` ``create`` to create a backup or ``prune``
-        to prune an old backup according to the ``--keep-*`` settings.
-        If ``--dry`` has been passed through the commandline only.
+        """Run ``borgbackup``.
+
+        Run ``create`` to create a backup or ``prune`` to prune an old
+        backup according to the ``--keep-*`` settings. If ``--dry`` has
+        been passed through the commandline only.
 
         display the command that would occur - this won't run a backup
         or prune.
 
-        :param args:    Arguments for the borg command to receive,
-                        parsed from the ``config.ini``, the ``include``
-                        and the ``exclude`` files
+        :param args: Arguments for the borg command to receive, parsed
+            from the ``config.ini``, the ``include`` and the ``exclude``
+            files
         """
         if self.dry:
             self._dry_mode(args)
@@ -89,29 +90,31 @@ class BorgBackup:
         exclude: t.Tuple[str, ...],
         include: t.Tuple[str, ...],
     ) -> None:
-        """Run the ``borg create`` command. Includes several
-        miscellaneous boolean arguments and key-values parsed from the
-        ``config.ini`` file. Includes the ``exclude`` arguments
-        formatted as ``[--exclude ARG, ...]``. Includes the ``include``
-        arguments formatted as ``[ARG, ...]``.
+        """Run the ``borg create`` command.
 
-        :param args:    Flags that effect compression, whether stats are
-                        shown, the command is verbose etc...
+        Includes several miscellaneous boolean arguments and key-values
+        parsed from the ``config.ini`` file. Includes the ``exclude``
+        arguments formatted as ``[--exclude ARG, ...]``. Includes the
+        ``include`` arguments formatted as ``[ARG, ...]``.
+
+        :param args: Flags that effect compression, whether stats are
+            shown, the command is verbose etc...
         :param exclude: Directories or files to exclude parsed from the
-                        exclude list.
+            ``exclude`` list.
         :param include: Directories or files to include parsed from the
-                        include list - files and dirs will be overridden
-                        by exclude.
+            ``include`` list - files and dirs will be overridden by
+            exclude.
         """
         self.borg("create", *args, *exclude, f"{self.archive}", *include)
 
     def prune(self, args: t.Tuple[str, ...]) -> None:
-        """Run the ``borg prune`` command Includes several miscellaneous
-        boolean arguments that can be further explored by running
-        ``borgini --config``.
+        """Run the ``borg prune`` command.
 
-        :param args:    Flags that effect compression, whether stats are
-                        shown, the command is verbose etc...
+        Includes several miscellaneous boolean arguments that can be
+        further explored by running ``borgini --config``.
+
+        :param args: Flags that effect compression, whether stats are
+            shown, the command is verbose etc.
         """
 
         pruneargs, keep = self._separate_keep(list(args))
@@ -119,9 +122,10 @@ class BorgBackup:
 
 
 class Data:
-    """Resolve the directory the configurations belong to. Get the list
-    of files to include and exclude. Allow the files to contain comments
-    and avoid parsing them.
+    """Resolve the directory the configurations belong to.
+
+    Get the list of files to include and exclude. Allow the files to
+    contain comments and avoid parsing them.
 
     :param profile: The profile that ``borgini`` is being run under.
     """
@@ -135,8 +139,7 @@ class Data:
         return {p: os.path.join(self.dirname, p) for p in paths}
 
     def make_appdir(self) -> None:
-        """Create the configuration directory for all the user's
-        settings."""
+        """Create the config directory for all the user's settings."""
         if not os.path.isdir(self.dirname):
             os.makedirs(self.dirname)
 
@@ -149,11 +152,13 @@ class Data:
             t.Tuple[str, ...], t.Tuple[str, ...], t.Tuple[str, ...]
         ],
     ) -> None:
-        """If the ``include`` or ``exclude`` files do not exist write
-        the starter templates to file.
+        """Initialize persistent data files.
 
-        :param pathlists:   Tuple containing two tuples of lines to
-                            write to file.
+        If the ``include`` or ``exclude`` files do not exist write the
+            starter templates to file.
+
+        :param pathlists: Tuple containing two tuples of lines to write
+            to file.
         """
         for count, datafile in enumerate(
             self._get_paths("include", "exclude", "styles")
@@ -179,10 +184,10 @@ class Data:
         return [f"'{f.split('#')[0].strip()}'" for f in files if f[0] != "#"]
 
     def get_path(self, key: str) -> str:
-        """Get the path of the file by calling it's key.
+        """Get the path of the file by calling its key.
 
         :param key: Name of the basename file
-        :return:    The file's absolute path
+        :return: The file's absolute path
         """
         return self.files[key]
 
@@ -197,8 +202,7 @@ class Data:
         return tuple(self._get_files(path))
 
     def get_include(self) -> t.Tuple[str, ...]:
-        """The tuple of directories and files to include from the
-        ``include`` file.
+        """Directories and files to include from the ``include`` file.
 
         :return: Tuple of paths to include in backups for that profile
         """
@@ -218,8 +222,8 @@ class Data:
         Every item will automatically be prefixed with ``--exclude``
         for the ``borgbackup`` commandline
 
-        :return:    A lit of paths to exclude - this will override items
-                    in ``include``
+        :return: A lit of paths to exclude - this will override items in
+            ``include``
         """
         exclude_path = self.get_path("exclude")
         exclude_list = self._get_files(exclude_path)
@@ -227,9 +231,10 @@ class Data:
 
 
 class PygmentPrint:
-    """Instantiate with the path leading to the config file for syntax
-    styles. Class will read the file and maintain it's config throughout
-    the process.
+    """Instantiate with the path to the config file for syntax styles.
+
+    Class will read the file and maintain its config throughout the
+    process.
 
     :param styles: The path to the ``styles`` config file.
     """
@@ -242,6 +247,8 @@ class PygmentPrint:
         """Read the ``styles`` file into the buffer.
 
         Parse the configuration that is uncommented and ignore the rest.
+
+        :return: Style config.
         """
         with open(self.styles, encoding="utf-8") as file:
             contents = file.readlines()
@@ -257,13 +264,14 @@ class PygmentPrint:
         return "default"
 
     def print(self, string: str, ini: bool = True) -> None:
-        """Print with ``pygments``. Read the string entered in method
-        Configure syntax highlighting for either shell or ini files and
-        processes.
+        """Print with ``pygments``.
 
-        :param string:  What is to be printed.
-        :param ini:     ``True`` for printing ini files, ``False`` for
-                        shell.
+        Read the string entered in method. Configure syntax highlighting
+        for either shell or ini files and processes.
+
+        :param string: What is to be printed.
+        :param ini: ``True`` for printing ini files, ``False`` for
+            shell.
         """
         if string:
             lexer = IniLexer if ini else BashLexer

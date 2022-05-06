@@ -41,13 +41,15 @@ def test_initialize_files(
     initialize_files: str,
     initialize_files_expected: InitializeFilesExpectedFixture,
 ) -> None:
-    """Test that ``config.ini``, ``include``, ``exclude`` and ``styles``
+    """Test initialization of files.
+
+    Test that ``config.ini``, ``include``, ``exclude`` and ``styles``
     are all initialized and that the correct message is displayed.
 
-    :param initialize_files:            Initialize all the configuration
-                                        files in a temporary directory
-    :param initialize_files_expected:   Expected output when
-                                        initializing files.
+    :param initialize_files: Initialize all the configuration files in a
+        temporary directory.
+    :param initialize_files_expected: Expected output when initializing
+        files.
     """
     _expected = initialize_files_expected("default")
     assert initialize_files == _expected
@@ -57,13 +59,15 @@ def test_initialize_files(
 def test_empty_repo_setting(
     main: MockMainFixture, nocolorcapsys: NoColorCapsys
 ) -> None:
-    """Test that the correct stderr is displayed when the ``config.ini``
+    """Test settings for an empty repo.
+
+    Test that the correct stderr is displayed when the ``config.ini``
     file has not been configured to contain a path to the backup
     repository. Assert non-zero exit-code.
 
-    :param main:            Fixture for mocking ``borgini.main``.
-    :param nocolorcapsys:   Capture stderr and strip it of any ANSI
-                            escape codes
+    :param main: Patch package entry point.
+    :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
+        codes.
     """
     with pytest.raises(SystemExit) as pytest_err:
         main("--dry")
@@ -80,16 +84,17 @@ def test_borg_commands(
     nocolorcapsys: NoColorCapsys,
     tmpconfigdir: str,
 ) -> None:
-    """Test that values written to the config file yield the correct
-    result when running borgbackup commands.
+    """Test commands run with ``BorgBackup``.
 
-    :param main:            Fixture for mocking ``borgini.main``.
-    :param update_config:   Update the test config with parameters.
-    :param nocolorcapsys:   Capture stdout and strip it of any ANSI
-                            escape codes
-    :param tmpconfigdir:    Absolute path to directory containing
-                            ``config.ini``, ``include``, ``exclude`` and
-                            ``styles``files
+    Test that values written to the config file yield the correct result
+    when running borgbackup commands.
+
+    :param main: Patch package entry point.
+    :param update_config: Update the test config with parameters.
+    :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
+        codes.
+    :param tmpconfigdir:  Absolute path to directory containing
+        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
     """
     configpath = os.path.join(tmpconfigdir, "default", "config.ini")
     borg_commands = BorgCommands(
@@ -111,12 +116,14 @@ def test_borg_commands(
 def test_show_config(
     main: MockMainFixture, nocolorcapsys: NoColorCapsys
 ) -> None:
-    """Test the correct stdout is displayed when running the
-    ``--config`` flag without an editor to show the config.
+    """Test printing of config.
 
-    :param main:            Fixture for mocking ``borgini.main``.
-    :param nocolorcapsys:   Capture stdout and strip it of any ANSI
-                            escape codes
+    Test the correct stdout is displayed when running the ``--config``
+    flag without an editor to show the config.
+
+    :param main: Patch package entry point.
+    :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
+        codes.
     """
     with pytest.raises(SystemExit):
         main("--config")
@@ -128,12 +135,14 @@ def test_show_config(
 def test_show_include(
     main: MockMainFixture, nocolorcapsys: NoColorCapsys
 ) -> None:
-    """Test the correct stdout is displayed when running the
-    ``--include`` flag without an editor to show the include file.
+    """Test printing of include config.
 
-    :param main:            Fixture for mocking ``borgini.main``.
-    :param nocolorcapsys:   Capture stdout and strip it of any ANSI
-                            escape codes
+    Test the correct stdout is displayed when running the ``--include``
+    flag without an editor to show the include file.
+
+    :param main: Patch package entry point.
+    :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
+        codes.
     """
     with pytest.raises(SystemExit):
         main("--include")
@@ -145,12 +154,14 @@ def test_show_include(
 def test_show_exclude(
     main: MockMainFixture, nocolorcapsys: NoColorCapsys
 ) -> None:
-    """Test the correct stdout is displayed when running the
-    ``--exclude`` flag without an editor to show the exclude file.
+    """Test printing of exclude config.
 
-    :param main:            Fixture for mocking ``borgini.main``.
-    :param nocolorcapsys:   Capture stdout and strip it of any ANSI
-                            escape codes
+    Test the correct stdout is displayed when running the ``--exclude``
+    flag without an editor to show the exclude file.
+
+    :param main: Patch package entry point.
+    :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
+        codes.
     """
     with pytest.raises(SystemExit):
         main("--exclude")
@@ -166,16 +177,18 @@ def test_invalid_keyfile(  # pylint: disable=too-many-arguments
     nocolorcapsys: NoColorCapsys,
     tmpconfigdir: str,
 ) -> None:
-    """Test the correct warning message is displayed when the process is
-    attempting to go on without a correct value value for a keyfile.
+    """Test invalid keyfile.
 
-    :param main:            Fixture for mocking ``borgini.main``.
-    :param update_config:   Update the test config with parameters.
-    :param nocolorcapsys:   Capture stdout and strip it of any ANSI
-                            escape codes
-    :param tmpconfigdir:    Absolute path to directory containing
-                            ``config.ini``, ``include``, ``exclude`` and
-                            ``styles``files
+    Test the correct warning message is displayed when the process is
+    attempting to go on without a correct value for a keyfile.
+
+    :param main: Patch package entry point.
+    :param invalid_keyfile: Invalid keyfile.
+    :param update_config: Update the test config with parameters.
+    :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
+        codes.
+    :param tmpconfigdir: Absolute path to directory containing
+        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
     """
     configpath = os.path.join(tmpconfigdir, "default", "config.ini")
     _expected = invalid_keyfile(
@@ -200,17 +213,19 @@ def test_invalid_keyfile(  # pylint: disable=too-many-arguments
 def test_invalid_path_arg(
     main: MockMainFixture, nocolorcapsys: NoColorCapsys
 ) -> None:
-    """Test that the usage information is displayed when a file that
-    does not exist is entered and not the following:
+    """Test execution with an invalid path argument.
+
+    Test that the usage information is displayed when a file that does
+    not exist is entered and not the following:
 
     - ``config``
     - ``include``
     - ``exclude``
     - ``styles``
 
-    :param main:            Fixture for mocking ``borgini.main``.
-    :param nocolorcapsys:   Capture stderr and strip it of any ANSI
-                            escape codes
+    :param main: Patch package entry point.
+    :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
+        codes.
     """
     with pytest.raises(SystemExit):
         main("--invalid")
@@ -222,18 +237,20 @@ def test_invalid_path_arg(
 def test_edit_invalid_path_arg(
     main: MockMainFixture, nocolorcapsys: NoColorCapsys
 ) -> None:
-    """Test that the usage information is displayed when a file that
-    does not exist is entered and not the following when running with an
-    the editor positional argument:
+    """Test execution when editor called to open invalid file.
+
+    Test that the usage information is displayed when a file that does
+    not exist is entered and not the following when running with the
+    editor positional argument:
 
     - ``config``
     - ``include``
     - ``exclude``
     - ``styles``
 
-    :param main:            Fixture for mocking ``borgini.main``.
-    :param nocolorcapsys:   Capture stdout and strip it of any ANSI
-                            escape codes
+    :param main: Patch package entry point.
+    :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
+        codes.
     """
     with pytest.raises(SystemExit):
         main("vim", "--invalid")
@@ -250,19 +267,20 @@ def test_edit_path_arg(
     nocolorcapsys: NoColorCapsys,
     tmpconfigdir: str,
 ) -> None:
-    """Test the correct command is passed when attempting to edit a file
+    """Test execution of editor and the path provided.
+
+    Test the correct command is passed when attempting to edit a file
     with the editor positional argument.
 
-    Run in dry mode for dumb terminal
+    Run in dry mode for dumb terminal.
 
-    :param mock_which:      ``shutil.which`` mock object
-    :param main:            Fixture for mocking ``borgini.main``.
-    :param edit_path_arg:   Expected output when setting an editor.
-    :param nocolorcapsys:   Capture stdout and strip it of any ANSI
-                            escape codes
-    :param tmpconfigdir:    Absolute path to directory containing
-                            ``config.ini``, ``include``, ``exclude`` and
-                            ``styles``files
+    :param mock_which: Mock ``shutil.which`` object
+    :param main: Patch package entry point.
+    :param edit_path_arg: Expected output when setting an editor.
+    :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
+        codes.
+    :param tmpconfigdir:  Absolute path to directory containing
+        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
     """
     mock_which.return_value = "vim"
     path = os.path.join(tmpconfigdir, "default", "include")
@@ -284,19 +302,19 @@ def test_read_keyfile(  # pylint: disable=too-many-arguments
     tmpconfigdir: str,
     keygen: str,
 ) -> None:
-    """Test that the correct password is retrieved from a keyfile when
-    the keyfile path is supplied in the config file.
+    """Test loading of keyfile.
 
-    :param main:            Fixture for mocking ``borgini.main``.
-    :param update_config:   Update the test config with parameters.
-    :param tmpdir:          Path to the test keyfile
-    :param capsys:          Silence stdout
-    :param tmpconfigdir:    Absolute path to directory containing
-                            ``config.ini``, ``include``, ``exclude`` and
-                            ``styles``files
-    :param keygen:          Generate a keyfile and read it's random
-                            password value to the
-                            ``BORG_PASSPHRASE`` environment variable
+    Test that the correct password is retrieved from a keyfile when the
+    keyfile path is supplied in the config file.
+
+    :param main: Patch package entry point.
+    :param update_config: Update the test config with parameters.
+    :param tmpdir: Create and return temporary test directory.
+    :param capsys: Silence stdout.
+    :param tmpconfigdir:  Absolute path to directory containing
+        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
+    :param keygen: Generate a keyfile and read its random password value
+        to the ``BORG_PASSPHRASE`` environment variable.
     """
     configpath = os.path.join(tmpconfigdir, "default", "config.ini")
     keyfile = os.path.join(tmpdir, "borgsecret")
@@ -320,16 +338,17 @@ def test_no_ssh(
     nocolorcapsys: NoColorCapsys,
     tmpconfigdir: str,
 ) -> None:
-    """Test the path is properly adjusted to not include the full ssh
-    path when ``ssh`` is False.
+    """Test execution when SSH is not meant to be used.
 
-    :param main:            Fixture for mocking ``borgini.main``.
-    :param update_config:   Update the test config with parameters.
-    :param nocolorcapsys:   Capture stdout and strip it of any ANSI
-                            escape codes
-    :param tmpconfigdir:    Absolute path to directory containing
-                            ``config.ini``, ``include``, ``exclude`` and
-                            ``styles``files
+    Test the path is properly adjusted to not include the full ssh path
+    when ``ssh`` is False.
+
+    :param main: Patch package entry point.
+    :param update_config: Update the test config with parameters.
+    :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
+        codes.
+    :param tmpconfigdir:  Absolute path to directory containing
+        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
     """
     configpath = os.path.join(tmpconfigdir, "default", "config.ini")
     borg_commands = BorgCommands(
@@ -354,20 +373,19 @@ def test_select_profile(
     nocolorcapsys: NoColorCapsys,
     tmpconfigdir: str,
 ) -> None:
-    """Test the correct alternate profile is being used when the
+    """Test selection of profile.
+
+    Test the correct alternate profile is being used when the
     ``--select`` flag is passed with a non-default profile.
 
-    :param main:                        Fixture for mocking
-                                        ``borgini.main``.
-    :param initialize_files_expected:   Expected output when
-                                        initializing files.
-    :param initialize_profile:          Create a test profile.
-    :param nocolorcapsys:               Capture stdout and strip it of
-                                        any ANSI escape codes
-    :param tmpconfigdir:                Absolute path to directory
-                                        containing ``config.ini``,
-                                        ``include``, ``exclude`` and
-                                        ``styles``files
+    :param main: Patch package entry point.
+    :param initialize_files_expected: Expected output when initializing
+        files.
+    :param initialize_profile: Create a test profile.
+    :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
+        codes.
+    :param tmpconfigdir:  Absolute path to directory containing
+        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
     """
     _expected = initialize_files_expected("newprofile")
     out = initialize_profile(main, tmpconfigdir, nocolorcapsys, "newprofile")
@@ -382,16 +400,17 @@ def test_list_arg(
     nocolorcapsys: NoColorCapsys,
     tmpconfigdir: str,
 ) -> None:
-    """Test for the correct output when the ``--list`` flag is used.
+    """Test printing of list.
 
-    :param main:                Fixture for mocking ``borgini.main``.
-    :param list_arg:            Expected arg.
-    :param initialize_profile:  Create a test profile.
-    :param nocolorcapsys:       Capture stdout and strip it of any ANSI
-                                escape codes
-    :param tmpconfigdir:        Absolute path to directory containing
-                                ``config.ini``, ``include``, ``exclude``
-                                and ``styles``files
+    Test for the correct output when the ``--list`` flag is used.
+
+    :param main: Patch package entry point.
+    :param list_arg: Expected arg.
+    :param initialize_profile: Create a test profile.
+    :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
+        codes.
+    :param tmpconfigdir:  Absolute path to directory containing
+        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
     """
     _expected = list_arg("default", "newprofile")
     initialize_profile(main, tmpconfigdir, nocolorcapsys, "newprofile")
@@ -405,14 +424,15 @@ def test_list_arg(
 def test_remove_no_exist(
     main: MockMainFixture, remove: RemoveFixture, nocolorcapsys: NoColorCapsys
 ) -> None:
-    """Test that the correct warning is displayed when the ``--remove``
+    """Test call to remove when target doesn't exist.
+
+    Test that the correct warning is displayed when the ``--remove``
     option is passed with a profile name and that name does not exist.
 
-    :param main:            Fixture for mocking ``borgini.main``.
-    :param remove:          Run commandline arguments to remove a
-                            profile
-    :param nocolorcapsys:   Capture stdout and strip it of any ANSI
-                            escape codes
+    :param main: Patch package entry point.
+    :param remove: Run commandline arguments to remove a profile
+    :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
+        codes.
     """
     out = remove(main, nocolorcapsys)
     assert out == expected.REMOVE_NO_EXIST
@@ -427,19 +447,18 @@ def test_remove_arg(
     nocolorcapsys: NoColorCapsys,
     tmpconfigdir: str,
 ) -> None:
-    """First create a profile and test the remote function with it so
-    that we can test that the ``--remove`` flag properly removes
-    profiles.
+    """Test call to remove.
 
-    :param main:                Fixture for mocking ``borgini.main``.
-    :param initialize_profile:  Create a test profile.
-    :param remove:              Run commandline arguments to remove a
-                                profile
-    :param nocolorcapsys:       Capture stdout and strip it of any ANSI
-                                escape codes
-    :param tmpconfigdir:        Absolute path to directory containing
-                                ``config.ini``, ``include``, ``exclude``
-                                and ``styles``files
+    First create a profile and test the remote function with it so that
+    we can test that the ``--remove`` flag properly removes profiles.
+
+    :param main: Patch package entry point.
+    :param remove: Run commandline arguments to remove a profile
+    :param initialize_profile: Create a test profile.
+    :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
+        codes.
+    :param tmpconfigdir:  Absolute path to directory containing
+        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
     """
     # calls `initialize_newprofile_files' unlike the above
     initialize_profile(main, tmpconfigdir, nocolorcapsys, "newprofile")
@@ -455,16 +474,17 @@ def test_file_exists_error(
     tmpconfigdir: str,
     nocolorcapsys: NoColorCapsys,
 ) -> None:
-    """Demonstrate that ``make_appdir`` should not be in
+    """Test error when a file already exists when initializing new one.
+
+    Demonstrate that ``make_appdir`` should not be in
     ``borgini.data.Data.__init__``
 
-    :param main:                Fixture for mocking ``borgini.main``.
-    :param initialize_profile:  Create a test profile.
-    :param nocolorcapsys:       Capture stdout and strip it of any ANSI
-                                escape codes
-    :param tmpconfigdir:        Absolute path to directory containing
-                                ``config.ini``, ``include``, ``exclude``
-                                and ``styles``files
+    :param main: Patch package entry point.
+    :param initialize_profile: Create a test profile.
+    :param tmpconfigdir:  Absolute path to directory containing
+        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
+    :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
+        codes.
     """
     initialize_profile(main, tmpconfigdir, nocolorcapsys, "profile1")
     borgini.Data(tmpconfigdir, "profile1").make_appdir()
@@ -495,16 +515,13 @@ def test_random_opts(  # pylint: disable=too-many-arguments
     Test when activating the borgbackup commands that the correct values
     have been parsed and retrieved by the process
 
-    :param main:            Fixture for mocking ``borgini.main``.
-    :param randopts:        Parse random commandline arguments.
-    :param update_config:   Update the test config with parameters.
-    :param nocolorcapsys:   Capture stdout and strip it of any ANSI
-                            escape codes
-    :param tmpconfigdir:    Absolute path to directory containing
-                            ``config.ini``, ``include``, ``exclude`` and
-                            ``styles``files
-    :param _:               Loop this test 10 times as results are
-                            randomized
+    :param main: Patch package entry point.
+    :param randopts: Parse random commandline arguments.
+    :param update_config: Update the test config with parameters.
+    :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
+        codes.
+    :param tmpconfigdir:  Absolute path to directory containing
+        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
     """
     configpath = os.path.join(tmpconfigdir, "default", "config.ini")
     obj = randopts()
@@ -520,13 +537,15 @@ def test_random_opts(  # pylint: disable=too-many-arguments
 def test_run_editor_without_arg(
     mock_which: Mock, main: MockMainFixture, nocolorcapsys: NoColorCapsys
 ) -> None:
-    """Test for the correct error message is displayed when an editor is
+    """Test error message when argument needs to be provided to editor.
+
+    Test for the correct error message is displayed when an editor is
     called without a file to edit.
 
-    :param main:            Fixture for mocking ``borgini.main``.
-    :param mock_which:      ``shutil.which`` mock object
-    :param nocolorcapsys:   Capture stdout and strip it of any ANSI
-                            escape codes
+    :param mock_which: Mock ``shutil.which`` object.
+    :param main: Patch package entry point.
+    :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
+        codes.
     """
     mock_which.return_value = "vim"
     with pytest.raises(SystemExit) as pytest_err:
@@ -540,13 +559,15 @@ def test_run_editor_without_arg(
 def test_run_uninstalled_editor(
     mock_which: Mock, main: MockMainFixture, nocolorcapsys: NoColorCapsys
 ) -> None:
-    """Test for the correct error message is displayed when the entered
+    """Test call to editor that is not installed.
+
+    Test for the correct error message is displayed when the entered
     "editor" does not exist.
 
-    :param main:            Fixture for mocking ``borgini.main``.
-    :param mock_which:      ``shutil.which`` mock object
-    :param nocolorcapsys:   Capture stdout and strip it of any ANSI
-                            escape codes
+    :param mock_which: Mock ``shutil.which`` object.
+    :param main: Patch package entry point.
+    :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
+        codes.
     """
     mock_which.return_value = None
     with pytest.raises(SystemExit) as pytest_err:
@@ -563,17 +584,18 @@ def test_repair_config_key_err(
     tmpconfigdir: str,
     capsys: pytest.CaptureFixture,
 ) -> None:
-    """Test that a out of place section does not halt the process and is
+    """Test repairing a config with a key error.
+
+    Test that an out-of-place section does not halt the process and is
     subsequently corrected by the ``configparser.ConfigParser`` object.
 
-    Useful if there are any section updates in the code
+    Useful if there are any section updates in the code.
 
-    :param main:            Fixture for mocking ``borgini.main``.
-    :param update_config:   Update the test config with parameters.
-    :param tmpconfigdir:    Absolute path to directory containing
-                            ``config.ini``, ``include`` and
-                            ``exclude`` files
-    :param capsys:          Silence unnecessary stdout
+    :param main: Patch package entry point.
+    :param update_config: Update the test config with parameters.
+    :param tmpconfigdir:  Absolute path to directory containing
+        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
+    :param capsys: Silence stdout.
     """
     bad_section = "NOT_A_SECTION"
     configpath = os.path.join(tmpconfigdir, "default", "config.ini")
@@ -596,19 +618,19 @@ def test_repair_config_key_err(
 def test_pass_on_not_a_directory_err(
     main: MockMainFixture, tmpconfigdir: str, capsys: pytest.CaptureFixture
 ) -> None:
-    """When running list and traversing the individual profile
-    directories without the exception to just ignore a file that doesn't
-    need to be there (all items should be dirs in the `CONFIGDIR')
-    `-l/--list' will try to make a path out of the file and raise a
-    NotADirectoryError.
+    """Test silently passing by when no directory exists.
 
-    Test that this process can continue will an out of place file
+    When running list and traversing the individual profile directories
+    without the exception to just ignore a file that doesn't need to be
+    there (all items should be dirs in the `CONFIGDIR') `-l/--list' will
+    try to make a path out of the file and raise a NotADirectoryError.
 
-    :param main:            Fixture for mocking ``borgini.main``.
-    :param tmpconfigdir:    Absolute path to directory containing
-                            ``config.ini``, ``include``, ``exclude`` and
-                            ``styles``files
-    :param capsys:          Silence unnecessary stdout
+    Test that this process can continue will an out-of-place file.
+
+    :param main: Patch package entry point.
+    :param tmpconfigdir:  Absolute path to directory containing
+        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
+    :param capsys: Silence stdout.
     """
     out_of_place_file = os.path.join(tmpconfigdir, "out_of_place_file.txt")
     with open(out_of_place_file, "w", encoding="utf-8"):
@@ -621,13 +643,13 @@ def test_pass_on_not_a_directory_err(
 
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
 def test_chosen_style(tmpconfigdir: str) -> None:
-    """Test that the first option written to the ``styles`` file -
+    """Test usage of selected style.
 
-    ``monokai`` - is collected
+    Test that the first option written to the ``styles`` file,
+    ``monokai``, is collected.
 
-    :param tmpconfigdir:    Absolute path to directory containing
-                            ``config.ini``, ``include``, ``exclude`` and
-                            ``styles``files
+    :param tmpconfigdir:  Absolute path to directory containing
+        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
     """
     styles = os.path.join(tmpconfigdir, "default", "styles")
     pygments = borgini.PygmentPrint(styles)
@@ -636,12 +658,13 @@ def test_chosen_style(tmpconfigdir: str) -> None:
 
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
 def test_default_style(tmpconfigdir: str) -> None:
-    """Test that the ``default`` option written to the ``styles`` file -
-    is collected if all options are commented out.
+    """Test usage of default style.
 
-    :param tmpconfigdir:    Absolute path to directory containing
-                            ``config.ini``, ``include``, ``exclude`` and
-                            ``styles``files
+    Test that the ``default`` option written to the ``styles`` file is
+    collected if all options are commented out.
+
+    :param tmpconfigdir:  Absolute path to directory containing
+        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
     """
     styles = os.path.join(tmpconfigdir, "default", "styles")
     with open(styles, encoding="utf-8") as file:
@@ -661,15 +684,16 @@ def test_run_call_main_process(
     update_config: UpdateConfigFixture,
     tmpconfigdir: str,
 ) -> None:
-    """Test that no errors occur when the main process is run with a
+    """Test main.
+
+    Test that no errors occur when the main process is run with a
     configured repo path.
 
-    :param mock_subproc_call:   Mock ``subprocess.call`` object
-    :param main:                Fixture for mocking ``borgini.main``.
-    :param update_config:       Update the test config with parameters.
-    :param tmpconfigdir:        Absolute path to directory containing
-                                ``config.ini``, ``include``, ``exclude``
-                                and ``styles``files
+    :param mock_subproc_call: Mock ``subprocess.call`` object.
+    :param main: Patch package entry point.
+    :param update_config: Update the test config with parameters.
+    :param tmpconfigdir:  Absolute path to directory containing
+        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
     """
     configpath = os.path.join(tmpconfigdir, "default", "config.ini")
     update_config(configpath, DEFAULT={"repopath": "/dev/null"})
@@ -685,14 +709,16 @@ def test_run_call_main_process(
 def test_run_call_editor(
     mock_which: Mock, mock_subproc_call: Mock, main: MockMainFixture
 ) -> None:
-    """Test that no errors occur when the user opts to configure a file
+    """Test running of called editor.
+
+    Test that no errors occur when the user opts to configure a file
     with their favourite editor.
 
-    Mock ``vim`` for systems where ``vim`` isn't installed
+    Mock ``vim`` for systems where ``vim`` isn't installed.
 
-    :param main:                Fixture for mocking ``borgini.main``.
-    :param mock_which:          Mock ``shutil.which`` object
-    :param mock_subproc_call:   Mock ``subprocess.call`` object
+    :param mock_which: Mock ``shutil.which`` object.
+    :param mock_subproc_call: Mock ``subprocess.call`` object.
+    :param main: Patch package entry point.
     """
     process_mock = mock.Mock()
     attrs = {"wait.return_value": ("output", "error")}
@@ -714,12 +740,14 @@ def test_run_call_editor(
 def test_get_configdir(
     monkeypatch: pytest.MonkeyPatch, uid: int, expects: str
 ) -> None:
-    """Test the root config directory in /etc is returned when the UID
-    is 0.
+    """Test retrieval of config dir.
 
-    :param uid:             0 for root, > 0 for all other users.
-    :param expects:         Expected path.
-    :param monkeypatch:     ``pytest`` fixture for mocking attributes.
+    Test the root config directory in /etc is returned when the UID is
+    0.
+
+    :param monkeypatch: Mock patch environment and attributes.
+    :param uid: 0 for root, > 0 for all other users.
+    :param expects: Expected path.
     """
 
     def _mockreturn():
@@ -733,7 +761,7 @@ def test_get_configdir(
 def test_windows_attr_error(monkeypatch: pytest.MonkeyPatch) -> None:
     """When user is on Windows.
 
-    :param monkeypatch:     ``pytest`` fixture for mocking attributes.
+    :param monkeypatch: Mock patch environment and attributes.
     """
 
     def _raise_attr_error():

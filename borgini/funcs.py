@@ -23,8 +23,7 @@ from .parser import Catch
 
 
 def get_configdir() -> str:
-    """Get the path to the configuration files most suitable for active
-    os and privilege.
+    """Get path to the config most suitable for active os and privilege.
 
     :return: Path to configuration dir for all profiles.
     """
@@ -46,10 +45,9 @@ def get_file_arg(
 ) -> str | None:
     """Detect that a file has been selected to edit or view.
 
-    :param namespace:   The ``ArgumentParser`` ``Namespace.__dict__``.
-    :param files:       The files dictionary returned from
-                        ``data.Data``.
-    :return:            Return an absolute path or ``None``.
+    :param namespace: The ``ArgumentParser`` ``Namespace.__dict__``.
+    :param files: The file's dictionary returned from ``data.Data``.
+    :return: Return an absolute path or ``None``.
     """
     notfile = "editor", "dry", "select", "list", "remove"
     for key in namespace:
@@ -66,9 +64,9 @@ def get_file_arg(
 def normalize_ntpath(path: str) -> str:
     """Format NT path to a Unix-like path.
 
-    :param path:    Path to format.
-    :return:        Returns a formatted path if running Windows
-                    otherwise the same path that came in.
+    :param path: Path to format.
+    :return: Returns a formatted path if running Windows otherwise the
+        same path that came in.
     """
     normalized = "/".join(
         p[:-1] if re.match("^[a-zA-Z]:", p) else p
@@ -82,12 +80,11 @@ def edit_files(
 ) -> None:
     """Edit a config file with the editor of choice.
 
-    :param edit:        The editor to edit with.
-    :param file:        The path to the file to edit.
-    :param pygments:    Instantiated ``print.PygmentPrint`` class
-                        configured with user's style option.
-    :param dry:         Dry mode for when we do not want to execute the
-                        code.
+    :param edit: The editor to edit with.
+    :param file: The path to the file to edit.
+    :param pygments: Instantiated ``print.PygmentPrint`` class
+        configured with user's style option.
+    :param dry: Dry mode for when we do not want to execute the code.
     """
     file = normalize_ntpath(file)
     command = f"{edit} {file}"
@@ -98,12 +95,14 @@ def edit_files(
 
 
 def read_file(filepath: str, pygments: PygmentPrint) -> None:
-    """Read the file and print the output. If reading ``config.ini``
-    color the text with ini-style syntax, otherwise shell-like syntax.
+    """Read the file and print the output.
 
-    :param filepath:    The file to read from.
-    :param pygments:    Instantiated ``print.PygmentPrint`` class.
-                        configured with user's style option.
+    If reading ``config.ini`` color the text with ini-style syntax,
+    otherwise shell-like syntax.
+
+    :param filepath: The file to read from.
+    :param pygments: Instantiated ``print.PygmentPrint`` class.
+        configured with user's style option.
     """
     ini = os.path.basename(filepath) == "config.ini"
     with open(filepath, encoding="utf-8") as file:
@@ -119,18 +118,19 @@ def edit_file(
     pygments: PygmentPrint,
     dry: bool,
 ) -> None:
-    """Call the editor to edit a file. If the argument passed does not
-    correspond to an existing file print help. If an editor is not
-    provided go on to simply print the file content.
+    """Call the editor to edit a file.
 
-    :param editor:      The editor to edit the file with.
-    :param namespace:   ``argparse.ArgumentParser's``
-                        ``Namespace.__dict__``.
-    :param files:       Dictionary of config file paths.
-    :param pygments:    Instantiated ``print.PygmentPrint`` class
-                        configured with user's style option.
-    :param dry:         Dry mode for when we do not want to execute the
-                        code.
+    If the argument passed does not correspond to an existing file print
+    help. If an editor is not provided go on to simply print the file
+    content.
+
+    :param editor: The editor to edit the file with.
+    :param namespace: ``argparse.ArgumentParser``'s
+        ``Namespace.__dict__``.
+    :param files: Dictionary of config file paths.
+    :param pygments: Instantiated ``print.PygmentPrint`` class
+        configured with user's style option.
+    :param dry: Dry mode for when we do not want to execute the code.
     """
     filepath = get_file_arg(namespace, files)
     if editor:
@@ -145,35 +145,34 @@ def edit_file(
 def get_path(
     borguser: str, hostname: str, port: str, repopath: str, ssh: bool
 ) -> str:
-    """Get the path to the backup repository location. If ``ssh`` is
-    ``True`` this will return the configured ssh path on the remote
-    system. If ``ssh`` is ``False`` the repository will need exist on
-    the localhost.
+    """Get the path to the backup repository location.
+
+    If ``ssh`` is ``True`` this will return the configured ssh path on
+    the remote system. If ``ssh`` is ``False`` the repository will need
+    exist on the localhost.
 
     Note: The ``repopath`` setting in the ``DEFAULT`` section will
     be the directory the repository is in, not the actual repository
     i.e. ``/path/to/repopath/reponame`` not ``/path/to/repopath``.
 
-    :param borguser:    The remote's user invoking ``borg`` on that
-                        machine.
-    :param hostname:    The remote's hostname.
-    :param port:        The port that the remote allows ssh through.
-    :param repopath:    The path relative to root on the remote or the
-                        localhost.
-    :param ssh:         Boolean for whether using ssh or not.
-    :return:            A path configured based on the ``config.ini``
-                        parameters.
+    :param borguser: The remote's user invoking ``borg`` on that
+        machine.
+    :param hostname: The remote's hostname.
+    :param port: The port that the remote allows ssh through.
+    :param repopath: The path relative to root on the remote or the
+        localhost.
+    :param ssh: Boolean for whether using ssh or not.
+    :return: A path configured based on the ``config.ini`` parameters.
     """
     return f"ssh://{borguser}@{hostname}:{port}{repopath}" if ssh else repopath
 
 
 def set_passphrase(keyfile: str, catch: Catch) -> None:
-    """Export the ``BORG_PASSPHRASE`` environment variable from a
-    keyfile.
+    """Export the ``BORG_PASSPHRASE`` env var from a keyfile.
 
     :param keyfile: The absolute path to the passphrase keyfile.
-    :param catch:   ``parser.Catch`` - exit if necessary and inform
-                    user why.
+    :param catch: ``parser.Catch`` - exit if necessary and inform
+        user why.
     """
     if keyfile:
         if os.path.isfile(keyfile):
@@ -186,10 +185,11 @@ def set_passphrase(keyfile: str, catch: Catch) -> None:
 
 
 def initialize_config(configpath: str, catch: Catch) -> config.Config:
-    """If a ``config.ini`` file does not exist create the file and write
-    the default values.
+    """If a config file does not exist create a default, else read.
 
-    Otherwise, read ``config.ini`` for it's values.
+    :param configpath: Path to config file.
+    :param catch: Instantiated ``Catch`` object.
+    :return: Instantiated ``ConfigParser`` object.
     """
     raw_config = config.RawConfig(configpath)
     if not os.path.isfile(configpath):
@@ -203,8 +203,8 @@ def initialize_config(configpath: str, catch: Catch) -> config.Config:
 def remove_profile(remove: t.List[str]) -> None:
     """Remove selected profile.
 
-    :param remove:  The profile entered to remove via
-                    ``argparse.ArgumentParser`` and the commandline.
+    :param remove: The profile entered to remove via
+        ``argparse.ArgumentParser`` and the commandline.
     """
     profiles = ""
     if remove:
@@ -223,12 +223,11 @@ def remove_profile(remove: t.List[str]) -> None:
 
 
 def list_profiles(show_profiles: t.List[str], pygments: PygmentPrint) -> None:
-    """If ``show_profiles`` is ``True`` than display a list of profiles
-    that exist otherwise do nothing.
+    """If ``show_profiles`` then display a list of profiles that exist.
 
-    :param show_profiles:   Boolean switch from the commandline.
-    :param pygments:        Instantiated ``print.PygmentPrint``
-                            class configured with user's style option.
+    :param show_profiles: Boolean switch from the commandline.
+    :param pygments: Instantiated ``print.PygmentPrint`` class
+        configured with user's style option.
     """
     if show_profiles:
         profiles = list(os.listdir(CONFIGDIR))
@@ -255,8 +254,7 @@ def list_profiles(show_profiles: t.List[str], pygments: PygmentPrint) -> None:
 
 
 def initialize_datafiles(data: Data) -> None:
-    """Write the default settings to the ``include``, ``exclude`` and
-    ``styles`` files.
+    """Write the default settings to the config files.
 
     :param data: ``data.Data``.
     """

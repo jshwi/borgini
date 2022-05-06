@@ -15,16 +15,15 @@ import typing as t
 def getcolor(string: str, code: int) -> str:
     """Return a given string in color depending on the code provided.
 
-    :param string:  String to color.
-    :param code:    Corresponding ANSI escape code.
-    :return:        The colored string.
+    :param string: String to color.
+    :param code: Corresponding ANSI escape code.
+    :return: The colored string.
     """
     return f"\u001b[0;3{code};40m{string}\u001b[0;0m"
 
 
 class RawParser(argparse.ArgumentParser):
-    """Inherit ``argparse.ArgumentParser`` as add all args and options
-    to be parsed from the commandline.
+    """Inherit ``ArgumentParser`` to be parsed from the commandline.
 
     Format a separate ``Namespace`` object to get arguments by group.
     """
@@ -112,11 +111,12 @@ class RawParser(argparse.ArgumentParser):
 
 
 class Catch:
-    """Stop the program before going any further if it can be determined
-    that essential values are missing. Exit informatively.
+    """Exit if it can be determined essential values are missing.
+
+    Exit informatively.
 
     :param profile: Profile that the process is running under so that
-                    suggestion commands can be displayed.
+        suggestion commands can be displayed.
     """
 
     def __init__(self, profile: str) -> None:
@@ -125,17 +125,17 @@ class Catch:
     def show_command(self, arg: str) -> str:
         """Format and color the example commands provided.
 
-        :param arg:     The argument the command would need.
-        :return:        The formatted and colored example command.
+        :param arg: The argument the command would need.
+        :return: The formatted and colored example command.
         """
         return f". borgini EDITOR --{arg} --select {self.profile}"
 
     def check_repopath_config(self, repopath: str) -> None:
-        """Exit the process with a non-zero exit status if the path to
-        the backup repository has not been provided in the
-        ``config.ini`` file.
+        """Exit process if the path to the backup repo not provided.
 
-        :param repopath: Path to backup repository or ``None``.
+        Exit with a non-zero exit status.
+
+        :param repopath: Path to back up repository or ``None``.
         """
         if not repopath:
             print(
@@ -149,8 +149,7 @@ class Catch:
             sys.exit(1)
 
     def announce_first_run(self) -> None:
-        """Announce that a new default config file has been initialized
-        on a first run.
+        """Announce that a new default config file has been initialized.
 
         Not an error. Exit with zero exit status.
         """
@@ -169,7 +168,9 @@ class Catch:
         sys.exit(0)
 
     def announce_keyfile(self) -> None:
-        """If the keyfile section of the config file has been populated
+        """Announce keyfile has been created.
+
+        If the keyfile section of the config file has been populated
         but the keyfile cannot be found let the user know as this would
         make it clearer as to why the backup might fail eventually if
         ``borgbackup`` prompts for a passphrase.
