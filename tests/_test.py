@@ -52,12 +52,7 @@ def test_empty_repo_setting(main, nocolorcapsys):
 
 @freezegun.freeze_time("2021-02-07T16:12:58")
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
-def test_borg_commands(
-    main,
-    update_config,
-    nocolorcapsys,
-    tmpconfigdir,
-):
+def test_borg_commands(main, update_config, nocolorcapsys, tmpconfigdir):
     """Test that values written to the config file yield the correct
     result when running borgbackup commands
 
@@ -132,11 +127,7 @@ def test_show_exclude(main, nocolorcapsys):
 
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
 def test_invalid_keyfile(  # pylint: disable=too-many-arguments
-    main,
-    invalid_keyfile,
-    update_config,
-    nocolorcapsys,
-    tmpconfigdir,
+    main, invalid_keyfile, update_config, nocolorcapsys, tmpconfigdir
 ):
     """Test the correct warning message is displayed when the
     process is attempting to go on without a correct value value for
@@ -292,7 +283,7 @@ def test_no_ssh(main, update_config, nocolorcapsys, tmpconfigdir):
             "reponame": expected.HOST,
             "repopath": "/dev/null",
             "ssh": False,
-        },
+        }
     )
     _expected = borg_commands.commands()
     update_config(configpath, DEFAULT={"repopath": "/dev/null", "ssh": False})

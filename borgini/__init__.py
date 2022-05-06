@@ -79,7 +79,7 @@ def main():
         *_config.get_keytuple(
             SSH=("remoteuser", "remotehost", "port"),
             DEFAULT=("repopath", "ssh"),
-        ),
+        )
     )
     borg = BorgBackup(
         fullpath,

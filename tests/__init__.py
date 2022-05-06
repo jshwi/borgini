@@ -162,13 +162,7 @@ class BorgCommands:
 
     @staticmethod
     def _include_args():
-        include = [
-            "'/home'",
-            "'/root'",
-            "'/var'",
-            "'/usr/local'",
-            "'/srv'",
-        ]
+        include = ["'/home'", "'/root'", "'/var'", "'/usr/local'", "'/srv'"]
         return "".join(f"  {i}\n" for i in include)
 
     def commands(self):
