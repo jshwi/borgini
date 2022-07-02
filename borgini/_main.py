@@ -4,6 +4,8 @@ borgini._main
 
 Contains package entry point.
 """
+from __future__ import annotations
+
 import shutil
 import sys
 
@@ -20,7 +22,7 @@ class Parser(parser.RawParser):
     ``Namespace`` object from this class.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.editor = self.args.editor
         self.editor_opts = any(
@@ -29,7 +31,7 @@ class Parser(parser.RawParser):
         self.message = self._get_message()
         self._exit_error()
 
-    def _check_editor(self):
+    def _check_editor(self) -> str | None:
         # exit the process if the editor argument has been incorrectly
         # supplied
         if not shutil.which(self.editor):
@@ -43,19 +45,19 @@ class Parser(parser.RawParser):
             )
         return None
 
-    def _get_message(self):
+    def _get_message(self) -> str | None:
         if self.editor:
             return self._check_editor()
         return None
 
-    def _exit_error(self):
+    def _exit_error(self) -> None:
         if self.message:
             print(self.message, file=sys.stderr)
             self.print_help()
             sys.exit(1)
 
 
-def main():
+def main() -> None:
     """Main function for package."""
     _parser = Parser()
     args = _parser.args
@@ -71,10 +73,14 @@ def main():
     funcs.remove_profile(args.remove)
     funcs.list_profiles(args.list, pygments)
     funcs.edit_file(args.editor, args.__dict__, data.files, pygments, dry)
-    funcs.set_passphrase(_config.get_key("ENVIRONMENT", "keyfile"), catch)
-    catch.check_repopath_config(_config.get_key("DEFAULT", "repopath"))
+    funcs.set_passphrase(
+        _config.get_key("ENVIRONMENT", "keyfile"), catch  # type: ignore
+    )
+    catch.check_repopath_config(
+        _config.get_key("DEFAULT", "repopath")  # type: ignore
+    )
     fullpath = funcs.get_path(
-        *_config.get_keytuple(
+        *_config.get_keytuple(  # type: ignore
             SSH=("remoteuser", "remotehost", "port"),
             DEFAULT=("repopath", "ssh"),
         )

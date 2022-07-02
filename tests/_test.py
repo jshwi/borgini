@@ -8,20 +8,39 @@ import flaky for flaky tests which involve the date-time in their
 output - there can be a slight skew when the date and time was set
 between the output and the _expected
 """
+from __future__ import annotations
+
 import configparser
 import os
 from unittest import mock
+from unittest.mock import Mock
 
 import freezegun
 import pytest
 
 import borgini
 
-from . import BorgCommands, expected
+from . import (
+    BorgCommands,
+    EditPathArgFixture,
+    InitializeFilesExpectedFixture,
+    InitializeProfileFixture,
+    InvalidKeyfileFixture,
+    ListArgFixture,
+    MockMainFixture,
+    NoColorCapsys,
+    RandOptsFixture,
+    RemoveFixture,
+    UpdateConfigFixture,
+    expected,
+)
 
 
 @pytest.mark.usefixtures("tmpconfigdir")
-def test_initialize_files(initialize_files, initialize_files_expected):
+def test_initialize_files(
+    initialize_files: str,
+    initialize_files_expected: InitializeFilesExpectedFixture,
+) -> None:
     """Test that ``config.ini``, ``include``, ``exclude`` and ``styles``
     are all initialized and that the correct message is displayed.
 
@@ -35,7 +54,9 @@ def test_initialize_files(initialize_files, initialize_files_expected):
 
 
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
-def test_empty_repo_setting(main, nocolorcapsys):
+def test_empty_repo_setting(
+    main: MockMainFixture, nocolorcapsys: NoColorCapsys
+) -> None:
     """Test that the correct stderr is displayed when the ``config.ini``
     file has not been configured to contain a path to the backup
     repository. Assert non-zero exit-code.
@@ -53,7 +74,12 @@ def test_empty_repo_setting(main, nocolorcapsys):
 
 @freezegun.freeze_time("2021-02-07T16:12:58")
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
-def test_borg_commands(main, update_config, nocolorcapsys, tmpconfigdir):
+def test_borg_commands(
+    main: MockMainFixture,
+    update_config: UpdateConfigFixture,
+    nocolorcapsys: NoColorCapsys,
+    tmpconfigdir: str,
+) -> None:
     """Test that values written to the config file yield the correct
     result when running borgbackup commands.
 
@@ -82,7 +108,9 @@ def test_borg_commands(main, update_config, nocolorcapsys, tmpconfigdir):
 
 
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
-def test_show_config(main, nocolorcapsys):
+def test_show_config(
+    main: MockMainFixture, nocolorcapsys: NoColorCapsys
+) -> None:
     """Test the correct stdout is displayed when running the
     ``--config`` flag without an editor to show the config.
 
@@ -97,7 +125,9 @@ def test_show_config(main, nocolorcapsys):
 
 
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
-def test_show_include(main, nocolorcapsys):
+def test_show_include(
+    main: MockMainFixture, nocolorcapsys: NoColorCapsys
+) -> None:
     """Test the correct stdout is displayed when running the
     ``--include`` flag without an editor to show the include file.
 
@@ -112,7 +142,9 @@ def test_show_include(main, nocolorcapsys):
 
 
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
-def test_show_exclude(main, nocolorcapsys):
+def test_show_exclude(
+    main: MockMainFixture, nocolorcapsys: NoColorCapsys
+) -> None:
     """Test the correct stdout is displayed when running the
     ``--exclude`` flag without an editor to show the exclude file.
 
@@ -128,8 +160,12 @@ def test_show_exclude(main, nocolorcapsys):
 
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
 def test_invalid_keyfile(  # pylint: disable=too-many-arguments
-    main, invalid_keyfile, update_config, nocolorcapsys, tmpconfigdir
-):
+    main: MockMainFixture,
+    invalid_keyfile: InvalidKeyfileFixture,
+    update_config: UpdateConfigFixture,
+    nocolorcapsys: NoColorCapsys,
+    tmpconfigdir: str,
+) -> None:
     """Test the correct warning message is displayed when the process is
     attempting to go on without a correct value value for a keyfile.
 
@@ -161,7 +197,9 @@ def test_invalid_keyfile(  # pylint: disable=too-many-arguments
 
 
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
-def test_invalid_path_arg(main, nocolorcapsys):
+def test_invalid_path_arg(
+    main: MockMainFixture, nocolorcapsys: NoColorCapsys
+) -> None:
     """Test that the usage information is displayed when a file that
     does not exist is entered and not the following:
 
@@ -181,7 +219,9 @@ def test_invalid_path_arg(main, nocolorcapsys):
 
 
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
-def test_edit_invalid_path_arg(main, nocolorcapsys):
+def test_edit_invalid_path_arg(
+    main: MockMainFixture, nocolorcapsys: NoColorCapsys
+) -> None:
     """Test that the usage information is displayed when a file that
     does not exist is entered and not the following when running with an
     the editor positional argument:
@@ -204,8 +244,12 @@ def test_edit_invalid_path_arg(main, nocolorcapsys):
 @mock.patch("shutil.which")
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
 def test_edit_path_arg(
-    mock_which, main, edit_path_arg, nocolorcapsys, tmpconfigdir
-):
+    mock_which: Mock,
+    main: MockMainFixture,
+    edit_path_arg: EditPathArgFixture,
+    nocolorcapsys: NoColorCapsys,
+    tmpconfigdir: str,
+) -> None:
     """Test the correct command is passed when attempting to edit a file
     with the editor positional argument.
 
@@ -233,8 +277,13 @@ def test_edit_path_arg(
 @freezegun.freeze_time("2021-02-07T16:12:58")
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
 def test_read_keyfile(  # pylint: disable=too-many-arguments
-    main, update_config, tmpdir, capsys, tmpconfigdir, keygen
-):
+    main: MockMainFixture,
+    update_config: UpdateConfigFixture,
+    tmpdir: str | os.PathLike,
+    capsys: pytest.CaptureFixture,
+    tmpconfigdir: str,
+    keygen: str,
+) -> None:
     """Test that the correct password is retrieved from a keyfile when
     the keyfile path is supplied in the config file.
 
@@ -265,7 +314,12 @@ def test_read_keyfile(  # pylint: disable=too-many-arguments
 
 @freezegun.freeze_time("2021-02-07T16:12:58")
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
-def test_no_ssh(main, update_config, nocolorcapsys, tmpconfigdir):
+def test_no_ssh(
+    main: MockMainFixture,
+    update_config: UpdateConfigFixture,
+    nocolorcapsys: NoColorCapsys,
+    tmpconfigdir: str,
+) -> None:
     """Test the path is properly adjusted to not include the full ssh
     path when ``ssh`` is False.
 
@@ -294,12 +348,12 @@ def test_no_ssh(main, update_config, nocolorcapsys, tmpconfigdir):
 
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
 def test_select_profile(
-    main,
-    initialize_files_expected,
-    initialize_profile,
-    nocolorcapsys,
-    tmpconfigdir,
-):
+    main: MockMainFixture,
+    initialize_files_expected: InitializeFilesExpectedFixture,
+    initialize_profile: InitializeProfileFixture,
+    nocolorcapsys: NoColorCapsys,
+    tmpconfigdir: str,
+) -> None:
     """Test the correct alternate profile is being used when the
     ``--select`` flag is passed with a non-default profile.
 
@@ -322,8 +376,12 @@ def test_select_profile(
 
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
 def test_list_arg(
-    main, list_arg, initialize_profile, nocolorcapsys, tmpconfigdir
-):
+    main: MockMainFixture,
+    list_arg: ListArgFixture,
+    initialize_profile: InitializeProfileFixture,
+    nocolorcapsys: NoColorCapsys,
+    tmpconfigdir: str,
+) -> None:
     """Test for the correct output when the ``--list`` flag is used.
 
     :param main:                Fixture for mocking ``borgini.main``.
@@ -344,7 +402,9 @@ def test_list_arg(
 
 
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
-def test_remove_no_exist(main, remove, nocolorcapsys):
+def test_remove_no_exist(
+    main: MockMainFixture, remove: RemoveFixture, nocolorcapsys: NoColorCapsys
+) -> None:
     """Test that the correct warning is displayed when the ``--remove``
     option is passed with a profile name and that name does not exist.
 
@@ -361,8 +421,12 @@ def test_remove_no_exist(main, remove, nocolorcapsys):
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
 @pytest.mark.usefixtures()
 def test_remove_arg(
-    main, remove, initialize_profile, nocolorcapsys, tmpconfigdir
-):
+    main: MockMainFixture,
+    remove: RemoveFixture,
+    initialize_profile: InitializeProfileFixture,
+    nocolorcapsys: NoColorCapsys,
+    tmpconfigdir: str,
+) -> None:
     """First create a profile and test the remote function with it so
     that we can test that the ``--remove`` flag properly removes
     profiles.
@@ -386,8 +450,11 @@ def test_remove_arg(
 
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
 def test_file_exists_error(
-    main, initialize_profile, tmpconfigdir, nocolorcapsys
-):
+    main: MockMainFixture,
+    initialize_profile: InitializeProfileFixture,
+    tmpconfigdir: str,
+    nocolorcapsys: NoColorCapsys,
+) -> None:
     """Demonstrate that ``make_appdir`` should not be in
     ``borgini.data.Data.__init__``
 
@@ -414,8 +481,13 @@ def test_file_exists_error(
 @pytest.mark.parametrize("_", range(10))
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
 def test_random_opts(  # pylint: disable=too-many-arguments
-    main, randopts, update_config, nocolorcapsys, tmpconfigdir, _
-):
+    main: MockMainFixture,
+    randopts: RandOptsFixture,
+    update_config: UpdateConfigFixture,
+    nocolorcapsys: NoColorCapsys,
+    tmpconfigdir: str,
+    _: int,
+) -> None:
     """Run this test function 10 times.
 
     Random values will be generated and written to the config file
@@ -445,7 +517,9 @@ def test_random_opts(  # pylint: disable=too-many-arguments
 
 
 @mock.patch("shutil.which")
-def test_run_editor_without_arg(mock_which, main, nocolorcapsys):
+def test_run_editor_without_arg(
+    mock_which: Mock, main: MockMainFixture, nocolorcapsys: NoColorCapsys
+) -> None:
     """Test for the correct error message is displayed when an editor is
     called without a file to edit.
 
@@ -463,7 +537,9 @@ def test_run_editor_without_arg(mock_which, main, nocolorcapsys):
 
 
 @mock.patch("shutil.which")
-def test_run_uninstalled_editor(mock_which, main, nocolorcapsys):
+def test_run_uninstalled_editor(
+    mock_which: Mock, main: MockMainFixture, nocolorcapsys: NoColorCapsys
+) -> None:
     """Test for the correct error message is displayed when the entered
     "editor" does not exist.
 
@@ -481,7 +557,12 @@ def test_run_uninstalled_editor(mock_which, main, nocolorcapsys):
 
 
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
-def test_repair_config_key_err(main, update_config, tmpconfigdir, capsys):
+def test_repair_config_key_err(
+    main: MockMainFixture,
+    update_config: UpdateConfigFixture,
+    tmpconfigdir: str,
+    capsys: pytest.CaptureFixture,
+) -> None:
     """Test that a out of place section does not halt the process and is
     subsequently corrected by the ``configparser.ConfigParser`` object.
 
@@ -512,7 +593,9 @@ def test_repair_config_key_err(main, update_config, tmpconfigdir, capsys):
 
 
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
-def test_pass_on_not_a_directory_err(main, tmpconfigdir, capsys):
+def test_pass_on_not_a_directory_err(
+    main: MockMainFixture, tmpconfigdir: str, capsys: pytest.CaptureFixture
+) -> None:
     """When running list and traversing the individual profile
     directories without the exception to just ignore a file that doesn't
     need to be there (all items should be dirs in the `CONFIGDIR')
@@ -537,7 +620,7 @@ def test_pass_on_not_a_directory_err(main, tmpconfigdir, capsys):
 
 
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
-def test_chosen_style(tmpconfigdir):
+def test_chosen_style(tmpconfigdir: str) -> None:
     """Test that the first option written to the ``styles`` file -
 
     ``monokai`` - is collected
@@ -552,7 +635,7 @@ def test_chosen_style(tmpconfigdir):
 
 
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
-def test_default_style(tmpconfigdir):
+def test_default_style(tmpconfigdir: str) -> None:
     """Test that the ``default`` option written to the ``styles`` file -
     is collected if all options are commented out.
 
@@ -573,8 +656,11 @@ def test_default_style(tmpconfigdir):
 @pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
 @mock.patch("subprocess.call")
 def test_run_call_main_process(
-    mock_subproc_call, main, update_config, tmpconfigdir
-):
+    mock_subproc_call: Mock,
+    main: MockMainFixture,
+    update_config: UpdateConfigFixture,
+    tmpconfigdir: str,
+) -> None:
     """Test that no errors occur when the main process is run with a
     configured repo path.
 
@@ -596,7 +682,9 @@ def test_run_call_main_process(
 
 @mock.patch("shutil.which")
 @mock.patch("subprocess.call")
-def test_run_call_editor(mock_which, mock_subproc_call, main):
+def test_run_call_editor(
+    mock_which: Mock, mock_subproc_call: Mock, main: MockMainFixture
+) -> None:
     """Test that no errors occur when the user opts to configure a file
     with their favourite editor.
 
@@ -616,19 +704,21 @@ def test_run_call_editor(mock_which, mock_subproc_call, main):
 
 
 @pytest.mark.parametrize(
-    "uid,_expected",
+    "uid,expects",
     [
         (0, os.path.join("/etc", "xdg", "borgini")),
         (1, os.path.join(borgini.HOME, ".config", "borgini")),
     ],
     ids=["root", "user"],
 )
-def test_get_configdir(monkeypatch, uid, _expected):
+def test_get_configdir(
+    monkeypatch: pytest.MonkeyPatch, uid: int, expects: str
+) -> None:
     """Test the root config directory in /etc is returned when the UID
     is 0.
 
     :param uid:             0 for root, > 0 for all other users.
-    :param _expected:       Expected path.
+    :param expects:         Expected path.
     :param monkeypatch:     ``pytest`` fixture for mocking attributes.
     """
 
@@ -637,10 +727,10 @@ def test_get_configdir(monkeypatch, uid, _expected):
 
     monkeypatch.setattr(os, "getuid", _mockreturn)
     path = borgini.funcs.get_configdir()
-    assert path == _expected
+    assert path == expects
 
 
-def test_windows_attr_error(monkeypatch):
+def test_windows_attr_error(monkeypatch: pytest.MonkeyPatch) -> None:
     """When user is on Windows.
 
     :param monkeypatch:     ``pytest`` fixture for mocking attributes.

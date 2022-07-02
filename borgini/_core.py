@@ -2,11 +2,14 @@
 borgini._core
 =============
 """
+from __future__ import annotations
+
 import datetime
 import os
 import pathlib
 import shutil
 import subprocess
+import typing as t
 
 from pygments import highlight
 from pygments.formatters.terminal256 import Terminal256Formatter
@@ -32,7 +35,9 @@ class BorgBackup:
                         with ``configparser.ConfigParser``.
     """
 
-    def __init__(self, repopath, pygments, dry, *args):
+    def __init__(
+        self, repopath: str, pygments: PygmentPrint, dry: bool, *args: t.Any
+    ) -> None:
         self.repo = f"{repopath}/{args[0]}"
         self.pygments = pygments
         self.bin = shutil.which("borg")
@@ -41,7 +46,9 @@ class BorgBackup:
         self.archive = f"{self.repo}::{args[0]}-{self.date}"
 
     @staticmethod
-    def _separate_keep(args):
+    def _separate_keep(
+        args: t.List[str],
+    ) -> t.Tuple[t.Tuple[t.Any, ...], t.Tuple[str, ...]]:
         keep = [
             args.pop(args.index(a))
             for a in list(args)
@@ -49,17 +56,17 @@ class BorgBackup:
         ]
         return tuple(args), tuple(keep)
 
-    def _run_borg(self, args):
+    def _run_borg(self, args: t.Tuple[str, ...]) -> None:
         borgargs = " ".join(args)
         command = f"{self.bin} {borgargs}"
         subprocess.call(command, shell=True)
 
-    def _dry_mode(self, args):
+    def _dry_mode(self, args: t.Tuple[str, ...]) -> None:
         borgargs = " ".join([f" {a}\n" for a in args])
         borg = self.bin if self.bin else "borg"
         self.pygments.print(f"\n{borg} {borgargs[1:-1]}", ini=False)
 
-    def borg(self, *args):
+    def borg(self, *args: str) -> None:
         """Run ``borgbackup`` ``create`` to create a backup or ``prune``
         to prune an old backup according to the ``--keep-*`` settings.
         If ``--dry`` has been passed through the commandline only.
@@ -76,7 +83,12 @@ class BorgBackup:
         else:
             self._run_borg(args)
 
-    def create(self, args, exclude, include):
+    def create(
+        self,
+        args: t.Tuple[str, ...],
+        exclude: t.Tuple[str, ...],
+        include: t.Tuple[str, ...],
+    ) -> None:
         """Run the ``borg create`` command. Includes several
         miscellaneous boolean arguments and key-values parsed from the
         ``config.ini`` file. Includes the ``exclude`` arguments
@@ -93,7 +105,7 @@ class BorgBackup:
         """
         self.borg("create", *args, *exclude, f"{self.archive}", *include)
 
-    def prune(self, args):
+    def prune(self, args: t.Tuple[str, ...]) -> None:
         """Run the ``borg prune`` command Includes several miscellaneous
         boolean arguments that can be further explored by running
         ``borgini --config``.
@@ -114,24 +126,29 @@ class Data:
     :param profile: The profile that ``borgini`` is being run under.
     """
 
-    def __init__(self, appdir, profile):
+    def __init__(self, appdir: str, profile: str) -> None:
         self.dirname = os.path.join(appdir, profile)
         self.files = self._get_file_obj()
 
-    def _get_file_obj(self):
+    def _get_file_obj(self) -> t.Dict[str, str]:
         paths = "config.ini", "include", "exclude", "styles"
         return {p: os.path.join(self.dirname, p) for p in paths}
 
-    def make_appdir(self):
+    def make_appdir(self) -> None:
         """Create the configuration directory for all the user's
         settings."""
         if not os.path.isdir(self.dirname):
             os.makedirs(self.dirname)
 
-    def _get_paths(self, *args):
+    def _get_paths(self, *args: str) -> t.Tuple[str, ...]:
         return tuple(self.files[arg] for arg in args)
 
-    def initialize_data_files(self, pathlists):
+    def initialize_data_files(
+        self,
+        pathlists: t.Tuple[
+            t.Tuple[str, ...], t.Tuple[str, ...], t.Tuple[str, ...]
+        ],
+    ) -> None:
         """If the ``include`` or ``exclude`` files do not exist write
         the starter templates to file.
 
@@ -147,13 +164,13 @@ class Data:
                         file.write(f"{path}\n")
 
     @staticmethod
-    def _read_datafile(path):
+    def _read_datafile(path: str) -> t.List[str]:
         with open(path, encoding="utf-8") as file:
             readfile = file.read().strip()
 
         return readfile.splitlines()
 
-    def _parse_datafile(self, path):
+    def _parse_datafile(self, path: str) -> t.List[str]:
         files = self._read_datafile(path)
 
         # remove string starting at the hash symbol if inline
@@ -161,7 +178,7 @@ class Data:
         # hash symbol
         return [f"'{f.split('#')[0].strip()}'" for f in files if f[0] != "#"]
 
-    def get_path(self, key):
+    def get_path(self, key: str) -> str:
         """Get the path of the file by calling it's key.
 
         :param key: Name of the basename file
@@ -169,17 +186,17 @@ class Data:
         """
         return self.files[key]
 
-    def _get_files(self, path):
+    def _get_files(self, path: str) -> t.List[str]:
         pathlist = []
         if os.path.isfile(path):
             pathlist.extend(self._parse_datafile(path))
 
         return pathlist
 
-    def _format_include(self, path):
+    def _format_include(self, path: str) -> t.Tuple[str, ...]:
         return tuple(self._get_files(path))
 
-    def get_include(self):
+    def get_include(self) -> t.Tuple[str, ...]:
         """The tuple of directories and files to include from the
         ``include`` file.
 
@@ -189,10 +206,10 @@ class Data:
         return self._format_include(include_path)
 
     @staticmethod
-    def _format_exclude(pathlist):
+    def _format_exclude(pathlist: t.List[str]) -> t.Tuple[str, ...]:
         return tuple(f"--exclude {e}" for e in pathlist)
 
-    def get_exclude(self):
+    def get_exclude(self) -> t.Tuple[str, ...]:
         """Return the values obtained from the ``exclude`` file.
 
         Unlike the ``include`` file this doesn't necessarily need to
@@ -217,11 +234,11 @@ class PygmentPrint:
     :param styles: The path to the ``styles`` config file.
     """
 
-    def __init__(self, styles):
+    def __init__(self, styles: str) -> None:
         self.styles = styles
         self.style = self.read_styles()
 
-    def read_styles(self):
+    def read_styles(self) -> str:
         """Read the ``styles`` file into the buffer.
 
         Parse the configuration that is uncommented and ignore the rest.
@@ -239,7 +256,7 @@ class PygmentPrint:
 
         return "default"
 
-    def print(self, string, ini=True):
+    def print(self, string: str, ini: bool = True) -> None:
         """Print with ``pygments``. Read the string entered in method
         Configure syntax highlighting for either shell or ini files and
         processes.

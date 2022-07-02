@@ -4,9 +4,13 @@ tests
 """
 import datetime
 import getpass
+import os
 import re
 import shutil
 import socket
+import typing as t
+
+import pytest
 
 USER = getpass.getuser()
 HOST = socket.gethostname()
@@ -26,11 +30,11 @@ class NoColorCapsys:
     :param capsys: ``pytest's`` builtin fixture to capture system output
     """
 
-    def __init__(self, capsys):
+    def __init__(self, capsys: pytest.CaptureFixture) -> None:
         self.capsys = capsys
 
     @staticmethod
-    def regex(out):
+    def regex(out: str) -> str:
         """Replace ANSI color codes with empty strings i.e. remove all
         escape codes.
 
@@ -45,7 +49,7 @@ class NoColorCapsys:
         ansi_escape = re.compile(r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])")
         return ansi_escape.sub("", out)
 
-    def readouterr(self):
+    def readouterr(self) -> t.Tuple[str, ...]:
         """Call as capsys ``readouterr`` but regex the strings for
         escape codes at the same time.
 
@@ -55,12 +59,12 @@ class NoColorCapsys:
         out = self.capsys.readouterr()
         return tuple(self.regex(r) for r in out)
 
-    def stdout(self):
+    def stdout(self) -> str:
         """Call this to return the stdout without referencing the tuple
         indices."""
         return self.readouterr()[0]
 
-    def stderr(self):
+    def stderr(self) -> str:
         """Call this to return the stderr without referencing the tuple
         indices."""
         return self.readouterr()[1]
@@ -80,7 +84,7 @@ class BorgCommands:
         self.is_ssh = self.default.get("ssh", True)
 
     @staticmethod
-    def get_sections(**kwargs):
+    def get_sections(**kwargs: str) -> t.Dict[str, t.Any]:
         """Get all sections that belong to the
         ``configparser.ConfigParser`` object once the config file is
         parsed.
@@ -98,14 +102,16 @@ class BorgCommands:
         return {s: kwargs.get(s, {}) for s in sections}
 
     @staticmethod
-    def _boolean_switch(obj, key, default=True):
+    def _boolean_switch(
+        obj: t.Dict[str, bool], key: str, default: bool = True
+    ) -> str:
         return f"  --{key}\n" if obj.get(key, default) else ""
 
     @staticmethod
-    def _kwargs(obj, key, default):
+    def _kwargs(obj: t.Dict[str, str], key: str, default: str) -> str:
         return f"  --{key} {obj.get(key, default)}"
 
-    def _backup_args(self):
+    def _backup_args(self) -> str:
         keys = ["verbose", "stats", "list", "show-rc", "exclude-caches"]
         flags = "".join([self._boolean_switch(self.backups, k) for k in keys])
         return (
@@ -114,7 +120,7 @@ class BorgCommands:
             f"{self._kwargs(self.backups, 'compression', 'lz4')}\n"
         )
 
-    def _prune_args(self):
+    def _prune_args(self) -> str:
         keys = ["stats", "list", "show-rc"]
         flags = "".join([self._boolean_switch(self.prune, k) for k in keys])
         return (
@@ -122,33 +128,33 @@ class BorgCommands:
             f"{flags}"
         )
 
-    def _keep_args(self):
+    def _keep_args(self) -> str:
         return (
             f"{self._kwargs(self.prune, 'keep-daily', '7')}\n"
             f"{self._kwargs(self.prune, 'keep-weekly', '4')}\n"
             f"{self._kwargs(self.prune, 'keep-monthly', '6')}\n\n"
         )
 
-    def _ssh_args(self):
+    def _ssh_args(self) -> t.Tuple[str, str, str]:
         remoteuser = self.ssh.get("remoteuser", USER)
         remotehost = self.ssh.get("remotehost", HOST)
         port = self.ssh.get("port", "22")
         return remoteuser, remotehost, port
 
-    def _repo_fullpath(self):
+    def _repo_fullpath(self) -> str:
         remoteuser, remotehost, port = self._ssh_args()
         return f"ssh://{remoteuser}@{remotehost}:{port}" if self.is_ssh else ""
 
-    def _backup_path(self, fullpath, reponame):
+    def _backup_path(self, fullpath: str, reponame: str) -> str:
         return f"  {fullpath}::{reponame}-{self.datetime}\n"
 
-    def _get_fullpath(self, reponame):
+    def _get_fullpath(self, reponame: str) -> str:
         fullremote = self._repo_fullpath()
         repopath = self.default.get("repopath", "/dev/null")
         return f"{fullremote}{repopath}/{reponame}"
 
     @staticmethod
-    def _exclude_args():
+    def _exclude_args() -> str:
         exclude = [
             "'/home/*/.cache/*'",
             "'/var/cache/*'",
@@ -158,11 +164,11 @@ class BorgCommands:
         return "".join(f"  --exclude {e}\n" for e in exclude)
 
     @staticmethod
-    def _include_args():
+    def _include_args() -> str:
         include = ["'/home'", "'/root'", "'/var'", "'/usr/local'", "'/srv'"]
         return "".join(f"  {i}\n" for i in include)
 
-    def commands(self):
+    def commands(self) -> str:
         """Return a string that should match up with the output from the
         tests provided the tests are passing."""
         reponame = self.default.get("reponame", HOST)
@@ -179,3 +185,19 @@ class BorgCommands:
             f"  {fullpath}\n"
             f"{self._keep_args()}"
         )
+
+
+StarredNoRetFixture = t.Callable[..., None]
+StarredRetStrFixture = t.Callable[..., str]
+MockMainFixture = StarredNoRetFixture
+UpdateConfigFixture = StarredNoRetFixture
+InitializeProfileFixture = t.Callable[
+    [MockMainFixture, t.Union[str, os.PathLike], NoColorCapsys, str], str
+]
+RemoveFixture = t.Callable[[MockMainFixture, NoColorCapsys], str]
+RandOpts = t.Dict[str, t.Any]
+RandOptsFixture = t.Callable[..., RandOpts]
+InvalidKeyfileFixture = StarredRetStrFixture
+ListArgFixture = StarredRetStrFixture
+InitializeFilesExpectedFixture = t.Callable[[str], str]
+EditPathArgFixture = t.Callable[[t.Union[str, os.PathLike]], str]

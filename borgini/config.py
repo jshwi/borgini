@@ -4,9 +4,14 @@ borgini.config
 
 All things ``config.ini``
 """
+from __future__ import annotations
+
 import configparser
 import getpass
+import os
 import socket
+import typing as t
+from typing import Tuple
 
 
 class RawConfig:
@@ -21,14 +26,14 @@ class RawConfig:
                         ``"$USER"`` or as root.
     """
 
-    def __init__(self, configpath):
+    def __init__(self, configpath: str | os.PathLike) -> None:
         self.configpath = configpath
         self.parser = configparser.ConfigParser(interpolation=None)
 
-    def _read_kwargs(self, **kwargs):
+    def _read_kwargs(self, **kwargs: t.Dict[str, t.Any]):
         self.parser.read_dict(kwargs)
 
-    def _load_default_values(self):
+    def _load_default_values(self) -> None:
         hostname = socket.gethostname()
         user = getpass.getuser()
         self._read_kwargs(
@@ -61,19 +66,19 @@ class RawConfig:
             ENVIRONMENT={"keyfile": "None"},
         )
 
-    def write_values(self):
+    def write_values(self) -> None:
         """Write values in the ``configparser.ConfigParser`` object to
         the ``config.ini`` file."""
         with open(self.configpath, "w", encoding="utf-8") as configfile:
             self.parser.write(configfile)
 
-    def write_new_config(self):
+    def write_new_config(self) -> None:
         """Load the default values into the
         ``configparser.ConfigParser`` object and Write them to file."""
         self._load_default_values()
         self.write_values()
 
-    def read(self):
+    def read(self) -> None:
         """Read the ``config.ini`` file and avoid non-critical errors.
 
         Once the ``config.ini`` is read and loaded into the buffer write
@@ -114,19 +119,19 @@ class Proxy:
                         ``parser``.
     """
 
-    def __init__(self, raw_config):
+    def __init__(self, raw_config: RawConfig) -> None:
         self.parser = raw_config.parser
         self.sections = self.section_list()
 
-    def section_list(self):
+    def section_list(self) -> t.List[str]:
         """Index the sections of the config.ini file."""
         sections = self.parser.sections()
         sections.append("DEFAULT")
         return sections
 
-    def _filter_default(self, section):
+    def _filter_default(self, section: str) -> t.Dict[str, t.Any]:
         if section == "DEFAULT":
-            return self.parser[section]
+            return dict(self.parser[section])
 
         return {
             k: v
@@ -134,16 +139,16 @@ class Proxy:
             if k not in dict(self.parser["DEFAULT"])
         }
 
-    def _raw_dict(self):
+    def _raw_dict(self) -> t.Dict[str, t.Any]:
         return {s: self._filter_default(s) for s in self.sections}
 
     @staticmethod
-    def _convert_null(obj):
+    def _convert_null(obj: t.Dict[str, t.Any]) -> t.Dict[str, t.Any]:
         return {
             s: {k: v for k, v in obj[s].items() if v != "None"} for s in obj
         }
 
-    def _get_boolean(self, section, key):
+    def _get_boolean(self, section: str, key: str) -> bool:
         try:
             if key.startswith("keep-"):
                 raise ValueError
@@ -153,14 +158,14 @@ class Proxy:
         except ValueError:
             return self._filter_default(section)[key]
 
-    def _convert_booleans(self, obj):
+    def _convert_booleans(self, obj: t.Dict[str, t.Any]) -> t.Dict[str, t.Any]:
         return {s: {k: self._get_boolean(s, k) for k in obj[s]} for s in obj}
 
     @staticmethod
-    def _filter_null(raw_dict):
+    def _filter_null(raw_dict: t.Dict[str, t.Any]) -> t.Dict[str, t.Any]:
         return {k: v for k, v in raw_dict.items() if v}
 
-    def convert_proxy(self):
+    def convert_proxy(self) -> t.Dict[str, t.Any]:
         """Convert the ``configparser.ConfigParser`` object into a
         python friendly dictionary.
 
@@ -180,14 +185,14 @@ class Config(Proxy):
     :param raw_config:  The ``configparser.ConfigParser`` object.
     """
 
-    def __init__(self, raw_config):
+    def __init__(self, raw_config: RawConfig) -> None:
         super().__init__(raw_config)
         self.dict = self.convert_proxy()
 
-    def _get_section(self, section):
+    def _get_section(self, section: str) -> t.Dict[str, t.Any]:
         return self.dict[section]
 
-    def get_key(self, section, key):
+    def get_key(self, section: str, key: str) -> str | None:
         """Get a key from the dictionary object in ``self``. If the
         value is not found such as the ``BORG_PASSPHRASE`` environment
         variable (as the string value ``"None"`` would have been omitted
@@ -205,7 +210,9 @@ class Config(Proxy):
         except KeyError:
             return None
 
-    def get_keytuple(self, **kwargs):
+    def get_keytuple(
+        self, **kwargs: t.Tuple[str, ...]
+    ) -> Tuple[str | bool | None, ...]:
         """Return multiple values at once from ``self.dict[section]`` as
         a tuple that can be unpacked by the keys passed to the method.
 
@@ -218,14 +225,14 @@ class Config(Proxy):
         )
 
     @staticmethod
-    def _get_flags(obj):
+    def _get_flags(obj: t.Dict[str, str]) -> t.List[str]:
         return [f"--{k}" for k, v in obj.items() if v is True]
 
     @staticmethod
-    def _get_keyvals(obj):
+    def _get_keyvals(obj: t.Dict[str, str]) -> t.List[str]:
         return [f"--{k} {v}" for k, v in obj.items() if isinstance(v, str)]
 
-    def return_all(self, section):
+    def return_all(self, section: str) -> t.Tuple[str, ...]:
         """Get all args belonging to a section. The (kw)args that are
         boolean flags only need to exist, as their existence in the.
 

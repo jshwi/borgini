@@ -5,11 +5,14 @@ borgini.parser
 Parse the commandline arguments and check arguments for errors and exit
 informatively
 """
+from __future__ import annotations
+
 import argparse
 import sys
+import typing as t
 
 
-def getcolor(string, code):
+def getcolor(string: str, code: int) -> str:
     """Return a given string in color depending on the code provided.
 
     :param string:  String to color.
@@ -26,7 +29,7 @@ class RawParser(argparse.ArgumentParser):
     Format a separate ``Namespace`` object to get arguments by group.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         # noinspection PyTypeChecker
         super().__init__(
             prog=getcolor("borgini", 6),
@@ -37,10 +40,10 @@ class RawParser(argparse.ArgumentParser):
         self._add_arguments()
         self._add_editor_args()
         self.args = self.parse_args()
-        self.arg_groups = {}
+        self.arg_groups: t.Dict[str | None, argparse.Namespace] = {}
         self._get_argument_group()
 
-    def _add_editor_args(self):
+    def _add_editor_args(self) -> None:
         editor_args = self.add_argument_group(title="EDITOR")
         editor_args.add_argument(
             "-c", "--config", action="store_true", help="edit or view config"
@@ -64,7 +67,7 @@ class RawParser(argparse.ArgumentParser):
             help="edit or view list of styles for syntax highlighting",
         )
 
-    def _add_arguments(self):
+    def _add_arguments(self) -> None:
         """Parse args from sys.argv."""
         self.add_argument(
             "editor",
@@ -97,7 +100,7 @@ class RawParser(argparse.ArgumentParser):
             help="remove profile or profiles",
         )
 
-    def _get_argument_group(self):
+    def _get_argument_group(self) -> None:
         for group in self._action_groups:
             # noinspection PyProtectedMember
             group_dict = {
@@ -116,10 +119,10 @@ class Catch:
                     suggestion commands can be displayed.
     """
 
-    def __init__(self, profile):
+    def __init__(self, profile: str) -> None:
         self.profile = profile
 
-    def show_command(self, arg):
+    def show_command(self, arg: str) -> str:
         """Format and color the example commands provided.
 
         :param arg:     The argument the command would need.
@@ -127,7 +130,7 @@ class Catch:
         """
         return f". borgini EDITOR --{arg} --select {self.profile}"
 
-    def check_repopath_config(self, repopath):
+    def check_repopath_config(self, repopath: str) -> None:
         """Exit the process with a non-zero exit status if the path to
         the backup repository has not been provided in the
         ``config.ini`` file.
@@ -145,7 +148,7 @@ class Catch:
             )
             sys.exit(1)
 
-    def announce_first_run(self):
+    def announce_first_run(self) -> None:
         """Announce that a new default config file has been initialized
         on a first run.
 
@@ -165,7 +168,7 @@ class Catch:
         )
         sys.exit(0)
 
-    def announce_keyfile(self):
+    def announce_keyfile(self) -> None:
         """If the keyfile section of the config file has been populated
         but the keyfile cannot be found let the user know as this would
         make it clearer as to why the backup might fail eventually if

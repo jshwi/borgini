@@ -8,17 +8,21 @@ Parse commandline arguments
 
 Invoke classes, methods and functions
 """
+from __future__ import annotations
+
 import os
 import re
 import shutil
 import subprocess
 import sys
+import typing as t
 
 from . import config
-from ._core import HOME, Data
+from ._core import HOME, Data, PygmentPrint
+from .parser import Catch
 
 
-def get_configdir():
+def get_configdir() -> str:
     """Get the path to the configuration files most suitable for active
     os and privilege.
 
@@ -37,7 +41,9 @@ def get_configdir():
 CONFIGDIR = get_configdir()
 
 
-def get_file_arg(namespace, files):
+def get_file_arg(
+    namespace: t.Dict[str, str], files: t.Dict[str, str]
+) -> str | None:
     """Detect that a file has been selected to edit or view.
 
     :param namespace:   The ``ArgumentParser`` ``Namespace.__dict__``.
@@ -57,7 +63,7 @@ def get_file_arg(namespace, files):
     return None
 
 
-def normalize_ntpath(path):
+def normalize_ntpath(path: str) -> str:
     """Format NT path to a Unix-like path.
 
     :param path:    Path to format.
@@ -71,7 +77,9 @@ def normalize_ntpath(path):
     return normalized if path[0] == "/" else f"/{normalized}"
 
 
-def edit_files(edit, file, pygments, dry):
+def edit_files(
+    edit: str, file: str, pygments: PygmentPrint, dry: bool
+) -> None:
     """Edit a config file with the editor of choice.
 
     :param edit:        The editor to edit with.
@@ -89,7 +97,7 @@ def edit_files(edit, file, pygments, dry):
         subprocess.call(command, shell=True)
 
 
-def read_file(filepath, pygments):
+def read_file(filepath: str, pygments: PygmentPrint) -> None:
     """Read the file and print the output. If reading ``config.ini``
     color the text with ini-style syntax, otherwise shell-like syntax.
 
@@ -104,7 +112,13 @@ def read_file(filepath, pygments):
     pygments.print(lines, ini=ini)
 
 
-def edit_file(editor, namespace, files, pygments, dry):
+def edit_file(
+    editor: str,
+    namespace: t.Dict[str, str],
+    files: t.Dict[str, str],
+    pygments: PygmentPrint,
+    dry: bool,
+) -> None:
     """Call the editor to edit a file. If the argument passed does not
     correspond to an existing file print help. If an editor is not
     provided go on to simply print the file content.
@@ -120,7 +134,7 @@ def edit_file(editor, namespace, files, pygments, dry):
     """
     filepath = get_file_arg(namespace, files)
     if editor:
-        edit_files(editor, filepath, pygments, dry)
+        edit_files(editor, filepath, pygments, dry)  # type: ignore
         sys.exit(0)
 
     elif filepath:
@@ -128,7 +142,9 @@ def edit_file(editor, namespace, files, pygments, dry):
         sys.exit(0)
 
 
-def get_path(borguser, hostname, port, repopath, ssh):
+def get_path(
+    borguser: str, hostname: str, port: str, repopath: str, ssh: bool
+) -> str:
     """Get the path to the backup repository location. If ``ssh`` is
     ``True`` this will return the configured ssh path on the remote
     system. If ``ssh`` is ``False`` the repository will need exist on
@@ -151,7 +167,7 @@ def get_path(borguser, hostname, port, repopath, ssh):
     return f"ssh://{borguser}@{hostname}:{port}{repopath}" if ssh else repopath
 
 
-def set_passphrase(keyfile, catch):
+def set_passphrase(keyfile: str, catch: Catch) -> None:
     """Export the ``BORG_PASSPHRASE`` environment variable from a
     keyfile.
 
@@ -169,7 +185,7 @@ def set_passphrase(keyfile, catch):
             catch.announce_keyfile()
 
 
-def initialize_config(configpath, catch):
+def initialize_config(configpath: str, catch: Catch) -> config.Config:
     """If a ``config.ini`` file does not exist create the file and write
     the default values.
 
@@ -184,7 +200,7 @@ def initialize_config(configpath, catch):
     return config.Config(raw_config)
 
 
-def remove_profile(remove):
+def remove_profile(remove: t.List[str]) -> None:
     """Remove selected profile.
 
     :param remove:  The profile entered to remove via
@@ -206,7 +222,7 @@ def remove_profile(remove):
         sys.exit(0)
 
 
-def list_profiles(show_profiles, pygments):
+def list_profiles(show_profiles: t.List[str], pygments: PygmentPrint) -> None:
     """If ``show_profiles`` is ``True`` than display a list of profiles
     that exist otherwise do nothing.
 
@@ -215,7 +231,7 @@ def list_profiles(show_profiles, pygments):
                             class configured with user's style option.
     """
     if show_profiles:
-        profiles = os.listdir(CONFIGDIR)
+        profiles = list(os.listdir(CONFIGDIR))
         profiles.insert(0, profiles.pop(profiles.index("default")))
         for profile in profiles:
             data = Data(CONFIGDIR, profile)
@@ -238,7 +254,7 @@ def list_profiles(show_profiles, pygments):
         sys.exit(0)
 
 
-def initialize_datafiles(data):
+def initialize_datafiles(data: Data) -> None:
     """Write the default settings to the ``include``, ``exclude`` and
     ``styles`` files.
 
