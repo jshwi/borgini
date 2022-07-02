@@ -13,7 +13,11 @@ import typing as t
 
 from pygments import highlight
 from pygments.formatters.terminal256 import Terminal256Formatter
+
+# noinspection PyUnresolvedReferences
 from pygments.lexers.configs import IniLexer
+
+# noinspection PyUnresolvedReferences
 from pygments.lexers.shell import BashLexer
 
 HOME = str(pathlib.Path.home())
