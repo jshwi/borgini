@@ -1,5 +1,5 @@
 """Module entry point."""
-import borgini
+from borgini import main
 
 if __name__ == "__main__":
-    borgini.main()
+    main()

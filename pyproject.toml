@@ -66,7 +66,7 @@ restview = "^2.9.2"
 sphinx-toolbox = "^2.18.1"
 
 [tool.poetry.scripts]
-borgini = "borgini:main"
+borgini = "borgini.__main__:main"
 
 [tool.pyaud.audit]
 modules = [

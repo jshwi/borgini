@@ -1,6 +1,6 @@
 """
-borgini.src.funcs
-=================
+borgini.funcs
+=============
 
 Package entry point
 
@@ -14,7 +14,8 @@ import shutil
 import subprocess
 import sys
 
-from . import HOME, Data, config
+from . import config
+from ._core import HOME, Data
 
 
 def get_configdir():
@@ -41,7 +42,7 @@ def get_file_arg(namespace, files):
 
     :param namespace:   The ``ArgumentParser`` ``Namespace.__dict__``.
     :param files:       The files dictionary returned from
-                        ``src.data.Data``.
+                        ``data.Data``.
     :return:            Return an absolute path or ``None``.
     """
     notfile = "editor", "dry", "select", "list", "remove"
@@ -75,7 +76,7 @@ def edit_files(edit, file, pygments, dry):
 
     :param edit:        The editor to edit with.
     :param file:        The path to the file to edit.
-    :param pygments:    Instantiated ``src.print.PygmentPrint`` class
+    :param pygments:    Instantiated ``print.PygmentPrint`` class
                         configured with user's style option.
     :param dry:         Dry mode for when we do not want to execute the
                         code.
@@ -93,7 +94,7 @@ def read_file(filepath, pygments):
     color the text with ini-style syntax, otherwise shell-like syntax.
 
     :param filepath:    The file to read from.
-    :param pygments:    Instantiated ``src.print.PygmentPrint`` class.
+    :param pygments:    Instantiated ``print.PygmentPrint`` class.
                         configured with user's style option.
     """
     ini = os.path.basename(filepath) == "config.ini"
@@ -112,7 +113,7 @@ def edit_file(editor, namespace, files, pygments, dry):
     :param namespace:   ``argparse.ArgumentParser's``
                         ``Namespace.__dict__``.
     :param files:       Dictionary of config file paths.
-    :param pygments:    Instantiated ``src.print.PygmentPrint`` class
+    :param pygments:    Instantiated ``print.PygmentPrint`` class
                         configured with user's style option.
     :param dry:         Dry mode for when we do not want to execute the
                         code.
@@ -155,7 +156,7 @@ def set_passphrase(keyfile, catch):
     keyfile.
 
     :param keyfile: The absolute path to the passphrase keyfile.
-    :param catch:   ``src.parser.Catch`` - exit if necessary and inform
+    :param catch:   ``parser.Catch`` - exit if necessary and inform
                     user why.
     """
     if keyfile:
@@ -210,7 +211,7 @@ def list_profiles(show_profiles, pygments):
     that exist otherwise do nothing.
 
     :param show_profiles:   Boolean switch from the commandline.
-    :param pygments:        Instantiated ``src.print.PygmentPrint``
+    :param pygments:        Instantiated ``print.PygmentPrint``
                             class configured with user's style option.
     """
     if show_profiles:
@@ -241,7 +242,7 @@ def initialize_datafiles(data):
     """Write the default settings to the ``include``, ``exclude`` and
     ``styles`` files.
 
-    :param data: ``src.data.Data``.
+    :param data: ``data.Data``.
     """
 
     def comment(filetype):

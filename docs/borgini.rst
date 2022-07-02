@@ -5,19 +5,15 @@ borgini
    :members:
    :undoc-members:
    :show-inheritance:
-.. automodule:: borgini.src
+.. automodule:: borgini.config
    :members:
    :undoc-members:
    :show-inheritance:
-.. automodule:: borgini.src.config
+.. automodule:: borgini.funcs
    :members:
    :undoc-members:
    :show-inheritance:
-.. automodule:: borgini.src.funcs
-   :members:
-   :undoc-members:
-   :show-inheritance:
-.. automodule:: borgini.src.parser
+.. automodule:: borgini.parser
    :members:
    :undoc-members:
    :show-inheritance:

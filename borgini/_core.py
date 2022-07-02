@@ -1,6 +1,6 @@
 """
-borgini.src
-===========
+borgini._core
+=============
 """
 import datetime
 import os
@@ -22,7 +22,7 @@ class BorgBackup:
     :param repopath:    Path to the backup repository - local dir if
                         ``ssh`` set to ``False``, remote server and repo
                         dir if ``ssh`` set to ``True``.
-    :param pygments:    Instantiated ``src.print.PygmentPrint`` class
+    :param pygments:    Instantiated ``print.PygmentPrint`` class
                         configured with user's style option.
     :param dry:         if ``--dry`` is passed through the commandline
                         then display the commandline arguments that

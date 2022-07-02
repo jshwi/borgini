@@ -1,6 +1,6 @@
 """
-borgini.src.config
-==================
+borgini.config
+==============
 
 All things ``config.ini``
 """
@@ -14,7 +14,7 @@ class RawConfig:
     read from the ``config.ini`` file. The boolean values get written to
     the file as strings, and they get read from the file into the buffer
     as strings too. Not all values are as they should be when read into
-    Python so this will get subclassed into ``src.config.Proxy`` first.
+    Python so this will get subclassed into ``config.Proxy`` first.
 
     :param configpath:  The path to the config.ini file - this depends
                         on the profile used and whether this is run as
@@ -107,7 +107,7 @@ class Proxy:
     into boolean and ``NoneType`` values or some of the tests will not
     work i.e. ``None`` and ``False`` will be ``True`` as the strings
     ``"None"`` and ``"False"`` Inherit ``RawConfig`` after the
-    ``src.parser.Catch`` string has identified run-time errors.
+    ``parser.Catch`` string has identified run-time errors.
 
     :param raw_config:  Instantiated ``RawConfig`` object containing the
                         ``configparser.ConfigParser`` object as
@@ -174,8 +174,8 @@ class Proxy:
 
 class Config(Proxy):
     """Final config object suitable for running with python methods.
-    Subclass the ``src.config.Proxy`` class to inherit the translated
-    config object from ``ConfigParser`` -> ``Dict``.
+    Subclass the ``config.Proxy`` class to inherit the translated config
+    object from ``ConfigParser`` -> ``Dict``.
 
     :param raw_config:  The ``configparser.ConfigParser`` object.
     """
@@ -191,8 +191,8 @@ class Config(Proxy):
         """Get a key from the dictionary object in ``self``. If the
         value is not found such as the ``BORG_PASSPHRASE`` environment
         variable (as the string value ``"None"`` would have been omitted
-        by ``src.config.Proxy``) return ``None`` in its place to avoid
-        an expected error and carry on omitting the key.
+        by ``config.Proxy``) return ``None`` in its place to avoid an
+        expected error and carry on omitting the key.
 
         :param section: The primary key and the section from
                         ``configparser.ConfigParser``.

@@ -1,6 +1,6 @@
 """
-borgini.src.parser
-==================
+borgini.parser
+==============
 
 Parse the commandline arguments and check arguments for errors and exit
 informatively
