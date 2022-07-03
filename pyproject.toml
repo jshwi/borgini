@@ -1,3 +1,9 @@
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = [
+    "poetry-core>=1.0.0",
+]
+
 [tool.black]
 exclude = '''
 /(
@@ -19,6 +25,47 @@ omit = [
     "whitelist.py",
     "borgini/__main__.py",
 ]
+
+[tool.poetry]
+authors = [
+    "jshwi <stephen@jshwisolutions.com>",
+]
+description = "ini config for borg backup"
+documentation = "https://borgini.readthedocs.io/en/latest/?badge=latest"
+homepage = "https://pypi.org/project/borgini/"
+keywords = [
+    "backup",
+    "deduplicate",
+    "borg",
+    "ini",
+    "config",
+]
+license = "MIT"
+maintainers = [
+    "jshwi <stephen@jshwisolutions.com>",
+]
+name = "borgini"
+readme = "README.rst"
+repository = "https://github.com/jshwi/borgini"
+version = "1.0.0"
+
+[tool.poetry.dependencies]
+borgbackup = "^1.1.15"
+pygments = "^2.6.1"
+python = "^3.8"
+
+[tool.poetry.dev-dependencies]
+bump2version = "^1.0.1"
+freezegun = "^1.1.0"
+ipython = "^7.19.0"
+prompt-toolkit = "^3.0.13"
+pyaud = "^1.2.1"
+pytest = "^6.2.1"
+pytest-randomly = "^3.5.0"
+restview = "^2.9.2"
+
+[tool.poetry.scripts]
+borgini = "borgini:main"
 
 [tool.pytest.ini_options]
 addopts = [

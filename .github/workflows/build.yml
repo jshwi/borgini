@@ -1,53 +1,52 @@
-name: build
+name: CI
 
 on:
   push:
-    branches:
-      - master
+    branches: [master]
+
+  pull_request:
+    branches: [master]
 
 jobs:
-  build:
-    name: build
-    runs-on: ubuntu-18.04
+  ci:
+    name: ${{ matrix.os }}-python${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
     env:
-      LANG: en_AU.UTF-8
-      GH_NAME: jshwi
-      GH_EMAIL: stephen@jshwisolutions.com
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      PYAUD_GH_NAME: jshwi
+      PYAUD_GH_EMAIL: stephen@jshwisolutions.com
+      PYAUD_GH_TOKEN: ${{ secrets.PYAUD_GH_TOKEN }}
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       CODECOV_SLUG: jshwi/borgini
 
     strategy:
       matrix:
         python-version: [3.8]
+        os: [ubuntu-latest]
 
     steps:
-    - name: Checkout build
-      uses: actions/checkout@v2
+      - name: Checkout build
+        id: checkout-build
+        uses: actions/checkout@v3
 
-    - name: Setup Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Install Borg Dependencies
+        id: install-borg-dependencies
+        run: sudo apt install libacl1-dev
 
-    - name: Install dependencies
-      run: sudo apt install zstd libacl1-dev
+      - name: Install Poetry
+        id: install-poetry
+        run: pipx install poetry
 
-    - name: Install Pipenv
-      run: python -m pip install --upgrade pip pipenv wheel
+      - name: Setup Python
+        id: setup-python
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: poetry
 
-    - name: Cache Virtualenvs
-      uses: actions/cache@v2
-      id: pipenv-cache
-      with:
-        path: ~/.local/share/virtualenvs
-        key: ${{ runner.os }}-pipenv-${{ secrets.CACHE_VERSION }}-${{ hashFiles('**/Pipfile.lock') }}
+      - name: Install Python Packages
+        id: install-python-packages
+        run: poetry install
 
-    - name: Setup Virtualenv
-      if: steps.pipenv-cache.outputs.cache-hit != 'true'
-      run: pipenv install --dev
-
-    - name: Audit
-      run: |
-        python -m pipenv run pip install -e .
-        python -m pipenv run pyaud audit --deploy
+      - name: Audit
+        run: |
+          poetry run pyaud audit --deploy

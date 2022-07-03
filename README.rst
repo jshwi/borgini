@@ -12,9 +12,6 @@ Borgini
 .. image:: https://codecov.io/gh/jshwi/borgini/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/jshwi/borgini
     :alt: codecov.io
-.. image:: https://readthedocs.org/projects/borgini/badge/?version=latest
-    :target: https://borgini.readthedocs.io/en/latest/?badge=latest
-    :alt: readthedocs.org
 .. image:: https://img.shields.io/badge/License-MIT-blue.svg
     :target: https://lbesson.mit-license.org/
     :alt: mit
