@@ -11,6 +11,8 @@ import argparse
 import sys
 import typing as t
 
+from ._version import __version__
+
 
 def getcolor(string: str, code: int) -> str:
     """Return a given string in color depending on the code provided.
@@ -41,6 +43,7 @@ class RawParser(argparse.ArgumentParser):
         self.args = self.parse_args()
         self.arg_groups: t.Dict[str | None, argparse.Namespace] = {}
         self._get_argument_group()
+        self._version_request()
 
     def _add_editor_args(self) -> None:
         editor_args = self.add_argument_group(title="EDITOR")
@@ -85,6 +88,12 @@ class RawParser(argparse.ArgumentParser):
             help="view the commandline arguments that would be run",
         )
         self.add_argument(
+            "-v",
+            "--version",
+            action="store_true",
+            help="show version and exit",
+        )
+        self.add_argument(
             "--select",
             action="store",
             default="default",
@@ -108,6 +117,12 @@ class RawParser(argparse.ArgumentParser):
                 for a in group._group_actions
             }
             self.arg_groups[group.title] = argparse.Namespace(**group_dict)
+
+    def _version_request(self) -> None:
+        # print version if `--version` is passed to commandline
+        if self.args.version:
+            print(__version__)
+            sys.exit(0)
 
 
 class Catch:

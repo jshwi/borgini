@@ -13,7 +13,7 @@ EMPTY_REPO_SETTING = (
     ". borgini EDITOR --config --select default\n"
 )
 INVALID_PATH_ARG = (
-    "usage: borgini [-h] [-l] [-d] [--select PROFILE]\n"
+    "usage: borgini [-h] [-l] [-d] [-v] [--select PROFILE]\n"
     "                               [--remove PROFILE [PROFILE ...]] [-c] "
     "[-i] [-e]\n"
     "                               [-s]\n"

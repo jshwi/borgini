@@ -772,3 +772,22 @@ def test_windows_attr_error(monkeypatch: pytest.MonkeyPatch) -> None:
         borgini.funcs.get_configdir()
 
     assert str(err.value) == "Windows not currently supported"
+
+
+def test_print_version(
+    monkeypatch: pytest.MonkeyPatch,
+    main: MockMainFixture,
+    nocolorcapsys: NoColorCapsys,
+) -> None:
+    """Test printing of version on commandline.
+
+    :param monkeypatch: Mock patch environment and attributes.
+    :param main: Patch package entry point.
+    :param nocolorcapsys: Capture system output while stripping ANSI
+        color codes.
+    """
+    monkeypatch.setattr("borgini.parser.__version__", "1.0.0")
+    with pytest.raises(SystemExit):
+        main("--version")
+
+    assert nocolorcapsys.stdout().strip() == "1.0.0"

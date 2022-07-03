@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 [Unreleased](https://github.com/jshwi/borgini/compare/v1.0.0...HEAD)
 ------------------------------------------------------------------------
+### Added
+- Adds `-v/--version` argument
 
 [1.0.0](https://github.com/jshwi/borgini/releases/tag/v1.0.0) - 2021-02-07
 ------------------------------------------------------------------------
