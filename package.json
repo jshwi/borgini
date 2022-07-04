@@ -1,6 +1,6 @@
 {
   "name": "borgini",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "ini config for borg backup",
   "private": true,
   "directories": {
