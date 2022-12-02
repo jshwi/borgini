@@ -53,6 +53,7 @@ version = "1.1.0"
 borgbackup = "^1.1.15"
 pygments = "^2.6.1"
 python = "^3.8"
+wrapt = "^1.14.1"
 
 [tool.poetry.dev-dependencies]
 bump2version = "^1.0.1"
