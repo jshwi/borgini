@@ -26,6 +26,9 @@ omit = [
     "borgini/__main__.py",
 ]
 
+[tool.isort]
+profile = "black"
+
 [tool.poetry]
 authors = [
     "jshwi <stephen@jshwisolutions.com>",
