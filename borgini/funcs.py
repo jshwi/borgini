@@ -86,12 +86,11 @@ def edit_files(
         configured with user's style option.
     :param dry: Dry mode for when we do not want to execute the code.
     """
-    file = normalize_ntpath(file)
-    command = f"{edit} {file}"
+    command = [edit, normalize_ntpath(file)]
     if dry:
-        pygments.print(command, ini=False)
+        pygments.print(" ".join(command), ini=False)
     else:
-        subprocess.call(command, shell=True)
+        subprocess.call(command)
 
 
 def read_file(filepath: str, pygments: PygmentPrint) -> None:
