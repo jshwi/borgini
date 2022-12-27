@@ -60,9 +60,7 @@ class BorgBackup:
         return tuple(args), tuple(keep)
 
     def _run_borg(self, args: t.Tuple[str, ...]) -> None:
-        borgargs = " ".join(args)
-        command = f"{self.bin} {borgargs}"
-        subprocess.call(command, shell=True)
+        subprocess.call([str(self.bin), *args])
 
     def _dry_mode(self, args: t.Tuple[str, ...]) -> None:
         borgargs = " ".join([f" {a}\n" for a in args])
