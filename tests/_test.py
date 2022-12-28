@@ -21,6 +21,18 @@ import pytest
 import borgini
 
 from . import (
+    CONFIG_INI,
+    DATETIME,
+    DEFAULT,
+    DEVNULL,
+    DRY,
+    INITIALIZE_FILES,
+    NEWPROFILE,
+    REPONAME,
+    REPOPATH,
+    SHUTIL_WHICH,
+    TMPCONFIGDIR,
+    VIM,
     BorgCommands,
     EditPathArgFixture,
     InitializeFilesExpectedFixture,
@@ -36,7 +48,7 @@ from . import (
 )
 
 
-@pytest.mark.usefixtures("tmpconfigdir")
+@pytest.mark.usefixtures(TMPCONFIGDIR)
 def test_initialize_files(
     initialize_files: str,
     initialize_files_expected: InitializeFilesExpectedFixture,
@@ -51,11 +63,11 @@ def test_initialize_files(
     :param initialize_files_expected: Expected output when initializing
         files.
     """
-    _expected = initialize_files_expected("default")
+    _expected = initialize_files_expected(DEFAULT)
     assert initialize_files == _expected
 
 
-@pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
+@pytest.mark.usefixtures(TMPCONFIGDIR, INITIALIZE_FILES)
 def test_empty_repo_setting(
     main: MockMainFixture, nocolorcapsys: NoColorCapsys
 ) -> None:
@@ -70,14 +82,14 @@ def test_empty_repo_setting(
         codes.
     """
     with pytest.raises(SystemExit) as pytest_err:
-        main("--dry")
+        main(DRY)
     err = nocolorcapsys.stderr()
     assert err == expected.EMPTY_REPO_SETTING
     assert pytest_err.value.code == 1
 
 
-@freezegun.freeze_time("2021-02-07T16:12:58")
-@pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
+@freezegun.freeze_time(DATETIME)
+@pytest.mark.usefixtures(TMPCONFIGDIR, INITIALIZE_FILES)
 def test_borg_commands(
     main: MockMainFixture,
     update_config: UpdateConfigFixture,
@@ -96,9 +108,9 @@ def test_borg_commands(
     :param tmpconfigdir:  Absolute path to directory containing
         ``config.ini``, ``include``, ``exclude`` and ``styles``files.
     """
-    configpath = os.path.join(tmpconfigdir, "default", "config.ini")
+    configpath = os.path.join(tmpconfigdir, DEFAULT, CONFIG_INI)
     borg_commands = BorgCommands(
-        DEFAULT={"reponame": expected.HOST, "repopath": "/dev/null"},
+        DEFAULT={REPONAME: expected.HOST, REPOPATH: DEVNULL},
         SSH={
             "remoteuser": expected.USER,
             "remotehost": expected.HOST,
@@ -106,13 +118,13 @@ def test_borg_commands(
         },
     )
     _expected = borg_commands.commands()
-    update_config(configpath, DEFAULT={"repopath": "/dev/null"})
-    main("--dry")
+    update_config(configpath, DEFAULT={REPOPATH: DEVNULL})
+    main(DRY)
     out = nocolorcapsys.stdout()
     assert out == _expected
 
 
-@pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
+@pytest.mark.usefixtures(TMPCONFIGDIR, INITIALIZE_FILES)
 def test_show_config(
     main: MockMainFixture, nocolorcapsys: NoColorCapsys
 ) -> None:
@@ -131,7 +143,7 @@ def test_show_config(
     assert out == expected.SHOW_CONFIG
 
 
-@pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
+@pytest.mark.usefixtures(TMPCONFIGDIR, INITIALIZE_FILES)
 def test_show_include(
     main: MockMainFixture, nocolorcapsys: NoColorCapsys
 ) -> None:
@@ -150,7 +162,7 @@ def test_show_include(
     assert out == expected.SHOW_INCLUDE
 
 
-@pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
+@pytest.mark.usefixtures(TMPCONFIGDIR, INITIALIZE_FILES)
 def test_show_exclude(
     main: MockMainFixture, nocolorcapsys: NoColorCapsys
 ) -> None:
@@ -169,7 +181,7 @@ def test_show_exclude(
     assert out == expected.SHOW_EXCLUDE
 
 
-@pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
+@pytest.mark.usefixtures(TMPCONFIGDIR, INITIALIZE_FILES)
 def test_invalid_keyfile(  # pylint: disable=too-many-arguments
     main: MockMainFixture,
     invalid_keyfile: InvalidKeyfileFixture,
@@ -190,9 +202,9 @@ def test_invalid_keyfile(  # pylint: disable=too-many-arguments
     :param tmpconfigdir: Absolute path to directory containing
         ``config.ini``, ``include``, ``exclude`` and ``styles``files.
     """
-    configpath = os.path.join(tmpconfigdir, "default", "config.ini")
+    configpath = os.path.join(tmpconfigdir, DEFAULT, CONFIG_INI)
     _expected = invalid_keyfile(
-        DEFAULT={"reponame": expected.HOST, "repopath": "/dev/null"},
+        DEFAULT={REPONAME: expected.HOST, REPOPATH: DEVNULL},
         SSH={
             "remoteuser": expected.USER,
             "remotehost": expected.HOST,
@@ -201,15 +213,15 @@ def test_invalid_keyfile(  # pylint: disable=too-many-arguments
     )
     update_config(
         configpath,
-        DEFAULT={"repopath": "/dev/null"},
-        ENVIRONMENT={"keyfile": "/dev/null"},
+        DEFAULT={REPOPATH: DEVNULL},
+        ENVIRONMENT={"keyfile": DEVNULL},
     )
-    main("--dry")
+    main(DRY)
     out = nocolorcapsys.stdout()
     assert out == _expected
 
 
-@pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
+@pytest.mark.usefixtures(TMPCONFIGDIR, INITIALIZE_FILES)
 def test_invalid_path_arg(
     main: MockMainFixture, nocolorcapsys: NoColorCapsys
 ) -> None:
@@ -233,7 +245,7 @@ def test_invalid_path_arg(
     assert err == expected.INVALID_PATH_ARG
 
 
-@pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
+@pytest.mark.usefixtures(TMPCONFIGDIR, INITIALIZE_FILES)
 def test_edit_invalid_path_arg(
     main: MockMainFixture, nocolorcapsys: NoColorCapsys
 ) -> None:
@@ -253,13 +265,13 @@ def test_edit_invalid_path_arg(
         codes.
     """
     with pytest.raises(SystemExit):
-        main("vim", "--invalid")
+        main(VIM, "--invalid")
     err = nocolorcapsys.stderr()
     assert err == expected.INVALID_PATH_ARG
 
 
-@mock.patch("shutil.which")
-@pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
+@mock.patch(SHUTIL_WHICH)
+@pytest.mark.usefixtures(TMPCONFIGDIR, INITIALIZE_FILES)
 def test_edit_path_arg(
     mock_which: Mock,
     main: MockMainFixture,
@@ -282,18 +294,18 @@ def test_edit_path_arg(
     :param tmpconfigdir:  Absolute path to directory containing
         ``config.ini``, ``include``, ``exclude`` and ``styles``files.
     """
-    mock_which.return_value = "vim"
-    path = os.path.join(tmpconfigdir, "default", "include")
+    mock_which.return_value = VIM
+    path = os.path.join(tmpconfigdir, DEFAULT, "include")
     _expected = edit_path_arg(path)
     with pytest.raises(SystemExit):
-        main("vim", "--include", "--dry")
+        main(VIM, "--include", DRY)
 
     out = nocolorcapsys.stdout()
     assert out == _expected
 
 
-@freezegun.freeze_time("2021-02-07T16:12:58")
-@pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
+@freezegun.freeze_time(DATETIME)
+@pytest.mark.usefixtures(TMPCONFIGDIR, INITIALIZE_FILES)
 def test_read_keyfile(  # pylint: disable=too-many-arguments
     main: MockMainFixture,
     update_config: UpdateConfigFixture,
@@ -316,22 +328,22 @@ def test_read_keyfile(  # pylint: disable=too-many-arguments
     :param keygen: Generate a keyfile and read its random password value
         to the ``BORG_PASSPHRASE`` environment variable.
     """
-    configpath = os.path.join(tmpconfigdir, "default", "config.ini")
+    configpath = os.path.join(tmpconfigdir, DEFAULT, CONFIG_INI)
     keyfile = os.path.join(tmpdir, "borgsecret")
     with open(keyfile, "w", encoding="utf-8") as file:
         file.write(keygen)
     update_config(
         configpath,
-        DEFAULT={"repopath": "/dev/null"},
+        DEFAULT={REPOPATH: DEVNULL},
         ENVIRONMENT={"keyfile": keyfile},
     )
-    main("--dry")
+    main(DRY)
     capsys.readouterr()
     assert os.environ["BORG_PASSPHRASE"] == keygen
 
 
-@freezegun.freeze_time("2021-02-07T16:12:58")
-@pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
+@freezegun.freeze_time(DATETIME)
+@pytest.mark.usefixtures(TMPCONFIGDIR, INITIALIZE_FILES)
 def test_no_ssh(
     main: MockMainFixture,
     update_config: UpdateConfigFixture,
@@ -350,22 +362,18 @@ def test_no_ssh(
     :param tmpconfigdir:  Absolute path to directory containing
         ``config.ini``, ``include``, ``exclude`` and ``styles``files.
     """
-    configpath = os.path.join(tmpconfigdir, "default", "config.ini")
+    configpath = os.path.join(tmpconfigdir, DEFAULT, CONFIG_INI)
     borg_commands = BorgCommands(
-        DEFAULT={
-            "reponame": expected.HOST,
-            "repopath": "/dev/null",
-            "ssh": False,
-        }
+        DEFAULT={REPONAME: expected.HOST, REPOPATH: DEVNULL, "ssh": False}
     )
     _expected = borg_commands.commands()
-    update_config(configpath, DEFAULT={"repopath": "/dev/null", "ssh": False})
-    main("--dry")
+    update_config(configpath, DEFAULT={REPOPATH: DEVNULL, "ssh": False})
+    main(DRY)
     out = nocolorcapsys.stdout()
     assert out == _expected
 
 
-@pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
+@pytest.mark.usefixtures(TMPCONFIGDIR, INITIALIZE_FILES)
 def test_select_profile(
     main: MockMainFixture,
     initialize_files_expected: InitializeFilesExpectedFixture,
@@ -387,12 +395,12 @@ def test_select_profile(
     :param tmpconfigdir:  Absolute path to directory containing
         ``config.ini``, ``include``, ``exclude`` and ``styles``files.
     """
-    _expected = initialize_files_expected("newprofile")
-    out = initialize_profile(main, tmpconfigdir, nocolorcapsys, "newprofile")
+    _expected = initialize_files_expected(NEWPROFILE)
+    out = initialize_profile(main, tmpconfigdir, nocolorcapsys, NEWPROFILE)
     assert out == _expected
 
 
-@pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
+@pytest.mark.usefixtures(TMPCONFIGDIR, INITIALIZE_FILES)
 def test_list_arg(
     main: MockMainFixture,
     list_arg: ListArgFixture,
@@ -412,15 +420,15 @@ def test_list_arg(
     :param tmpconfigdir:  Absolute path to directory containing
         ``config.ini``, ``include``, ``exclude`` and ``styles``files.
     """
-    _expected = list_arg("default", "newprofile")
-    initialize_profile(main, tmpconfigdir, nocolorcapsys, "newprofile")
+    _expected = list_arg(DEFAULT, NEWPROFILE)
+    initialize_profile(main, tmpconfigdir, nocolorcapsys, NEWPROFILE)
     with pytest.raises(SystemExit):
-        main("--dry", "--list")
+        main(DRY, "--list")
     out = nocolorcapsys.stdout()
     assert out == _expected
 
 
-@pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
+@pytest.mark.usefixtures(TMPCONFIGDIR, INITIALIZE_FILES)
 def test_remove_no_exist(
     main: MockMainFixture, remove: RemoveFixture, nocolorcapsys: NoColorCapsys
 ) -> None:
@@ -438,7 +446,7 @@ def test_remove_no_exist(
     assert out == expected.REMOVE_NO_EXIST
 
 
-@pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
+@pytest.mark.usefixtures(TMPCONFIGDIR, INITIALIZE_FILES)
 @pytest.mark.usefixtures()
 def test_remove_arg(
     main: MockMainFixture,
@@ -461,13 +469,13 @@ def test_remove_arg(
         ``config.ini``, ``include``, ``exclude`` and ``styles``files.
     """
     # calls `initialize_newprofile_files' unlike the above
-    initialize_profile(main, tmpconfigdir, nocolorcapsys, "newprofile")
+    initialize_profile(main, tmpconfigdir, nocolorcapsys, NEWPROFILE)
     out = remove(main, nocolorcapsys)
-    assert not os.path.isdir(os.path.join(tmpconfigdir, "newprofile"))
+    assert not os.path.isdir(os.path.join(tmpconfigdir, NEWPROFILE))
     assert out == expected.REMOVE_ARG
 
 
-@pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
+@pytest.mark.usefixtures(TMPCONFIGDIR, INITIALIZE_FILES)
 def test_file_exists_error(
     main: MockMainFixture,
     initialize_profile: InitializeProfileFixture,
@@ -497,9 +505,9 @@ def test_file_exists_error(
         borgini.Data(tmpconfigdir, "profile3").make_appdir()
 
 
-@freezegun.freeze_time("2021-02-07T16:12:58")
+@freezegun.freeze_time(DATETIME)
 @pytest.mark.parametrize("_", range(10))
-@pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
+@pytest.mark.usefixtures(TMPCONFIGDIR, INITIALIZE_FILES)
 def test_random_opts(  # pylint: disable=too-many-arguments
     main: MockMainFixture,
     randopts: RandOptsFixture,
@@ -523,17 +531,17 @@ def test_random_opts(  # pylint: disable=too-many-arguments
     :param tmpconfigdir:  Absolute path to directory containing
         ``config.ini``, ``include``, ``exclude`` and ``styles``files.
     """
-    configpath = os.path.join(tmpconfigdir, "default", "config.ini")
+    configpath = os.path.join(tmpconfigdir, DEFAULT, CONFIG_INI)
     obj = randopts()
     borg_commands = BorgCommands(**obj)
     _expected = borg_commands.commands()
     update_config(configpath, **obj)
-    main("--dry")
+    main(DRY)
     out = nocolorcapsys.stdout()
     assert out == _expected
 
 
-@mock.patch("shutil.which")
+@mock.patch(SHUTIL_WHICH)
 def test_run_editor_without_arg(
     mock_which: Mock, main: MockMainFixture, nocolorcapsys: NoColorCapsys
 ) -> None:
@@ -547,15 +555,15 @@ def test_run_editor_without_arg(
     :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
         codes.
     """
-    mock_which.return_value = "vim"
+    mock_which.return_value = VIM
     with pytest.raises(SystemExit) as pytest_err:
-        main("vim")
+        main(VIM)
     err = nocolorcapsys.stderr()
     assert err == "EDITOR must be followed by a file to edit\n"
     assert pytest_err.value.code == 1
 
 
-@mock.patch("shutil.which")
+@mock.patch(SHUTIL_WHICH)
 def test_run_uninstalled_editor(
     mock_which: Mock, main: MockMainFixture, nocolorcapsys: NoColorCapsys
 ) -> None:
@@ -571,13 +579,13 @@ def test_run_uninstalled_editor(
     """
     mock_which.return_value = None
     with pytest.raises(SystemExit) as pytest_err:
-        main("vim")
+        main(VIM)
     err = nocolorcapsys.stderr()
     assert err == "EDITOR must be installed: `vim' cannot be found\n"
     assert pytest_err.value.code == 1
 
 
-@pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
+@pytest.mark.usefixtures(TMPCONFIGDIR, INITIALIZE_FILES)
 def test_repair_config_key_err(
     main: MockMainFixture,
     update_config: UpdateConfigFixture,
@@ -598,15 +606,12 @@ def test_repair_config_key_err(
     :param capsys: Silence stdout.
     """
     bad_section = "NOT_A_SECTION"
-    configpath = os.path.join(tmpconfigdir, "default", "config.ini")
+    configpath = os.path.join(tmpconfigdir, DEFAULT, CONFIG_INI)
     update_config(
         configpath,
-        **{
-            "DEFAULT": {"repopath": "/dev/null"},
-            bad_section: {"bad_key": "null"},
-        },
+        **{"DEFAULT": {REPOPATH: DEVNULL}, bad_section: {"bad_key": "null"}},
     )
-    main("--dry")
+    main(DRY)
     capsys.readouterr()  # silence
     config = configparser.ConfigParser()
     config.read(configpath)
@@ -614,7 +619,7 @@ def test_repair_config_key_err(
         _ = config[bad_section]
 
 
-@pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
+@pytest.mark.usefixtures(TMPCONFIGDIR, INITIALIZE_FILES)
 def test_pass_on_not_a_directory_err(
     main: MockMainFixture, tmpconfigdir: str, capsys: pytest.CaptureFixture
 ) -> None:
@@ -641,7 +646,7 @@ def test_pass_on_not_a_directory_err(
     capsys.readouterr()  # silence
 
 
-@pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
+@pytest.mark.usefixtures(TMPCONFIGDIR, INITIALIZE_FILES)
 def test_chosen_style(tmpconfigdir: str) -> None:
     """Test usage of selected style.
 
@@ -651,12 +656,12 @@ def test_chosen_style(tmpconfigdir: str) -> None:
     :param tmpconfigdir:  Absolute path to directory containing
         ``config.ini``, ``include``, ``exclude`` and ``styles``files.
     """
-    styles = os.path.join(tmpconfigdir, "default", "styles")
+    styles = os.path.join(tmpconfigdir, DEFAULT, "styles")
     pygments = borgini.PygmentPrint(styles)
     assert pygments.style == "monokai"
 
 
-@pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
+@pytest.mark.usefixtures(TMPCONFIGDIR, INITIALIZE_FILES)
 def test_default_style(tmpconfigdir: str) -> None:
     """Test usage of default style.
 
@@ -666,17 +671,17 @@ def test_default_style(tmpconfigdir: str) -> None:
     :param tmpconfigdir:  Absolute path to directory containing
         ``config.ini``, ``include``, ``exclude`` and ``styles``files.
     """
-    styles = os.path.join(tmpconfigdir, "default", "styles")
+    styles = os.path.join(tmpconfigdir, DEFAULT, "styles")
     with open(styles, encoding="utf-8") as file:
         content = [r for r in file.readlines() if "monokai" not in r]
     with open(styles, "w", encoding="utf-8") as file:
         for line in content:
             file.write(f"{line}\n")
     pygments = borgini.PygmentPrint(styles)
-    assert pygments.style == "default"
+    assert pygments.style == DEFAULT
 
 
-@pytest.mark.usefixtures("tmpconfigdir", "initialize_files")
+@pytest.mark.usefixtures(TMPCONFIGDIR, INITIALIZE_FILES)
 @mock.patch("subprocess.call")
 def test_run_call_main_process(
     mock_subproc_call: Mock,
@@ -695,8 +700,8 @@ def test_run_call_main_process(
     :param tmpconfigdir:  Absolute path to directory containing
         ``config.ini``, ``include``, ``exclude`` and ``styles``files.
     """
-    configpath = os.path.join(tmpconfigdir, "default", "config.ini")
-    update_config(configpath, DEFAULT={"repopath": "/dev/null"})
+    configpath = os.path.join(tmpconfigdir, DEFAULT, CONFIG_INI)
+    update_config(configpath, DEFAULT={REPOPATH: DEVNULL})
     process_mock = mock.Mock()
     attrs = {"wait.return_value": ("output", "error")}
     process_mock.configure_mock(**attrs)
@@ -704,7 +709,7 @@ def test_run_call_main_process(
     main()
 
 
-@mock.patch("shutil.which")
+@mock.patch(SHUTIL_WHICH)
 @mock.patch("subprocess.call")
 def test_run_call_editor(
     mock_which: Mock, mock_subproc_call: Mock, main: MockMainFixture
@@ -726,7 +731,7 @@ def test_run_call_editor(
     mock_subproc_call.return_value = process_mock
     mock_which.return_value = None
     with pytest.raises(SystemExit):
-        main("vim", "--config")
+        main(VIM, "--config")
 
 
 @pytest.mark.parametrize(
