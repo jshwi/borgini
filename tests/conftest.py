@@ -17,7 +17,13 @@ import pytest
 import borgini
 
 from . import (
+    DEVNULL,
+    DRY,
     HOST,
+    INITIALIZE_FILES,
+    NEWPROFILE,
+    REPOPATH,
+    TMPCONFIGDIR,
     BorgCommands,
     EditPathArgFixture,
     InitializeFilesExpectedFixture,
@@ -58,7 +64,7 @@ def fixture_main(monkeypatch: pytest.MonkeyPatch) -> MockMainFixture:
     return _main
 
 
-@pytest.fixture(name="initialize_files")
+@pytest.fixture(name=INITIALIZE_FILES)
 def fixture_initialize_files(
     main: MockMainFixture,
     tmpconfigdir: str | os.PathLike,
@@ -74,7 +80,7 @@ def fixture_initialize_files(
     :return: Stdout from ``capsys``.
     """
     with pytest.raises(SystemExit):
-        main("--dry")
+        main(DRY)
     assert os.path.isdir(tmpconfigdir)
     return nocolorcapsys.stdout()
 
@@ -89,7 +95,7 @@ def fixture_keygen() -> str:
     return "".join(secrets.choice(alphabet) for _ in range(16))
 
 
-@pytest.fixture(name="tmpconfigdir")
+@pytest.fixture(name=TMPCONFIGDIR)
 def fixture_tmpconfigdir(tmpdir: str | os.PathLike) -> str:
     """Make a config directory and return the path.
 
@@ -146,7 +152,7 @@ def fixture_initialize_profile() -> InitializeProfileFixture:
         profile: str,
     ) -> str:
         with pytest.raises(SystemExit):
-            main("--dry", "--select", profile)
+            main(DRY, "--select", profile)
 
         assert os.path.isdir(tmpconfigdir)
         return nocolorcapsys.readouterr()[0]
@@ -163,7 +169,7 @@ def fixture_remove() -> RemoveFixture:
 
     def _remove(main: MockMainFixture, nocolorcapsys: NoColorCapsys) -> str:
         with pytest.raises(SystemExit):
-            main("--dry", "--remove", "newprofile")
+            main(DRY, "--remove", NEWPROFILE)
 
         return nocolorcapsys.stdout()
 
@@ -219,7 +225,7 @@ def fixture_randopts() -> RandOptsFixture:
         randweekly = random.choice(weekly)
         randmonthly = random.choice(monthly)
         return {
-            "DEFAULT": {"repopath": "/dev/null"},
+            "DEFAULT": {REPOPATH: DEVNULL},
             "SSH": {"port": random.randint(1, 9999)},
             "BACKUP": {
                 "verbose": random.choice([True, False]),

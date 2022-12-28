@@ -16,7 +16,20 @@ import pytest
 
 USER = getpass.getuser()
 HOST = socket.gethostname()
-BORG = shutil.which("borg") if shutil.which("borg") else "borg"
+BORG = "borg"
+BORG_BIN = shutil.which(BORG) if shutil.which(BORG) else BORG
+REPONAME = "reponame"
+DATETIME = "2021-02-07T16:12:58"
+SHUTIL_WHICH = "shutil.which"
+NEWPROFILE = "newprofile"
+CONFIG_INI = "config.ini"
+VIM = "vim"
+REPOPATH = "repopath"
+DEVNULL = "/dev/null"
+DRY = "--dry"
+DEFAULT = "default"
+INITIALIZE_FILES = "initialize_files"
+TMPCONFIGDIR = "tmpconfigdir"
 
 
 class NoColorCapsys:
@@ -149,7 +162,7 @@ class BorgCommands:
 
     def _get_fullpath(self, reponame: str) -> str:
         fullremote = self._repo_fullpath()
-        repopath = self.default.get("repopath", "/dev/null")
+        repopath = self.default.get(REPOPATH, DEVNULL)
         return f"{fullremote}{repopath}/{reponame}"
 
     @staticmethod
@@ -172,16 +185,16 @@ class BorgCommands:
 
         :return: String to match against test output.
         """
-        reponame = self.default.get("reponame", HOST)
+        reponame = self.default.get(REPONAME, HOST)
         fullpath = self._get_fullpath(reponame)
         backup_path = self._backup_path(fullpath, reponame)
         return (
-            f"{BORG} create\n"
+            f"{BORG_BIN} create\n"
             f"{self._backup_args()}"
             f"{self._exclude_args()}"
             f"{backup_path}"
             f"{self._include_args()}\n"
-            f"{BORG} prune\n"
+            f"{BORG_BIN} prune\n"
             f"{self._prune_args()}"
             f"  {fullpath}\n"
             f"{self._keep_args()}"
