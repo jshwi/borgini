@@ -9,7 +9,10 @@ on:
 
 jobs:
   ci:
-    name: ${{ matrix.os }}-python${{ matrix.python-version }}-node@${{ matrix.node-version }}
+    name: >
+      ${{ matrix.os }}
+      -python${{ matrix.python-version }}
+      -node@${{ matrix.node-version }}
     runs-on: ${{ matrix.os }}
     env:
       PYAUD_GH_NAME: jshwi
@@ -39,7 +42,7 @@ jobs:
 
       - name: Setup Python
         id: setup-python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
           cache: poetry
