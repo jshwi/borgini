@@ -11,7 +11,6 @@ import getpass
 import os
 import socket
 import typing as t
-from typing import Tuple
 
 
 class RawConfig:
@@ -216,7 +215,7 @@ class Config(Proxy):
 
     def get_keytuple(
         self, **kwargs: t.Tuple[str, ...]
-    ) -> Tuple[str | bool | None, ...]:
+    ) -> tuple[str | bool | None, ...]:
         """Return multiple values at once from ``self.dict[section]``.
 
         Return as a tuple that can be unpacked by the keys passed to the
