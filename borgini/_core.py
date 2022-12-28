@@ -21,6 +21,8 @@ from pygments.lexers.configs import IniLexer
 from pygments.lexers.shell import BashLexer
 
 HOME = str(pathlib.Path.home())
+EXCLUDE = "exclude"
+INCLUDE = "include"
 
 
 class BorgBackup:
@@ -137,7 +139,7 @@ class Data:
         self.files = self._get_file_obj()
 
     def _get_file_obj(self) -> t.Dict[str, str]:
-        paths = "config.ini", "include", "exclude", "styles"
+        paths = "config.ini", INCLUDE, EXCLUDE, "styles"
         return {p: os.path.join(self.dirname, p) for p in paths}
 
     def make_appdir(self) -> None:
@@ -163,7 +165,7 @@ class Data:
             to file.
         """
         for count, datafile in enumerate(
-            self._get_paths("include", "exclude", "styles")
+            self._get_paths(INCLUDE, EXCLUDE, "styles")
         ):
             if not os.path.isfile(datafile):
                 with open(datafile, "w", encoding="utf-8") as file:
@@ -208,7 +210,7 @@ class Data:
 
         :return: Tuple of paths to include in backups for that profile
         """
-        include_path = self.get_path("include")
+        include_path = self.get_path(INCLUDE)
         return self._format_include(include_path)
 
     @staticmethod
@@ -227,7 +229,7 @@ class Data:
         :return: A lit of paths to exclude - this will override items in
             ``include``
         """
-        exclude_path = self.get_path("exclude")
+        exclude_path = self.get_path(EXCLUDE)
         exclude_list = self._get_files(exclude_path)
         return self._format_exclude(exclude_list)
 

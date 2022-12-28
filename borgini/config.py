@@ -12,6 +12,9 @@ import os
 import socket
 import typing as t
 
+NONE = "None"
+DEFAULT = "DEFAULT"
+
 
 class RawConfig:
     """Contains the ``configparser.ConfigParser`` object.
@@ -40,7 +43,7 @@ class RawConfig:
         self._read_kwargs(
             DEFAULT={
                 "reponame": hostname,
-                "repopath": "None",
+                "repopath": NONE,
                 "timestamp": "%Y-%m-%dT%H:%M:%S",
                 "ssh": True,
                 "prune": True,
@@ -64,7 +67,7 @@ class RawConfig:
                 "keep-weekly": "4",
                 "keep-monthly": "6",
             },
-            ENVIRONMENT={"keyfile": "None"},
+            ENVIRONMENT={"keyfile": NONE},
         )
 
     def write_values(self) -> None:
@@ -93,8 +96,8 @@ class RawConfig:
         reader.read(self.configpath)
         for section in reader:
             for key in dict(reader[section]):
-                if section == "DEFAULT" or (
-                    section != "DEFAULT" and key not in reader["DEFAULT"]
+                if section == DEFAULT or (
+                    section != DEFAULT and key not in reader[DEFAULT]
                 ):
                     try:
                         self.parser[section][key] = reader[section][key]
@@ -128,17 +131,17 @@ class Proxy:
         :return: List of config sections.
         """
         sections = self.parser.sections()
-        sections.append("DEFAULT")
+        sections.append(DEFAULT)
         return sections
 
     def _filter_default(self, section: str) -> t.Dict[str, t.Any]:
-        if section == "DEFAULT":
+        if section == DEFAULT:
             return dict(self.parser[section])
 
         return {
             k: v
             for k, v in self.parser[section].items()
-            if k not in dict(self.parser["DEFAULT"])
+            if k not in dict(self.parser[DEFAULT])
         }
 
     def _raw_dict(self) -> t.Dict[str, t.Any]:
@@ -146,9 +149,7 @@ class Proxy:
 
     @staticmethod
     def _convert_null(obj: t.Dict[str, t.Any]) -> t.Dict[str, t.Any]:
-        return {
-            s: {k: v for k, v in obj[s].items() if v != "None"} for s in obj
-        }
+        return {s: {k: v for k, v in obj[s].items() if v != NONE} for s in obj}
 
     def _get_boolean(self, section: str, key: str) -> bool:
         try:
