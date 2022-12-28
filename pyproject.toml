@@ -68,7 +68,7 @@ borgbackup = "^1.1.15"
 pygments = "^2.6.1"
 python = "^3.8"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 bump2version = "^1.0.1"
 freezegun = "^1.2.2"
 ipython = "^8.6.0"
