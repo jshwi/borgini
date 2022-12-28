@@ -17,6 +17,17 @@ exclude = '''
 line-length = 79
 skip-magic-trailing-comma = true
 
+[tool.constcheck]
+ignore-strings = [
+    "utf-8",
+]
+
+[tool.constcheck.ignore-from]
+"borgini/parser.py" = [
+    "store",
+    "store_true",
+]
+
 [tool.coverage.report]
 fail_under = 100
 
