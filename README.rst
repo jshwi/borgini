@@ -4,8 +4,8 @@ borgini
     :target: https://opensource.org/licenses/MIT
     :alt: License
 .. image:: https://img.shields.io/pypi/v/borgini
-    :target: https://img.shields.io/pypi/v/borgini
-    :alt: pypi
+    :target: https://pypi.org/project/borgini/
+    :alt: PyPI
 .. image:: https://github.com/jshwi/borgini/actions/workflows/ci.yml/badge.svg
     :target: https://github.com/jshwi/borgini/actions/workflows/ci.yml
     :alt: CI
