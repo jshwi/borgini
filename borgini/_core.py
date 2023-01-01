@@ -131,6 +131,7 @@ class Data:
     Get the list of files to include and exclude. Allow the files to
     contain comments and avoid parsing them.
 
+    :param appdir: Application data dirs.
     :param profile: The profile that ``borgini`` is being run under.
     """
 
