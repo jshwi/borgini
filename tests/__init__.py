@@ -88,7 +88,10 @@ class NoColorCapsys:
 
 
 class BorgCommands:
-    """Read the kwargs supplied into a mock of the command output."""
+    """Read the kwargs supplied into a mock of the command output.
+
+    :param kwargs: Various ini config kwargs.
+    """
 
     def __init__(self, **kwargs):
         self.datetime = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
