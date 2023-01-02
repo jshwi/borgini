@@ -17,6 +17,13 @@ exclude = '''
 line-length = 79
 skip-magic-trailing-comma = true
 
+[tool.constcheck]
+ignore_strings = [
+    "store",
+    "store_true",
+    "utf-8",
+]
+
 [tool.coverage.report]
 fail_under = 100
 
@@ -26,12 +33,25 @@ omit = [
     "borgini/__main__.py",
 ]
 
+[tool.docsig]
+check-class = true
+summary = true
+
+[tool.isort]
+ensure_newline_before_comments = true
+force_grid_wrap = 0
+include_trailing_comma = true
+line_length = 79
+multi_line_output = 3
+profile = "black"
+use_parentheses = true
+
 [tool.poetry]
 authors = [
     "jshwi <stephen@jshwisolutions.com>",
 ]
 description = "ini config for borg backup"
-documentation = "https://borgini.readthedocs.io/en/latest/?badge=latest"
+documentation = "https://borgini.readthedocs.io/en/latest"
 homepage = "https://pypi.org/project/borgini/"
 keywords = [
     "backup",
@@ -71,9 +91,7 @@ borgini = "borgini.__main__:main"
 
 [tool.pyaud.audit]
 modules = [
-    "toc",
-    "whitelist",
-    "sort-pyproject",
+    "files",
     "format",
     "format-docs",
     "format-str",
@@ -81,6 +99,7 @@ modules = [
     "typecheck",
     "unused",
     "lint",
+    "const",
     "params",
     "test",
     "docs",
@@ -88,18 +107,15 @@ modules = [
 
 [tool.pyaud.clean]
 exclude = [
-    "*.egg*",
     ".mypy_cache",
     ".env",
-    "instance",
+    "node_modules",
 ]
 
 [tool.pyaud.indexing]
 exclude = [
     "whitelist.py",
     "conf.py",
-    "setup.py",
-    "migrations",
 ]
 
 [tool.pyaud.logging]
@@ -134,8 +150,8 @@ addopts = [
 filterwarnings = "ignore::DeprecationWarning"
 norecursedirs = [
     "docs",
-    "*.egg-info",
     ".git",
     ".mypy_cache",
     ".idea",
+    ".pytest_cache"
 ]
