@@ -4,11 +4,14 @@ borgini
     :target: https://opensource.org/licenses/MIT
     :alt: License
 .. image:: https://img.shields.io/pypi/v/borgini
-    :target: https://img.shields.io/pypi/v/borgini
-    :alt: pypi
+    :target: https://pypi.org/project/borgini/
+    :alt: PyPI
 .. image:: https://github.com/jshwi/borgini/actions/workflows/ci.yml/badge.svg
     :target: https://github.com/jshwi/borgini/actions/workflows/ci.yml
     :alt: CI
+.. image:: https://results.pre-commit.ci/badge/github/jshwi/borgini/master.svg
+   :target: https://results.pre-commit.ci/latest/github/jshwi/borgini/master
+   :alt: pre-commit.ci status
 .. image:: https://github.com/jshwi/borgini/actions/workflows/codeql-analysis.yml/badge.svg
     :target: https://github.com/jshwi/borgini/actions/workflows/codeql-analysis.yml
     :alt: CodeQL
@@ -23,7 +26,10 @@ borgini
     :alt: python3.8
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://github.com/psf/black
-    :alt: black
+    :alt: Black
+.. image:: https://img.shields.io/badge/linting-pylint-yellowgreen
+    :target: https://github.com/PyCQA/pylint
+    :alt: pylint
 
 ini config for borg backup
 --------------------------
@@ -127,4 +133,3 @@ Add the following for nightly backups at 12:00 to your crontab
     $ 0 0 * * * /usr/local/bin/borgini
     $ 0 0 * * * /usr/local/bin/borgini -s profile2  # easy for multiple repos
 ..
-
