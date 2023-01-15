@@ -30,6 +30,9 @@ borgini
 .. image:: https://img.shields.io/badge/linting-pylint-yellowgreen
     :target: https://github.com/PyCQA/pylint
     :alt: pylint
+.. image:: https://snyk.io/test/github/jshwi/borgini/badge.svg
+    :target: https://snyk.io/test/github/jshwi/borgini/badge.svg
+    :alt: Known Vulnerabilities
 
 ini config for borg backup
 --------------------------
