@@ -8,6 +8,8 @@ ci:
     - vulture
     - tests
     - toc
+    - about-tests
+    - commit-policy
 default_language_version:
   python: python3.8
 default_stages:
@@ -16,9 +18,11 @@ exclude: |
   (?x)^(
     | poetry\.lock
     | package-lock\.json
-    | migrations/.*
+    | migrations\/.*
     | \.bumpversion\.cfg
     | whitelist\.py
+    | docs\/conf\.py
+    | \.idea\/.*
   )$
 repos:
   - repo: local
@@ -73,14 +77,6 @@ repos:
         language: system
         entry: poetry run pyaud toc --fix
         pass_filenames: false
-      # audit commits between HEAD and origin/master
-      - id: audit
-        name: audit repo
-        language: system
-        entry: bash scripts/audit.sh
-        pass_filenames: false
-        stages:
-          - push
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: "v4.4.0"
     hooks:
@@ -100,7 +96,7 @@ repos:
       - id: debug-statements
       - id: destroyed-symlinks
       - id: detect-private-key
-        exclude: ^(.*/test.key)$
+        exclude: ^(.*test\.key)$
       - id: forbid-submodules
       - id: no-commit-to-branch
       - id: end-of-file-fixer
@@ -175,7 +171,7 @@ repos:
     rev: "6.0.0"
     hooks:
       - id: flake8
-        exclude: ^(.*/_?templates\.py)$
+        exclude: ^(.*\/)?_?templates\.py
         additional_dependencies:
           - flake8-bugbear==22.12.6
   - repo: https://github.com/adrienverge/yamllint.git
