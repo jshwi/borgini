@@ -84,7 +84,7 @@ pyaud = "^6.1.2"
 pylint = "2.16.2"
 pytest = "^7.2.0"
 pytest-randomly = "^3.5.0"
-restview = "^2.9.2"
+restview = "^3.0.1"
 sphinx-toolbox = "^2.18.1"
 
 [tool.poetry.scripts]
