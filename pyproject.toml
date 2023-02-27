@@ -76,7 +76,6 @@ version = "1.2.0"
 
 [tool.poetry.dependencies]
 borgbackup = "^1.1.15"
-lsfiles = "^0.1.2"
 pygments = "^2.6.1"
 python = "^3.8"
 
@@ -87,9 +86,9 @@ freezegun = "^1.1.0"
 ipython = "^7.19.0"
 pre-commit = "^2.21.0"
 prompt-toolkit = "^3.0.13"
-pyaud = "^3.13.5"
+pyaud = "^6.1.2"
 pylint = "2.15.9"
-pytest = "^6.2.1"
+pytest = "^7.2.0"
 pytest-randomly = "^3.5.0"
 restview = "^2.9.2"
 sphinx-toolbox = "^2.18.1"
@@ -97,8 +96,8 @@ sphinx-toolbox = "^2.18.1"
 [tool.poetry.scripts]
 borgini = "borgini.__main__:main"
 
-[tool.pyaud.audit]
-modules = [
+[tool.pyaud]
+audit = [
   "const",
   "docs",
   "files",
@@ -112,40 +111,12 @@ modules = [
   "typecheck",
   "unused"
 ]
-
-[tool.pyaud.clean]
-exclude = [
-  ".env",
-  ".mypy_cache",
-  "node_modules"
-]
-
-[tool.pyaud.indexing]
-exclude = [
-  "conf.py",
-  "whitelist.py"
-]
-
-[tool.pyaud.logging]
-disable_existing_loggers = true
-version = 1
-
-[tool.pyaud.logging.formatters.standard]
-format = "%(asctime)s %(levelname)s %(name)s %(message)s"
-
-[tool.pyaud.logging.handlers.default]
-backupCount = 60
-class = "logging.handlers.TimedRotatingFileHandler"
-filename = "~/.cache/pyaud/log/pyaud.log"
-formatter = "standard"
-when = "d"
-
-[tool.pyaud.logging.root]
-handlers = [
-  "default"
-]
-level = "DEBUG"
-propagate = false
+exclude = '''
+  (?x)^(
+    | docs\/conf\.py
+    | whitelist\.py
+  )$
+'''
 
 [tool.pytest.ini_options]
 addopts = [
