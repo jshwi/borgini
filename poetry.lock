@@ -1900,14 +1900,14 @@ files = [
 
 [[package]]
 name = "readme-renderer"
-version = "37.3"
+version = "36.0"
 description = "readme_renderer is a library for rendering \"readme\" descriptions for Warehouse"
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "readme_renderer-37.3-py3-none-any.whl", hash = "sha256:f67a16caedfa71eef48a31b39708637a6f4664c4394801a7b0d6432d13907343"},
-    {file = "readme_renderer-37.3.tar.gz", hash = "sha256:cd653186dfc73055656f090f227f5cb22a046d7f71a841dfa305f55c9a513273"},
+    {file = "readme_renderer-36.0-py3-none-any.whl", hash = "sha256:2c37e472ca96755caba6cc58bcbf673a5574bc033385a2ac91d85dfef2799876"},
+    {file = "readme_renderer-36.0.tar.gz", hash = "sha256:f71aeef9a588fcbed1f4cc001ba611370e94a0cd27c75b1140537618ec78f0a2"},
 ]
 
 [package.dependencies]
@@ -1974,23 +1974,20 @@ docutils = ">=0.11,<1.0"
 
 [[package]]
 name = "restview"
-version = "2.9.3"
+version = "3.0.1"
 description = "ReStructuredText viewer"
 category = "dev"
 optional = false
 python-versions = "*"
 files = [
-    {file = "restview-2.9.3-py2.py3-none-any.whl", hash = "sha256:ce5a56e81ccb6e2197d735501981cb9a6ffc79b63296b7db719e8c9eb9b09769"},
-    {file = "restview-2.9.3.tar.gz", hash = "sha256:5951aa2182e7a9aa3ab906dbd0f0d33df8fe93e66318a8689649c1228ad74cd8"},
+    {file = "restview-3.0.1-py2.py3-none-any.whl", hash = "sha256:16783ed371379e43d1f8dd31f93b10a1edffa5a718e1486357d578813bad3122"},
+    {file = "restview-3.0.1.tar.gz", hash = "sha256:8c1a171c159d46d15d5569f77021828883a121d6f9baf758d641fc1e54b05ae5"},
 ]
 
 [package.dependencies]
 docutils = "*"
 pygments = "*"
-readme-renderer = "*"
-
-[package.extras]
-test = ["mock"]
+readme-renderer = "<37"
 
 [[package]]
 name = "ruamel-yaml"
@@ -2768,4 +2765,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "48905835871e5b933cc62925232ef40fc06cd5df5517b7a12a0aa0f4670a9cc9"
+content-hash = "f6b6ebf71f6a67d96717bbddae9387a53e5690998fb6804fcdff201261857317"
