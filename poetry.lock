@@ -536,37 +536,6 @@ files = [
 ]
 
 [[package]]
-name = "deprecation"
-version = "2.1.0"
-description = "A library to handle automated deprecations"
-category = "dev"
-optional = false
-python-versions = "*"
-files = [
-    {file = "deprecation-2.1.0-py2.py3-none-any.whl", hash = "sha256:a10811591210e1fb0e768a8c25517cabeabcba6f0bf96564f8ff45189f90b14a"},
-    {file = "deprecation-2.1.0.tar.gz", hash = "sha256:72b3bde64e5d778694b0cf68178aed03d15e15477116add3fb773e581f9518ff"},
-]
-
-[package.dependencies]
-packaging = "*"
-
-[[package]]
-name = "deprecation-alias"
-version = "0.3.1"
-description = "A wrapper around 'deprecation' providing support for deprecated aliases."
-category = "dev"
-optional = false
-python-versions = ">=3.6.1"
-files = [
-    {file = "deprecation-alias-0.3.1.tar.gz", hash = "sha256:88df5f83a9b6cab583106ca6d8518fa197102ca2e62477a804663b8ccdd6b90c"},
-    {file = "deprecation_alias-0.3.1-py3-none-any.whl", hash = "sha256:8daac9bb342c293caf88ddb6b69ac6bd62e9b8bbe7108441bf916069682721e3"},
-]
-
-[package.dependencies]
-deprecation = ">=2.1.0"
-packaging = ">=20.4"
-
-[[package]]
 name = "dict2css"
 version = "0.3.0"
 description = "A μ-library for constructing cascading style sheets from Python dictionaries."
@@ -2278,14 +2247,14 @@ testing = ["bs4", "coverage", "pygments", "pytest (>=3.6,<4)", "pytest-cov", "py
 
 [[package]]
 name = "sphinx-toolbox"
-version = "2.18.3"
+version = "3.4.0"
 description = "Box of handy tools for Sphinx 🧰 📔"
 category = "dev"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 files = [
-    {file = "sphinx_toolbox-2.18.3-py3-none-any.whl", hash = "sha256:cb6ef290afdc641924906c8d8684e7082bdd6eaac4fe7d33d8aa252bec0fd818"},
-    {file = "sphinx_toolbox-2.18.3.tar.gz", hash = "sha256:129d8bfc387044dcdc61b025d33a2fbe77a8e66e5419d8d329a7cb3100703e93"},
+    {file = "sphinx_toolbox-3.4.0-py3-none-any.whl", hash = "sha256:cdf70facee515a2d9406d568a253fa3e89f930fde23c4e8095ba0c675f7c0a48"},
+    {file = "sphinx_toolbox-3.4.0.tar.gz", hash = "sha256:e1cf2a3dea5ce80e175a6a9cee8b5b2792240ecf6c28993d87a63b6fcf606293"},
 ]
 
 [package.dependencies]
@@ -2293,24 +2262,23 @@ apeye = ">=0.4.0"
 autodocsumm = ">=0.2.0"
 beautifulsoup4 = ">=4.9.1"
 cachecontrol = {version = ">=0.12.6", extras = ["filecache"]}
-deprecation-alias = ">=0.2.0"
 dict2css = ">=0.2.3"
-docutils = "0.16"
+docutils = ">=0.16,<0.19"
 domdf-python-tools = ">=2.9.0"
 html5lib = ">=1.1"
 lockfile = ">=0.12.2"
 "ruamel.yaml" = ">=0.16.12"
 sphinx = ">=3.2.0"
-sphinx-autodoc-typehints = ">=1.11.1,<=1.14.1"
+sphinx-autodoc-typehints = ">=1.11.1"
 sphinx-jinja2-compat = ">=0.1.0"
 sphinx-prompt = ">=1.1.0"
-sphinx-tabs = ">=1.2.1,<=3.2.0"
+sphinx-tabs = ">=1.2.1,<3.5.0"
 tabulate = ">=0.8.7"
 typing-extensions = ">=3.7.4.3,<3.10.0.1 || >3.10.0.1"
 
 [package.extras]
-all = ["coincidence (>=0.4.3)", "pygments (>=2.7.4)"]
-testing = ["coincidence (>=0.4.3)", "pygments (>=2.7.4)"]
+all = ["coincidence (>=0.4.3)", "pygments (>=2.7.4,<=2.13.0)"]
+testing = ["coincidence (>=0.4.3)", "pygments (>=2.7.4,<=2.13.0)"]
 
 [[package]]
 name = "sphinxcontrib-applehelp"
@@ -2765,4 +2733,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "cc9cd814254fcc881eb7e3635a45cf803e16f16d7152d07842cc897a3a8c8d15"
+content-hash = "0c5be131796b2facb7ce2e71e55ce196fa99080fe243a6db6fb31dbac18ef5d7"
