@@ -176,18 +176,18 @@ Sphinx = ">=2.2,<7.0"
 
 [[package]]
 name = "babel"
-version = "2.11.0"
+version = "2.12.0"
 description = "Internationalization utilities"
 category = "dev"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 files = [
-    {file = "Babel-2.11.0-py3-none-any.whl", hash = "sha256:1ad3eca1c885218f6dce2ab67291178944f810a10a9b5f3cb8382a5a232b64fe"},
-    {file = "Babel-2.11.0.tar.gz", hash = "sha256:5ef4b3226b0180dedded4229651c8b0e1a3a6a2837d45a073272f313e4cf97f6"},
+    {file = "Babel-2.12.0-py3-none-any.whl", hash = "sha256:8f8b752c803e9f9e03ff219b644aceb0dbcf081c55a88ea11f86291e60a7bb68"},
+    {file = "Babel-2.12.0.tar.gz", hash = "sha256:468e6cd1e2b571a1663110fc737e3a7d9069d038e0c9c4a7f158caeeafe4089c"},
 ]
 
 [package.dependencies]
-pytz = ">=2015.7"
+pytz = {version = ">=2015.7", markers = "python_version < \"3.9\""}
 
 [[package]]
 name = "backcall"
@@ -1375,14 +1375,14 @@ files = [
 
 [[package]]
 name = "natsort"
-version = "8.2.0"
+version = "8.3.0"
 description = "Simple yet flexible natural sorting in Python."
 category = "dev"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 files = [
-    {file = "natsort-8.2.0-py3-none-any.whl", hash = "sha256:04fe18fdd2b9e5957f19f687eb117f102ef8dde6b574764e536e91194bed4f5f"},
-    {file = "natsort-8.2.0.tar.gz", hash = "sha256:57f85b72c688b09e053cdac302dd5b5b53df5f73ae20b4874fcbffd8bf783d11"},
+    {file = "natsort-8.3.0-py3-none-any.whl", hash = "sha256:6c15c663d3fc57dd2af52a56ffa06e9fdf2edfcf8d2e129bf115941a7aeec61e"},
+    {file = "natsort-8.3.0.tar.gz", hash = "sha256:5c64ff0743181dfbb4dd5f0b211434e734992b308ec54b6fa24e0f77f4678ed2"},
 ]
 
 [package.extras]
@@ -1536,14 +1536,14 @@ testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
 name = "pre-commit"
-version = "3.1.0"
+version = "3.1.1"
 description = "A framework for managing and maintaining multi-language pre-commit hooks."
 category = "dev"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "pre_commit-3.1.0-py2.py3-none-any.whl", hash = "sha256:7001dfcd174540658822b1fd3630ceadf4f41375a5d1844b5c3b3830f227348c"},
-    {file = "pre_commit-3.1.0.tar.gz", hash = "sha256:61bd9f1b96d3d1e763f2a9a0f8522aed341646800642ff6803c73fac5781f5b7"},
+    {file = "pre_commit-3.1.1-py2.py3-none-any.whl", hash = "sha256:b80254e60668e1dd1f5c03a1c9e0413941d61f568a57d745add265945f65bfe8"},
+    {file = "pre_commit-3.1.1.tar.gz", hash = "sha256:d63e6537f9252d99f65755ae5b79c989b462d511ebbc481b561db6a297e1e865"},
 ]
 
 [package.dependencies]
@@ -1597,14 +1597,14 @@ tests = ["pytest"]
 
 [[package]]
 name = "pyaud"
-version = "6.1.2"
+version = "6.2.0"
 description = "Framework for writing Python package audits"
 category = "dev"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "pyaud-6.1.2-py3-none-any.whl", hash = "sha256:14d8e327b1b158f19fc696f6acb6bc0938285d4b7e5e895541ed0d11189154ea"},
-    {file = "pyaud-6.1.2.tar.gz", hash = "sha256:768328617c8a02cfad4804bf8c3b6e9e39795e7000eb2a46df48c5d1b313793a"},
+    {file = "pyaud-6.2.0-py3-none-any.whl", hash = "sha256:1a3557624ecc33a2d55a8705c49214e35286e8072846dd90566f75779fb78ba5"},
+    {file = "pyaud-6.2.0.tar.gz", hash = "sha256:9c095b85389b6347e0173a25199d507b61df79be8dcaab5e35f4d41fdf86fbc3"},
 ]
 
 [package.dependencies]
@@ -1617,14 +1617,14 @@ spall = ">=0,<1"
 
 [[package]]
 name = "pyaud-plugins"
-version = "0.13.3"
+version = "0.14.0"
 description = "Plugin package for Pyaud"
 category = "dev"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "pyaud_plugins-0.13.3-py3-none-any.whl", hash = "sha256:4391231a1fd9f915a5ff078be8e09137a69c16af35494b57eafa1224e18008ad"},
-    {file = "pyaud_plugins-0.13.3.tar.gz", hash = "sha256:18ed35b87e653b3042e1716909961dcfba1ddb9537d639a9538a0cb3d93b14ae"},
+    {file = "pyaud_plugins-0.14.0-py3-none-any.whl", hash = "sha256:345ab6784775a55bd372e7bfd3642b72599156cf7d44842658380660ebc0f1bf"},
+    {file = "pyaud_plugins-0.14.0.tar.gz", hash = "sha256:0713691c0b16464fa4813c90ec5fbf96a50a38c3b3910a1b172806e66c44a2d7"},
 ]
 
 [package.dependencies]
@@ -1634,7 +1634,7 @@ codecov = ">=2.1.12,<3.0.0"
 constcheck = ">=0,<1"
 coverage = ">=6.2,<8.0"
 docformatter = ">=1.4,<2.0"
-docsig = ">=0,<1"
+docsig = ">=0.34.0"
 environs = ">=9.4.0,<10.0.0"
 flynt = ">=0.75,<0.77"
 gitpython = ">=3.1.30,<4.0.0"
@@ -2765,4 +2765,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "f6b6ebf71f6a67d96717bbddae9387a53e5690998fb6804fcdff201261857317"
+content-hash = "cc9cd814254fcc881eb7e3635a45cf803e16f16d7152d07842cc897a3a8c8d15"
