@@ -33,6 +33,12 @@ omit = [
   "whitelist.py"
 ]
 
+[tool.deptry]
+ignore_obsolete = [
+  "borgbackup",
+  "lsfiles"
+]
+
 [tool.docsig]
 check-class = true
 summary = true
@@ -76,6 +82,7 @@ python = "^3.8"
 
 [tool.poetry.group.dev.dependencies]
 bump2version = "^1.0.1"
+deptry = "^0.8.0"
 freezegun = "^1.1.0"
 ipython = "^7.19.0"
 pre-commit = "^2.21.0"
