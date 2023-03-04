@@ -6,8 +6,8 @@ borgini
 .. image:: https://img.shields.io/pypi/v/borgini
     :target: https://pypi.org/project/borgini/
     :alt: PyPI
-.. image:: https://github.com/jshwi/borgini/actions/workflows/ci.yml/badge.svg
-    :target: https://github.com/jshwi/borgini/actions/workflows/ci.yml
+.. image:: https://github.com/jshwi/borgini/actions/workflows/build.yaml/badge.svg
+    :target: https://github.com/jshwi/borgini/actions/workflows/build.yaml
     :alt: Build
 .. image:: https://github.com/jshwi/borgini/actions/workflows/codeql-analysis.yml/badge.svg
     :target: https://github.com/jshwi/borgini/actions/workflows/codeql-analysis.yml
