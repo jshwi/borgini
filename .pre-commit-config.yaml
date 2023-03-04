@@ -22,9 +22,11 @@ exclude: |
     | migrations\/.*
     | \.bumpversion\.cfg
     | whitelist\.py
+    | tests\/TESTS\.md
+    | \.github\/COMMIT_POLICY\.md
+    | tests\/TESTS\.md
     | docs\/conf\.py
     | \.idea\/.*
-    | tests\/TESTS\.md
   )$
 repos:
   - repo: local
@@ -94,6 +96,12 @@ repos:
         name: about tests
         language: system
         entry: poetry run pyaud about-tests
+        pass_filenames: false
+      # check .github/COMMIT_POLICY.md is up-to-date
+      - id: commit-policy
+        name: commit policy
+        language: system
+        entry: poetry run pyaud commit-policy
         pass_filenames: false
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: "v4.4.0"
