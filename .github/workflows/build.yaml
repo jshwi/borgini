@@ -17,14 +17,12 @@ jobs:
           - "3.9"
           - "3.10"
         os:
+          - macos-latest
           - ubuntu-latest
     steps:
       - name: Checkout build
         id: checkout-build
         uses: actions/checkout@v3
-      - name: Install Borg Dependencies
-        id: install-borg-dependencies
-        run: sudo apt install libacl1-dev
       - name: Install Poetry
         id: install-poetry
         run: pipx install poetry
