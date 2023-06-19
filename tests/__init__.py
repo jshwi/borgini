@@ -35,12 +35,12 @@ TMPCONFIGDIR = "tmpconfigdir"
 class NoColorCapsys:
     """Capsys but with a regex to remove ANSI escape codes.
 
-    Class is preferable for this as we can instantiate the instance
-    as a fixture that also contains the same attributes as capsys.
+    Class is preferable for this as we can instantiate the instance as a
+    fixture that also contains the same attributes as capsys.
 
     We can make sure that the class is instantiated without executing
-    capsys immediately thus losing control of what stdout and stderr
-    we are to capture.
+    capsys immediately thus losing control of what stdout and stderr we
+    are to capture.
 
     :param capsys: Capture sys out.
     """
@@ -52,8 +52,8 @@ class NoColorCapsys:
     def regex(out: str) -> str:
         """Replace ANSI color codes with empty strings.
 
-        Prefer to test colored output this way as colored strings can
-        be tricky and the effort in testing their validity really isn't
+        Prefer to test colored output this way as colored strings can be
+        tricky and the effort in testing their validity really isn't
         worth it. Also, hard to read expected strings when they contain
         the codes.
 
