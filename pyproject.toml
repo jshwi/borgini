@@ -91,7 +91,7 @@ pylint = "2.17.5"
 pytest = "^7.4.0"
 pytest-randomly = "^3.13.0"
 restview = "^3.0.1"
-sphinx-immaterial = "^0.11.5"
+sphinx-immaterial = "^0.11.6"
 sphinx-toolbox = "^3.5.0"
 
 [tool.poetry.scripts]
