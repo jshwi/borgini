@@ -8,6 +8,7 @@ ci:
     - vulture
     - tests
     - toc
+    - about-tests
 default_language_version:
   python: python3.8
 default_stages:
@@ -21,6 +22,7 @@ exclude: |
     | whitelist\.py
     | \.idea\/.*
     | docs\/conf\.py
+    | tests\/TESTS\.md
   )$
 repos:
   - repo: local
@@ -80,6 +82,14 @@ repos:
         name: audit repo
         language: system
         entry: bash scripts/audit.sh
+        pass_filenames: false
+        stages:
+          - push
+      # check tests/TESTS.md is up-to-date
+      - id: about-tests
+        name: about tests
+        language: system
+        entry: poetry run pyaud about-tests
         pass_filenames: false
         stages:
           - push
