@@ -106,7 +106,7 @@ def test_borg_commands(
     :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
         codes.
     :param tmpconfigdir:  Absolute path to directory containing
-        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
+        ``config.ini``, ``include``, ``exclude`` and ``styles`` files.
     """
     configpath = os.path.join(tmpconfigdir, DEFAULT, CONFIG_INI)
     borg_commands = BorgCommands(
@@ -200,7 +200,7 @@ def test_invalid_keyfile(  # pylint: disable=too-many-arguments
     :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
         codes.
     :param tmpconfigdir: Absolute path to directory containing
-        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
+        ``config.ini``, ``include``, ``exclude`` and ``styles`` files.
     """
     configpath = os.path.join(tmpconfigdir, DEFAULT, CONFIG_INI)
     _expected = invalid_keyfile(
@@ -292,7 +292,7 @@ def test_edit_path_arg(
     :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
         codes.
     :param tmpconfigdir:  Absolute path to directory containing
-        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
+        ``config.ini``, ``include``, ``exclude`` and ``styles`` files.
     """
     mock_which.return_value = VIM
     path = os.path.join(tmpconfigdir, DEFAULT, "include")
@@ -324,7 +324,7 @@ def test_read_keyfile(  # pylint: disable=too-many-arguments
     :param tmpdir: Create and return temporary test directory.
     :param capsys: Silence stdout.
     :param tmpconfigdir:  Absolute path to directory containing
-        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
+        ``config.ini``, ``include``, ``exclude`` and ``styles`` files.
     :param keygen: Generate a keyfile and read its random password value
         to the ``BORG_PASSPHRASE`` environment variable.
     """
@@ -360,7 +360,7 @@ def test_no_ssh(
     :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
         codes.
     :param tmpconfigdir:  Absolute path to directory containing
-        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
+        ``config.ini``, ``include``, ``exclude`` and ``styles`` files.
     """
     configpath = os.path.join(tmpconfigdir, DEFAULT, CONFIG_INI)
     borg_commands = BorgCommands(
@@ -393,7 +393,7 @@ def test_select_profile(
     :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
         codes.
     :param tmpconfigdir:  Absolute path to directory containing
-        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
+        ``config.ini``, ``include``, ``exclude`` and ``styles`` files.
     """
     _expected = initialize_files_expected(NEWPROFILE)
     out = initialize_profile(main, tmpconfigdir, nocolorcapsys, NEWPROFILE)
@@ -418,7 +418,7 @@ def test_list_arg(
     :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
         codes.
     :param tmpconfigdir:  Absolute path to directory containing
-        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
+        ``config.ini``, ``include``, ``exclude`` and ``styles`` files.
     """
     _expected = list_arg(DEFAULT, NEWPROFILE)
     initialize_profile(main, tmpconfigdir, nocolorcapsys, NEWPROFILE)
@@ -466,7 +466,7 @@ def test_remove_arg(
     :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
         codes.
     :param tmpconfigdir:  Absolute path to directory containing
-        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
+        ``config.ini``, ``include``, ``exclude`` and ``styles`` files.
     """
     # calls `initialize_newprofile_files' unlike the above
     initialize_profile(main, tmpconfigdir, nocolorcapsys, NEWPROFILE)
@@ -490,7 +490,7 @@ def test_file_exists_error(
     :param main: Patch package entry point.
     :param initialize_profile: Create a test profile.
     :param tmpconfigdir:  Absolute path to directory containing
-        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
+        ``config.ini``, ``include``, ``exclude`` and ``styles`` files.
     :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
         codes.
     """
@@ -529,7 +529,7 @@ def test_random_opts(  # pylint: disable=too-many-arguments
     :param nocolorcapsys: Capture stdout and strip it of any ANSI escape
         codes.
     :param tmpconfigdir:  Absolute path to directory containing
-        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
+        ``config.ini``, ``include``, ``exclude`` and ``styles`` files.
     """
     configpath = os.path.join(tmpconfigdir, DEFAULT, CONFIG_INI)
     obj = randopts()
@@ -602,7 +602,7 @@ def test_repair_config_key_err(
     :param main: Patch package entry point.
     :param update_config: Update the test config with parameters.
     :param tmpconfigdir:  Absolute path to directory containing
-        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
+        ``config.ini``, ``include``, ``exclude`` and ``styles`` files.
     :param capsys: Silence stdout.
     """
     bad_section = "NOT_A_SECTION"
@@ -627,14 +627,15 @@ def test_pass_on_not_a_directory_err(
 
     When running list and traversing the individual profile directories
     without the exception to just ignore a file that doesn't need to be
-    there (all items should be dirs in the `CONFIGDIR') `-l/--list' will
-    try to make a path out of the file and raise a NotADirectoryError.
+    there (all items should be dirs in the `CONFIGDIR') ``-l/--list``
+    will try to make a path out of the file and raise a
+    NotADirectoryError.
 
     Test that this process can continue will an out-of-place file.
 
     :param main: Patch package entry point.
     :param tmpconfigdir:  Absolute path to directory containing
-        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
+        ``config.ini``, ``include``, ``exclude`` and ``styles`` files.
     :param capsys: Silence stdout.
     """
     out_of_place_file = os.path.join(tmpconfigdir, "out_of_place_file.txt")
@@ -650,11 +651,11 @@ def test_pass_on_not_a_directory_err(
 def test_chosen_style(tmpconfigdir: str) -> None:
     """Test usage of selected style.
 
-    Test that the first option written to the ``styles`` file,
+    Test that the first option written to the ``styles``  file,
     ``monokai``, is collected.
 
     :param tmpconfigdir:  Absolute path to directory containing
-        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
+        ``config.ini``, ``include``, ``exclude`` and ``styles`` files.
     """
     styles = os.path.join(tmpconfigdir, DEFAULT, "styles")
     pygments = borgini.PygmentPrint(styles)
@@ -665,11 +666,11 @@ def test_chosen_style(tmpconfigdir: str) -> None:
 def test_default_style(tmpconfigdir: str) -> None:
     """Test usage of default style.
 
-    Test that the ``default`` option written to the ``styles`` file is
+    Test that the ``default`` option written to the ``styles``  file is
     collected if all options are commented out.
 
     :param tmpconfigdir:  Absolute path to directory containing
-        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
+        ``config.ini``, ``include``, ``exclude`` and ``styles`` files.
     """
     styles = os.path.join(tmpconfigdir, DEFAULT, "styles")
     with open(styles, encoding="utf-8") as file:
@@ -698,7 +699,7 @@ def test_run_call_main_process(
     :param main: Patch package entry point.
     :param update_config: Update the test config with parameters.
     :param tmpconfigdir:  Absolute path to directory containing
-        ``config.ini``, ``include``, ``exclude`` and ``styles``files.
+        ``config.ini``, ``include``, ``exclude`` and ``styles`` files.
     """
     configpath = os.path.join(tmpconfigdir, DEFAULT, CONFIG_INI)
     update_config(configpath, DEFAULT={REPOPATH: DEVNULL})
