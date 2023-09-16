@@ -89,7 +89,7 @@ pyaud = "^7.1.0"
 pylint = "2.15.9"
 pytest = "^7.2.0"
 pytest-randomly = "^3.5.0"
-restview = "^2.9.2"
+restview = "^3.0.1"
 sphinx-immaterial = "^0.11.3"
 sphinx-toolbox = "^2.18.1"
 
