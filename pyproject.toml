@@ -93,6 +93,7 @@ borgini = "borgini.__main__:main"
 [tool.pyaud]
 audit = [
   "about-test",
+  "commit-policy",
   "const",
   "docs",
   "files",
