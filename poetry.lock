@@ -920,13 +920,13 @@ files = [
 
 [[package]]
 name = "ipython"
-version = "8.12.2"
+version = "8.12.3"
 description = "IPython: Productive Interactive Computing"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "ipython-8.12.2-py3-none-any.whl", hash = "sha256:ea8801f15dfe4ffb76dea1b09b847430ffd70d827b41735c64a0638a04103bfc"},
-    {file = "ipython-8.12.2.tar.gz", hash = "sha256:c7b80eb7f5a855a88efc971fda506ff7a91c280b42cdae26643e0f601ea281ea"},
+    {file = "ipython-8.12.3-py3-none-any.whl", hash = "sha256:b0340d46a933d27c657b211a329d0be23793c36595acf9e6ef4164bc01a1804c"},
+    {file = "ipython-8.12.3.tar.gz", hash = "sha256:3910c4b54543c2ad73d06579aa771041b7d5707b033bd488669b4cf544e3b363"},
 ]
 
 [package.dependencies]
@@ -2787,4 +2787,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "303e0f6b5570ea75ba21e91b4a233198101a3b1808b524240a712f604807aaa0"
+content-hash = "bfe0d9902b566bc6be794eaa5ca9a9ecbfb735ac5076fa9eba91deee0f429368"
