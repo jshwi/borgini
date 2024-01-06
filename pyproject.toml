@@ -101,6 +101,7 @@ audit = [
   "about-test",
   "commit-policy",
   "const",
+  "copyright-year",
   "docs",
   "files",
   "format",
