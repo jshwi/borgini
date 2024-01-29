@@ -8,6 +8,7 @@ Parse commandline arguments
 
 Invoke classes, methods and functions
 """
+
 from __future__ import annotations
 
 import os
