@@ -13,7 +13,7 @@ ci:
     - deptry
     - copyright-year
 default_language_version:
-  python: python3.8
+  python: python3.9
 default_stages:
   - commit
 exclude: |
