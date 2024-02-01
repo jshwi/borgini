@@ -4,6 +4,7 @@ tests.expected
 
 Expected stdout and stderr for tests
 """
+
 from . import HOST, USER
 
 EMPTY_REPO_SETTING = (

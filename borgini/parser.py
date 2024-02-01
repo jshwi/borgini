@@ -5,6 +5,7 @@ borgini.parser
 Parse the commandline arguments and check arguments for errors and exit
 informatively
 """
+
 from __future__ import annotations
 
 import argparse

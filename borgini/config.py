@@ -4,6 +4,7 @@ borgini.config
 
 All things ``config.ini``
 """
+
 from __future__ import annotations
 
 import configparser

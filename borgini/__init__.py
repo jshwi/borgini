@@ -1,4 +1,5 @@
 """Ini config for borg backup."""
+
 from ._core import HOME, Data, PygmentPrint
 from ._main import main
 from ._version import __version__
