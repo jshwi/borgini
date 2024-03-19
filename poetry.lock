@@ -586,21 +586,29 @@ files = [
 
 [[package]]
 name = "deptry"
-version = "0.12.0"
+version = "0.14.2"
 description = "A command line utility to check for unused, missing and transitive dependencies in a Python project."
 optional = false
-python-versions = ">=3.8,<4.0"
+python-versions = ">=3.8, <4.0"
 files = [
-    {file = "deptry-0.12.0-py3-none-any.whl", hash = "sha256:69c801a6ae1b39c7b8e0daf40dbe8b75f1f161277d206dd8f921f32cd22dad91"},
-    {file = "deptry-0.12.0.tar.gz", hash = "sha256:ac3cd32d149c92a9af12f63cd9486ddd1760f0277ed0cf306c6ef0388f57ff0a"},
+    {file = "deptry-0.14.2-cp38-abi3-macosx_10_12_x86_64.whl", hash = "sha256:6f451ac26990bcb3e4d517271b87f1f02e7272da6644e47755aa72bbb649a8dd"},
+    {file = "deptry-0.14.2-cp38-abi3-macosx_11_0_arm64.whl", hash = "sha256:7b3eeeace8c3cdb2eafe14d7a0261bb2ec410d1887a4152091e9dcb73325b452"},
+    {file = "deptry-0.14.2-cp38-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:cb4988bff104bfd3c0b13841f18dbddc6c818b88101cad97f662acc5827209ac"},
+    {file = "deptry-0.14.2-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:8f61a6c1165e91753d029c2a598d0ff37b7e6cb436beff5cc3ba6c7b8b4acf93"},
+    {file = "deptry-0.14.2-cp38-abi3-win_amd64.whl", hash = "sha256:65d20f7316b2f2ff545430dd3c2dea6dc668cd6ee3b866dffdf78d39c3b07ee8"},
+    {file = "deptry-0.14.2-pp310-pypy310_pp73-macosx_10_12_x86_64.whl", hash = "sha256:95901237482a390611370522d707931eeb1ea7172a56fe1bf84f0d4624b1dd4c"},
+    {file = "deptry-0.14.2-pp310-pypy310_pp73-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:6f531fd1cdcc980438647cc8c95115989f0a7efbf3456611174cfd54db721657"},
+    {file = "deptry-0.14.2-pp310-pypy310_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:54182741d343bcca73116a13eb905b5bded80ef72e2d13cdb23081c72a486f17"},
+    {file = "deptry-0.14.2-pp310-pypy310_pp73-win_amd64.whl", hash = "sha256:6c9a2949d2c0c580981e22c8ceff0461e77e632b94dacd02307f81caaa35f93f"},
+    {file = "deptry-0.14.2.tar.gz", hash = "sha256:1c585d4a5f9ddc75ed0cb27f99e998edda4720d050ba7214503a2bfe5e85d7df"},
 ]
 
 [package.dependencies]
 chardet = ">=4.0.0"
-click = ">=8.0.0,<9.0.0"
+click = ">=8.0.0,<9"
 colorama = {version = ">=0.4.6", markers = "sys_platform == \"win32\""}
 pathspec = ">=0.9.0"
-tomli = {version = ">=2.0.1,<3.0.0", markers = "python_version < \"3.11\""}
+tomli = {version = ">=2.0.1", markers = "python_version < \"3.11\""}
 
 [[package]]
 name = "dict2css"
@@ -1880,6 +1888,7 @@ files = [
     {file = "PyYAML-6.0.1-cp311-cp311-win_amd64.whl", hash = "sha256:bf07ee2fef7014951eeb99f56f39c9bb4af143d8aa3c21b1677805985307da34"},
     {file = "PyYAML-6.0.1-cp312-cp312-macosx_10_9_x86_64.whl", hash = "sha256:855fb52b0dc35af121542a76b9a84f8d1cd886ea97c84703eaa6d88e37a2ad28"},
     {file = "PyYAML-6.0.1-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:40df9b996c2b73138957fe23a16a4f0ba614f4c0efce1e9406a184b6d07fa3a9"},
+    {file = "PyYAML-6.0.1-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:a08c6f0fe150303c1c6b71ebcd7213c2858041a7e01975da3a99aed1e7a378ef"},
     {file = "PyYAML-6.0.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:6c22bec3fbe2524cde73d7ada88f6566758a8f7227bfbf93a408a9d86bcc12a0"},
     {file = "PyYAML-6.0.1-cp312-cp312-musllinux_1_1_x86_64.whl", hash = "sha256:8d4e9c88387b0f5c7d5f281e55304de64cf7f9c0021a3525bd3b1c542da3b0e4"},
     {file = "PyYAML-6.0.1-cp312-cp312-win32.whl", hash = "sha256:d483d2cdf104e7c9fa60c544d92981f12ad66a457afae824d146093b8c294c54"},
@@ -2646,4 +2655,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "3d25f874671187d491a4f6ef84e64ba94a541db4e7315b5ed86f7acd7f6592a8"
+content-hash = "47d368987e7097f63baebcf3bc0313bf76b1293e03619de348f6ec700efe1721"
